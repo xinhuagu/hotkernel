@@ -1,0 +1,177 @@
+{
+ "target": "int4_gemv",
+ "date": "2026-10-14",
+ "gpu": "NVIDIA GeForce RTX 5090",
+ "capability": [
+  12,
+  0
+ ],
+ "torch": "2.11.0+cu128",
+ "torchao": "0.17.0+cu128",
+ "protocol": 3,
+ "bench_n": 5,
+ "quantizer_vs_torchao": {
+  "codes_equal_fraction": 0.947841,
+  "scales_and_zeros_max_abs_diff": 0.03125,
+  "note": "same convention: (q - 8) * scale + zero, even column in the high nibble"
+ },
+ "contract_paths_warm_l2_probe": {
+  "int4pack_k2": {
+   "runs": true,
+   "inner_k_tiles": 2,
+   "max_abs_err_vs_reference": 1.0948,
+   "reference_absmax": 331.73,
+   "max_abs_err_vs_fp32_unquantized_matvec": 33.565,
+   "warm_us": 16.9
+  },
+  "int4pack_k4": {
+   "runs": true,
+   "inner_k_tiles": 4,
+   "max_abs_err_vs_reference": 1.0948,
+   "reference_absmax": 331.73,
+   "max_abs_err_vs_fp32_unquantized_matvec": 33.565,
+   "warm_us": 16.8
+  },
+  "int4pack_k8": {
+   "runs": true,
+   "inner_k_tiles": 8,
+   "max_abs_err_vs_reference": 1.0948,
+   "reference_absmax": 331.73,
+   "max_abs_err_vs_fp32_unquantized_matvec": 33.565,
+   "warm_us": 19.5
+  },
+  "dequant_mv": {
+   "runs": true,
+   "inner_k_tiles": 4,
+   "max_abs_err_vs_reference": 0.9965,
+   "reference_absmax": 331.73,
+   "max_abs_err_vs_fp32_unquantized_matvec": 33.565,
+   "warm_us": 1414.2
+  }
+ },
+ "torchao_module_paths_warm_l2_probe": {
+  "plain": {
+   "runs": false,
+   "error": "Requires mslk >= 1.0.0"
+  },
+  "preshuffled": {
+   "runs": false,
+   "error": "Requires mslk >= 1.0.0"
+  },
+  "plain_int32": {
+   "runs": false,
+   "error": "Int4PlainInt32Tensor does not support device 'cuda' yet."
+  },
+  "tile_packed_to_4d": {
+   "runs": true,
+   "weight_type": "Int4TilePackedTo4dTensor",
+   "max_abs_err_vs_fp32_unquantized_matvec": 36.383,
+   "warm_us": 28.9
+  }
+ },
+ "fp32_unquantized_matvec_absmax": 352.946,
+ "contract_paths": {
+  "int4pack_k2": {
+   "runs": true,
+   "all_ok": true,
+   "n": 5,
+   "mean_ms": 0.0347,
+   "std_ms": 0.0047,
+   "min_ms": 0.0293,
+   "max_ms": 0.0416,
+   "samples_ms": [
+    0.03769,
+    0.03546,
+    0.04157,
+    0.02957,
+    0.02927
+   ],
+   "achieved_gbs_lower_bound": 946.8,
+   "min_bytes": 35684352,
+   "rotation_k": 6,
+   "rotation_bytes": 427917312,
+   "l2_bytes": 100663296,
+   "inner_k_tiles": 2,
+   "impl": "int4 path int4pack_k2"
+  },
+  "int4pack_k4": {
+   "runs": true,
+   "all_ok": true,
+   "n": 5,
+   "mean_ms": 0.0314,
+   "std_ms": 0.003,
+   "min_ms": 0.0287,
+   "max_ms": 0.0356,
+   "samples_ms": [
+    0.03436,
+    0.03558,
+    0.02903,
+    0.02915,
+    0.02874
+   ],
+   "achieved_gbs_lower_bound": 1038.6,
+   "min_bytes": 35684352,
+   "rotation_k": 6,
+   "rotation_bytes": 427917312,
+   "l2_bytes": 100663296,
+   "inner_k_tiles": 4,
+   "impl": "int4 path int4pack_k4"
+  },
+  "int4pack_k8": {
+   "runs": true,
+   "all_ok": true,
+   "n": 5,
+   "mean_ms": 0.0361,
+   "std_ms": 0.012,
+   "min_ms": 0.0276,
+   "max_ms": 0.0595,
+   "samples_ms": [
+    0.05948,
+    0.0276,
+    0.02792,
+    0.03471,
+    0.03076
+   ],
+   "achieved_gbs_lower_bound": 599.9,
+   "min_bytes": 35684352,
+   "rotation_k": 6,
+   "rotation_bytes": 427917312,
+   "l2_bytes": 100663296,
+   "inner_k_tiles": 8,
+   "impl": "int4 path int4pack_k8"
+  },
+  "dequant_mv": {
+   "runs": true,
+   "all_ok": true,
+   "n": 5,
+   "mean_ms": 1.4333,
+   "std_ms": 0.0192,
+   "min_ms": 1.4118,
+   "max_ms": 1.4694,
+   "samples_ms": [
+    1.42805,
+    1.42858,
+    1.46943,
+    1.41175,
+    1.42881
+   ],
+   "achieved_gbs_lower_bound": 25.0,
+   "min_bytes": 35684352,
+   "rotation_k": 6,
+   "rotation_bytes": 427917312,
+   "l2_bytes": 100663296,
+   "inner_k_tiles": 4,
+   "impl": "int4 path dequant_mv"
+  }
+ },
+ "chosen": "int4pack_k4",
+ "chosen_mean_ms": 0.0314,
+ "reason": "fastest mean over bench n=5 among contract paths that run on this GPU and pass the fp32 dequantize reference check (bf16 default tolerances); torchao's module paths quantize with their own parameters, so they are compared on warm-L2 time only",
+ "min_bytes": 35684352,
+ "rotation_k": 6,
+ "l2_bytes": 100663296,
+ "rotation_streams_more_than_2x_l2": true,
+ "measured_mem_gbs": 1501.0,
+ "floor_ms_at_measured_bandwidth": 0.023773718854097268,
+ "chosen_pct_of_measured_bandwidth": 75.7
+}

@@ -14,7 +14,7 @@ English | [中文](https://github.com/xinhuagu/hotkernel/blob/main/README_zh.md)
 
 </div>
 
-Ask Claude to "make this kernel faster" today and it guesses: it cannot see the Nsight report, does not know which kernel eats 60% of the step, has never read the SASS the compiler produced, and cannot benchmark its own rewrite on your card. hotkernel is the missing pair of hands. Nine tools wrap `nsys`, `ncu`, `cuobjdump`, `torch.profiler` and a strict verify-and-record contract; one skill turns them into a loop: profile, pick the hot kernel, read its SASS, check it against the roofline, rewrite it in Triton, verify against the baseline, record the verdict, keep or revert, repeat.
+Ask Claude to "make this kernel faster" today and it guesses: it cannot see the Nsight report, does not know which kernel eats 60% of the step, has never read the SASS the compiler produced, and cannot benchmark its own rewrite on your card. hotkernel is the missing pair of hands. Ten tools wrap `nsys`, `ncu`, `cuobjdump`, `torch.profiler` and a strict verify-and-record contract; one skill turns them into a loop: profile, pick the hot kernel, read its SASS, check it against the roofline, rewrite it in Triton, verify against the baseline, record the verdict, keep or revert, repeat.
 
 **Three targets, three autonomous agent runs, one RTX 5090: rmsnorm 3.2× faster than eager PyTorch, softmax 1.2× faster than `torch.softmax`, gemv level with cuBLAS. Every kernel the agent kept runs at 95–105% of the card's measured streaming bandwidth.**¹
 
@@ -22,14 +22,31 @@ Ask Claude to "make this kernel faster" today and it guesses: it cannot see the 
 
 ## Install
 
+Claude Code, one command (Claude Code 2.1.275 or later): it adds this repository as a plugin marketplace and installs the plugin, which is the MCP server plus the kernel-speedrun skill.
+
 ```bash
-claude mcp add -e HOTKERNEL_PYTHON=$HOME/venvs/mytorch/bin/python hotkernel -- uvx hotkernel   # Claude Code
-codex mcp add --env HOTKERNEL_PYTHON=$HOME/venvs/mytorch/bin/python hotkernel -- uvx hotkernel # Codex
+claude plugin install hotkernel --marketplace xinhuagu/hotkernel
 ```
 
-Any other MCP client: `{"command": "uvx", "args": ["hotkernel"], "env": {"HOTKERNEL_PYTHON": "..."}}`. `HOTKERNEL_PYTHON` is the interpreter that has your PyTorch and Triton; the server itself stays torch-free.
+Inside a session the same is `/plugin marketplace add xinhuagu/hotkernel` followed by `/plugin install hotkernel@hotkernel`. The plugin has one option, the Python that has your PyTorch and Triton: set it with `/plugin configure hotkernel@hotkernel`, or at install time with `claude plugin install hotkernel@hotkernel --config hotkernel_python=$HOME/venvs/mytorch/bin/python`. Left empty, hotkernel uses the first `python` on PATH that can import torch, and says so if there is none. The server itself stays torch-free and runs as `uvx hotkernel`.
 
-The loop is a skill: copy [`skills/kernel-speedrun/`](https://github.com/xinhuagu/hotkernel/tree/main/skills/kernel-speedrun) into your agent's skills directory (Claude Code: `~/.claude/skills/`).
+Codex and other MCP clients (Cursor, DSH) keep the plain MCP setup:
+
+```bash
+codex mcp add --env HOTKERNEL_PYTHON=$HOME/venvs/mytorch/bin/python hotkernel -- uvx hotkernel
+```
+
+or `{"command": "uvx", "args": ["hotkernel"], "env": {"HOTKERNEL_PYTHON": "..."}}` in the client's MCP config, plus a copy of [`skills/kernel-speedrun/`](https://github.com/xinhuagu/hotkernel/tree/main/skills/kernel-speedrun) in the agent's skills directory. Claude Code without the plugin works the same way: `claude mcp add -e HOTKERNEL_PYTHON=... hotkernel -- uvx hotkernel`.
+
+## Point it at your own kernel
+
+`hotkernel new` turns any PyTorch function into a target with the same contract as the examples: the function becomes the baseline, its fp32 result the reference, tolerances default by dtype, and the protocol-3 timer is vendored next to the scripts, so they run in your torch interpreter whether or not hotkernel is installed there.
+
+```bash
+hotkernel new gelu --from torch.nn.functional:gelu --shape 4096x8192 --dtype bf16 --out targets
+```
+
+writes `targets/gelu_baseline.py`, `targets/gelu_candidate.py` (starts as the baseline; this is the file the loop edits) and `targets/_hotkernel_contract.py`. A function of your own works the same way, with extra inputs in call order: `--from ./mykernels.py:fused --extra w:8192`. Then `bench` the baseline for the number to beat, and `verify` the untouched candidate against it, which must come back `inconclusive` before anything changed. Agents get the same through the `new_target` tool. On the reference card the untouched gelu candidate benched at 0.0952 ms and verified `inconclusive`; a deliberately wrong one came back `incorrect`.
 
 ## Before / after
 
@@ -58,6 +75,7 @@ Every row on [LEADERBOARD.md](https://github.com/xinhuagu/hotkernel/blob/main/LE
 | `bench` | run a script n times, collect its `{"ms": …, "ok": …}` line, return mean/std/min | your torch |
 | `verify` | run baseline and candidate interleaved, n times each; speedup and a verdict: `faster`, `slower`, `inconclusive`, `incorrect` (any `ok=false`, no speedup reported), `invalid` (shape, dtype, seed or timing protocol changed) | your torch |
 | `record` | write the verify result to `results/<target>/`, regenerate the leaderboard from the logs, and say whether the change beats the run's best so far | nothing |
+| `new_target` | scaffold a target from your own function: baseline, blank candidate and the vendored contract, the same as `hotkernel new` | nothing |
 
 `torch_trace`, `bench`, `verify` and `record` work on any machine with PyTorch. Nsight is optional and only makes the picture sharper.
 

@@ -10,6 +10,9 @@ understood and reproduced:
 - system/hook_started and system/hook_response records are dropped;
 - the system/init record keeps only type, subtype, session_id, tools (mcp__hotkernel__* only),
   model, permissionMode, claude_code_version, uuid, apiKeySource, plus a `redacted` note;
+- a ToolSearch result (a user record whose tool_result carries `tool_reference` entries, and
+  the matching `tool_use_result.matches` list) keeps only the mcp__hotkernel__* names: a broad
+  query lists every deferred tool on the machine, which names other servers and plugins;
 - every other record (assistant, user, result) is kept as is;
 - in transcript.md the "MCP servers:" line names hotkernel only.
 
@@ -88,8 +91,42 @@ def scrub_stream(path: Path) -> tuple[list[str], int, int, bool]:
                 changed += 1
             out.append(json.dumps(new, ensure_ascii=False))
             continue
+        if ev.get("type") == "user" and _filter_tool_search(ev):
+            changed += 1
+            out.append(json.dumps(ev, ensure_ascii=False))
+            continue
         out.append(raw)
     return out, dropped, changed, has_hk
+
+
+def _is_hk(name) -> bool:
+    return str(name).startswith("mcp__hotkernel__")
+
+
+def _filter_tool_search(ev: dict) -> bool:
+    """Drop other servers' names from a ToolSearch result in place; True if anything changed."""
+    changed = False
+    content = ev.get("message", {}).get("content")
+    if isinstance(content, list):
+        for block in content:
+            if not (isinstance(block, dict) and block.get("type") == "tool_result"):
+                continue
+            inner = block.get("content")
+            if not isinstance(inner, list):
+                continue
+            kept = [x for x in inner
+                    if not (isinstance(x, dict) and x.get("type") == "tool_reference"
+                            and not _is_hk(x.get("tool_name")))]
+            if len(kept) != len(inner):
+                block["content"] = kept
+                changed = True
+    tur = ev.get("tool_use_result")
+    if isinstance(tur, dict) and isinstance(tur.get("matches"), list):
+        kept = [m for m in tur["matches"] if _is_hk(m)]
+        if len(kept) != len(tur["matches"]):
+            tur["matches"] = kept
+            changed = True
+    return changed
 
 
 def scrub_transcript(path: Path, has_hk: bool) -> tuple[list[str], int]:
@@ -113,7 +150,7 @@ def scrub_dir(run_dir: Path, check: bool) -> int:
     if stream.exists():
         lines, dropped, changed, has_hk = scrub_stream(stream)
         total += dropped + changed
-        print(f"{stream}: {dropped} hook records dropped, {changed} init record(s) reduced")
+        print(f"{stream}: {dropped} hook records dropped, {changed} record(s) reduced")
         if not check and (dropped or changed):
             stream.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     transcript = run_dir / "transcript.md"

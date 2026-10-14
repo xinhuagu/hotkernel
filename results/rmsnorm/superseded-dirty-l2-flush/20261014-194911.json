@@ -1,0 +1,85 @@
+{
+ "target": "rmsnorm",
+ "note": "H4: persistent grid (4 programs/SM = 680), each loops over rows with w loaded once - faster than baseline but slower than H1 (0.1022 vs 0.0908 ms); reverted",
+ "who": "agent:claude-fable-5-1, autonomous loop",
+ "commit": "7a101b7",
+ "recorded_at": "20261014-194911",
+ "verify": {
+  "baseline": {
+   "n": 7,
+   "mean_ms": 0.30284,
+   "std_ms": 0.00671,
+   "min_ms": 0.29925,
+   "max_ms": 0.318,
+   "samples_ms": [
+    0.30037,
+    0.30051,
+    0.318,
+    0.30084,
+    0.30083,
+    0.29925,
+    0.30008
+   ]
+  },
+  "candidate": {
+   "n": 7,
+   "mean_ms": 0.10222,
+   "std_ms": 0.00065,
+   "min_ms": 0.10144,
+   "max_ms": 0.10321,
+   "samples_ms": [
+    0.1027,
+    0.10264,
+    0.10213,
+    0.10144,
+    0.10321,
+    0.10167,
+    0.10172
+   ]
+  },
+  "baseline_all_ok": true,
+  "candidate_all_ok": true,
+  "contract_mismatch": [],
+  "speedup": 2.9626,
+  "delta_ms": 0.20062,
+  "threshold_ms": 0.0051,
+  "significant": true,
+  "verdict": "faster",
+  "reason": "candidate mean 0.1022 ms vs baseline 0.3028 ms; |delta| 0.2006 ms > 2*SE 0.0051 ms (n=7)",
+  "n": 7,
+  "warmup": 2,
+  "order": "interleaved baseline/candidate",
+  "cmds": {
+   "baseline": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/rmsnorm_baseline.py"
+   ],
+   "candidate": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/rmsnorm_agent_candidate.py"
+   ]
+  },
+  "cwd": null,
+  "timestamp": "2026-10-14T19:48:34+0200",
+  "wall_s": 28.3,
+  "contract": {
+   "shape": [
+    4096,
+    8192
+   ],
+   "dtype": "torch.bfloat16",
+   "iters": 50,
+   "seed": 0,
+   "timing": "per-call CUDA events, L2 flushed before each call",
+   "torch": "2.11.0+cu128"
+  },
+  "candidate_extra": {
+   "impl": "agent candidate"
+  },
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "617.42",
+  "power_limit_w": 575,
+  "sm_clock_mhz": 2475,
+  "temperature_c": 51
+ }
+}

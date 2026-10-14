@@ -1,0 +1,28 @@
+name: release
+
+# Publishes hotkernel to PyPI with Trusted Publishing (no API token stored anywhere).
+# Trigger: push a tag like v0.1.0. PyPI side: pending publisher for project "hotkernel",
+# owner xinhuagu, repo hotkernel, workflow release.yml, environment pypi.
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  pypi:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Check the tag matches the package version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          ver=$(grep -m1 '^version' pyproject.toml | sed -E 's/version *= *"([^"]+)"/\1/')
+          test "$tag" = "$ver" || { echo "tag $tag != pyproject version $ver"; exit 1; }
+      - run: uv build
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip-existing: true

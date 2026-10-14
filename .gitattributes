@@ -1,0 +1,18 @@
+# Keep Linux/WSL-run files on LF regardless of Windows autocrlf
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.ps1 text eol=crlf
+*.png binary
+*.gif binary
+*.nsys-rep binary
+*.ncu-rep binary
+*.txt text eol=lf
+*.csv text eol=lf
+uv.lock text eol=lf
+*.jsonl text eol=lf

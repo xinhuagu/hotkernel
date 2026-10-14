@@ -1,0 +1,96 @@
+{
+ "target": "rmsnorm",
+ "note": "hand-written fused one-row Triton rmsnorm (tool bring-up), protocol 3 (repeat 1/3)",
+ "who": "re-measured under protocol 3 by session (claude-fable-5.1); @xinhuagu",
+ "commit": "1a744b0",
+ "recorded_at": "20261014-204018",
+ "verify": {
+  "baseline": {
+   "n": 7,
+   "mean_ms": 0.28834,
+   "std_ms": 0.007,
+   "min_ms": 0.2807,
+   "max_ms": 0.29866,
+   "samples_ms": [
+    0.29332,
+    0.28403,
+    0.2807,
+    0.29866,
+    0.28282,
+    0.28428,
+    0.29454
+   ]
+  },
+  "candidate": {
+   "n": 7,
+   "mean_ms": 0.09201,
+   "std_ms": 0.0045,
+   "min_ms": 0.08856,
+   "max_ms": 0.10029,
+   "samples_ms": [
+    0.08879,
+    0.10029,
+    0.09388,
+    0.08889,
+    0.09481,
+    0.08856,
+    0.08888
+   ]
+  },
+  "baseline_all_ok": true,
+  "candidate_all_ok": true,
+  "contract_mismatch": [],
+  "speedup": 3.1338,
+  "delta_ms": 0.19633,
+  "threshold_ms": 0.00629,
+  "significant": true,
+  "verdict": "faster",
+  "reason": "candidate mean 0.0920 ms vs baseline 0.2883 ms; |delta| 0.1963 ms > 2*SE 0.0063 ms (n=7)",
+  "n": 7,
+  "warmup": 2,
+  "order": "interleaved baseline/candidate",
+  "cmds": {
+   "baseline": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/rmsnorm_baseline.py"
+   ],
+   "candidate": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/rmsnorm_candidate.py"
+   ]
+  },
+  "cwd": "/home/ubuntu/hotkernel",
+  "timestamp": "2026-10-14T20:40:18+0200",
+  "wall_s": 30.6,
+  "contract": {
+   "shape": [
+    4096,
+    8192
+   ],
+   "dtype": "torch.bfloat16",
+   "iters": 50,
+   "seed": 0,
+   "protocol": 3,
+   "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+   "rotation_k": 2,
+   "rotation_bytes": 268435456,
+   "l2_bytes": 100663296,
+   "torch": "2.11.0+cu128"
+  },
+  "roofline_inputs": {
+   "min_bytes": 134217728,
+   "flops": 134217728
+  },
+  "candidate_extra": {
+   "triton": "3.6.0",
+   "kernel": "rmsnorm_fwd_kernel",
+   "num_warps": 8
+  },
+  "note": "speedup = this call's baseline mean / candidate mean and moves with the baseline's run-to-run noise (a few %); to rank hypotheses against each other compare candidate mean_ms, which is what record() uses for keep",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "617.42",
+  "power_limit_w": 575.0,
+  "sm_clock_mhz": 2445.0,
+  "temperature_c": 38.0
+ }
+}

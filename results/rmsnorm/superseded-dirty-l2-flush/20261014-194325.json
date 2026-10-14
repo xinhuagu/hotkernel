@@ -1,0 +1,85 @@
+{
+ "target": "rmsnorm",
+ "note": "H0 control: candidate identical to baseline (eager bf16, 3 kernels, 5+ memory passes)",
+ "who": "agent:claude-fable-5-1, autonomous loop",
+ "commit": "7a101b7",
+ "recorded_at": "20261014-194325",
+ "verify": {
+  "baseline": {
+   "n": 7,
+   "mean_ms": 0.3155,
+   "std_ms": 0.00204,
+   "min_ms": 0.3118,
+   "max_ms": 0.3184,
+   "samples_ms": [
+    0.31435,
+    0.31538,
+    0.3118,
+    0.3184,
+    0.31627,
+    0.31593,
+    0.31634
+   ]
+  },
+  "candidate": {
+   "n": 7,
+   "mean_ms": 0.31608,
+   "std_ms": 0.00812,
+   "min_ms": 0.30734,
+   "max_ms": 0.33185,
+   "samples_ms": [
+    0.31367,
+    0.31904,
+    0.30876,
+    0.33185,
+    0.30734,
+    0.31499,
+    0.31692
+   ]
+  },
+  "baseline_all_ok": true,
+  "candidate_all_ok": true,
+  "contract_mismatch": [],
+  "speedup": 0.9982,
+  "delta_ms": -0.00058,
+  "threshold_ms": 0.00633,
+  "significant": false,
+  "verdict": "inconclusive",
+  "reason": "candidate mean 0.3161 ms vs baseline 0.3155 ms; |delta| 0.0006 ms <= 2*SE 0.0063 ms (n=7)",
+  "n": 7,
+  "warmup": 2,
+  "order": "interleaved baseline/candidate",
+  "cmds": {
+   "baseline": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/rmsnorm_baseline.py"
+   ],
+   "candidate": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/rmsnorm_agent_candidate.py"
+   ]
+  },
+  "cwd": null,
+  "timestamp": "2026-10-14T19:43:11+0200",
+  "wall_s": 27.3,
+  "contract": {
+   "shape": [
+    4096,
+    8192
+   ],
+   "dtype": "torch.bfloat16",
+   "iters": 50,
+   "seed": 0,
+   "timing": "per-call CUDA events, L2 flushed before each call",
+   "torch": "2.11.0+cu128"
+  },
+  "candidate_extra": {
+   "impl": "agent candidate"
+  },
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "617.42",
+  "power_limit_w": 575,
+  "sm_clock_mhz": 2580,
+  "temperature_c": 50
+ }
+}

@@ -1,0 +1,495 @@
+{
+ "repeats": 3,
+ "n": 7,
+ "warmup": 2,
+ "who": "re-measured under protocol 3 by session (claude-fable-5.1); @xinhuagu",
+ "wall_s": 563.0,
+ "rows": [
+  {
+   "rep": 1,
+   "target": "rmsnorm",
+   "candidate": "examples/rmsnorm_candidate.py",
+   "verdict": "faster",
+   "speedup": 3.1338,
+   "baseline_ms": 0.28834,
+   "candidate_ms": 0.09201,
+   "candidate_std": 0.0045,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204018.json"
+  },
+  {
+   "rep": 1,
+   "target": "rmsnorm",
+   "candidate": "results/rmsnorm/agent-run-20261014-194158/candidate_protocol3.py",
+   "verdict": "faster",
+   "speedup": 3.2293,
+   "baseline_ms": 0.28683,
+   "candidate_ms": 0.08882,
+   "candidate_std": 0.00025,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204049.json"
+  },
+  {
+   "rep": 1,
+   "target": "rmsnorm",
+   "candidate": "results/rmsnorm/agent-run-20261014-200017/candidate_protocol3.py",
+   "verdict": "faster",
+   "speedup": 3.1914,
+   "baseline_ms": 0.29233,
+   "candidate_ms": 0.0916,
+   "candidate_std": 0.00466,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204121.json"
+  },
+  {
+   "rep": 1,
+   "target": "rmsnorm",
+   "candidate": "tests/fixtures/rmsnorm_wrong_candidate.py",
+   "verdict": "incorrect",
+   "speedup": null,
+   "baseline_ms": 0.2983,
+   "candidate_ms": 0.49546,
+   "candidate_std": 0.00747,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204149.json"
+  },
+  {
+   "rep": 1,
+   "target": "softmax",
+   "candidate": "results/softmax/agent-run-20261014-200625/candidate_protocol3.py",
+   "verdict": "faster",
+   "speedup": 1.1684,
+   "baseline_ms": 0.10853,
+   "candidate_ms": 0.09289,
+   "candidate_std": 0.00376,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/softmax/20261014-204218.json"
+  },
+  {
+   "rep": 1,
+   "target": "gemv",
+   "candidate": "results/gemv/agent-run-20261014-201507/candidate_protocol3.py",
+   "verdict": "inconclusive",
+   "speedup": 1.0321,
+   "baseline_ms": 0.09111,
+   "candidate_ms": 0.08828,
+   "candidate_std": 0.00568,
+   "contract": {
+    "shape": [
+     8192,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268500992,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/gemv/20261014-204300.json"
+  },
+  {
+   "rep": 2,
+   "target": "rmsnorm",
+   "candidate": "examples/rmsnorm_candidate.py",
+   "verdict": "faster",
+   "speedup": 3.1529,
+   "baseline_ms": 0.28893,
+   "candidate_ms": 0.09164,
+   "candidate_std": 0.00445,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204328.json"
+  },
+  {
+   "rep": 2,
+   "target": "rmsnorm",
+   "candidate": "results/rmsnorm/agent-run-20261014-194158/candidate_protocol3.py",
+   "verdict": "faster",
+   "speedup": 3.1691,
+   "baseline_ms": 0.29961,
+   "candidate_ms": 0.09454,
+   "candidate_std": 0.00331,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204359.json"
+  },
+  {
+   "rep": 2,
+   "target": "rmsnorm",
+   "candidate": "results/rmsnorm/agent-run-20261014-200017/candidate_protocol3.py",
+   "verdict": "faster",
+   "speedup": 3.2494,
+   "baseline_ms": 0.29885,
+   "candidate_ms": 0.09197,
+   "candidate_std": 0.00537,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204430.json"
+  },
+  {
+   "rep": 2,
+   "target": "rmsnorm",
+   "candidate": "tests/fixtures/rmsnorm_wrong_candidate.py",
+   "verdict": "incorrect",
+   "speedup": null,
+   "baseline_ms": 0.29852,
+   "candidate_ms": 0.46631,
+   "candidate_std": 0.00052,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204458.json"
+  },
+  {
+   "rep": 2,
+   "target": "softmax",
+   "candidate": "results/softmax/agent-run-20261014-200625/candidate_protocol3.py",
+   "verdict": "faster",
+   "speedup": 1.2121,
+   "baseline_ms": 0.11143,
+   "candidate_ms": 0.09193,
+   "candidate_std": 0.00582,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/softmax/20261014-204527.json"
+  },
+  {
+   "rep": 2,
+   "target": "gemv",
+   "candidate": "results/gemv/agent-run-20261014-201507/candidate_protocol3.py",
+   "verdict": "faster",
+   "speedup": 1.0348,
+   "baseline_ms": 0.08837,
+   "candidate_ms": 0.0854,
+   "candidate_std": 0.00019,
+   "contract": {
+    "shape": [
+     8192,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268500992,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/gemv/20261014-204606.json"
+  },
+  {
+   "rep": 3,
+   "target": "rmsnorm",
+   "candidate": "examples/rmsnorm_candidate.py",
+   "verdict": "faster",
+   "speedup": 3.1057,
+   "baseline_ms": 0.29079,
+   "candidate_ms": 0.09363,
+   "candidate_std": 0.00471,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204634.json"
+  },
+  {
+   "rep": 3,
+   "target": "rmsnorm",
+   "candidate": "results/rmsnorm/agent-run-20261014-194158/candidate_protocol3.py",
+   "verdict": "faster",
+   "speedup": 3.3222,
+   "baseline_ms": 0.29415,
+   "candidate_ms": 0.08854,
+   "candidate_std": 0.00041,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204703.json"
+  },
+  {
+   "rep": 3,
+   "target": "rmsnorm",
+   "candidate": "results/rmsnorm/agent-run-20261014-200017/candidate_protocol3.py",
+   "verdict": "faster",
+   "speedup": 3.2394,
+   "baseline_ms": 0.28627,
+   "candidate_ms": 0.08837,
+   "candidate_std": 0.00029,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204733.json"
+  },
+  {
+   "rep": 3,
+   "target": "rmsnorm",
+   "candidate": "tests/fixtures/rmsnorm_wrong_candidate.py",
+   "verdict": "incorrect",
+   "speedup": null,
+   "baseline_ms": 0.29175,
+   "candidate_ms": 0.48316,
+   "candidate_std": 0.01783,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204800.json"
+  },
+  {
+   "rep": 3,
+   "target": "softmax",
+   "candidate": "results/softmax/agent-run-20261014-200625/candidate_protocol3.py",
+   "verdict": "faster",
+   "speedup": 1.1831,
+   "baseline_ms": 0.1068,
+   "candidate_ms": 0.09027,
+   "candidate_std": 0.0033,
+   "contract": {
+    "shape": [
+     4096,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268435456,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/softmax/20261014-204828.json"
+  },
+  {
+   "rep": 3,
+   "target": "gemv",
+   "candidate": "results/gemv/agent-run-20261014-201507/candidate_protocol3.py",
+   "verdict": "faster",
+   "speedup": 1.0518,
+   "baseline_ms": 0.09118,
+   "candidate_ms": 0.08669,
+   "candidate_std": 0.00188,
+   "contract": {
+    "shape": [
+     8192,
+     8192
+    ],
+    "dtype": "torch.bfloat16",
+    "iters": 50,
+    "seed": 0,
+    "protocol": 3,
+    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+    "rotation_k": 2,
+    "rotation_bytes": 268500992,
+    "l2_bytes": 100663296,
+    "torch": "2.11.0+cu128"
+   },
+   "mismatch": [],
+   "log": "/home/ubuntu/hotkernel/results/gemv/20261014-204908.json"
+  }
+ ]
+}

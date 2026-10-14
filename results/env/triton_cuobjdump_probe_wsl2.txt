@@ -1,0 +1,35 @@
+cache dir: /home/ubuntu/.triton/cache
+files: ['hk_probe_add.source', 'hk_probe_add.ttir', 'hk_probe_add.ttgir', 'hk_probe_add.llir', 'hk_probe_add.ptx', 'hk_probe_add.cubin', 'hk_probe_add.json']
+ptx target line: ['.target sm_120a']
+--- cuobjdump -sass: rc=0 lines=121 wall=0.23s stderr=''
+
+	code for sm_120a
+	.target	sm_120a
+
+		Function : hk_probe_add
+	.headerflags	@"EF_CUDA_SM120 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM120)"
+        /*0000*/                   LDC R1, c[0x0][0x37c]                      &wr=0x0          ?trans1;          /* 0x0000df00ff017b82 */
+                                                                                                                 /* 0x000e220000000800 */
+        /*0010*/                   S2R R0, SR_TID.X                           &wr=0x1          ?trans1;          /* 0x0000000000007919 */
+                                                                                                                 /* 0x000e620000002100 */
+        /*0020*/                   LDCU UR6, c[0x0][0x398]                    &wr=0x2          ?trans6;          /* 0x00007300ff0677ac */
+                                                                                                                 /* 0x000eac0008000800 */
+        /*0030*/                   LDC.64 R20, c[0x0][0x380]                  &wr=0x3          ?trans1;          /* 0x0000e000ff147b82 */
+                                                                                                                 /* 0x000ee20000000a00 */
+--- nvdisasm -c: rc=0 lines=78 wall=0.21s stderr=''
+	.target	sm_120a
+
+	.elftype	@"ET_EXEC"
+
+
+//--------------------- .text.hk_probe_add        --------------------------
+	.section	.text.hk_probe_add,"ax",@progbits
+	.align	128
+        .global         hk_probe_add
+        .type           hk_probe_add,@function
+        .size           hk_probe_add,(.L_x_1 - hk_probe_add)
+        .other          hk_probe_add,@"STO_CUDA_ENTRY STV_DEFAULT"
+hk_probe_add:
+.text.hk_probe_add:
+--- cuobjdump -lelf: rc=0 lines=1 wall=0.00s stderr=''
+ELF file    1: hk_probe_add.sm_120a.cubin

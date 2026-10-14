@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.venv/
+venvs/
+dist/
+build/
+*.egg-info/
+.ruff_cache/
+.pytest_cache/
+results/profiles/*.nsys-rep
+results/profiles/*.ncu-rep
+results/profiles/*.sqlite
+*.cubin
+*.gif.tmp
+.DS_Store
+Thumbs.db
+docs/plan-*.md

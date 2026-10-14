@@ -1,0 +1,19 @@
+[1] rmsnorm  rmsnorm_candidate.py         faster       3.1338   b=0.2883 c=0.0920
+[1] rmsnorm  candidate_protocol3.py       faster       3.2293   b=0.2868 c=0.0888
+[1] rmsnorm  candidate_protocol3.py       faster       3.1914   b=0.2923 c=0.0916
+[1] rmsnorm  rmsnorm_wrong_candidate.py   incorrect    None     b=0.2983 c=0.4955
+[1] softmax  candidate_protocol3.py       faster       1.1684   b=0.1085 c=0.0929
+[1] gemv     candidate_protocol3.py       inconclusive 1.0321   b=0.0911 c=0.0883
+[2] rmsnorm  rmsnorm_candidate.py         faster       3.1529   b=0.2889 c=0.0916
+[2] rmsnorm  candidate_protocol3.py       faster       3.1691   b=0.2996 c=0.0945
+[2] rmsnorm  candidate_protocol3.py       faster       3.2494   b=0.2989 c=0.0920
+[2] rmsnorm  rmsnorm_wrong_candidate.py   incorrect    None     b=0.2985 c=0.4663
+[2] softmax  candidate_protocol3.py       faster       1.2121   b=0.1114 c=0.0919
+[2] gemv     candidate_protocol3.py       faster       1.0348   b=0.0884 c=0.0854
+[3] rmsnorm  rmsnorm_candidate.py         faster       3.1057   b=0.2908 c=0.0936
+[3] rmsnorm  candidate_protocol3.py       faster       3.3222   b=0.2942 c=0.0885
+[3] rmsnorm  candidate_protocol3.py       faster       3.2394   b=0.2863 c=0.0884
+[3] rmsnorm  rmsnorm_wrong_candidate.py   incorrect    None     b=0.2918 c=0.4832
+[3] softmax  candidate_protocol3.py       faster       1.1831   b=0.1068 c=0.0903
+[3] gemv     candidate_protocol3.py       faster       1.0518   b=0.0912 c=0.0867
+summary: /home/ubuntu/hotkernel/results/env/remeasure_protocol3_20261014-204908.json

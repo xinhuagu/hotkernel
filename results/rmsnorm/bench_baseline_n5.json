@@ -1,0 +1,129 @@
+{
+  "cmd": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/rmsnorm_baseline.py"
+  ],
+  "n": 5,
+  "warmup": 1,
+  "mean_ms": 0.3013,
+  "std_ms": 0.0028,
+  "min_ms": 0.2969,
+  "max_ms": 0.3049,
+  "all_ok": true,
+  "samples": [
+    {
+      "ms": 0.29943,
+      "ok": true,
+      "shape": [
+        4096,
+        8192
+      ],
+      "dtype": "torch.bfloat16",
+      "iters": 50,
+      "seed": 0,
+      "protocol": 3,
+      "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+      "rotation_k": 2,
+      "rotation_bytes": 268435456,
+      "l2_bytes": 100663296,
+      "min_bytes": 134217728,
+      "flops": 134217728,
+      "achieved_gbs_lower_bound": 448.2,
+      "gpu": "NVIDIA GeForce RTX 5090",
+      "torch": "2.11.0+cu128",
+      "impl": "eager bf16: pow, mean, rsqrt, mul, mul"
+    },
+    {
+      "ms": 0.30241,
+      "ok": true,
+      "shape": [
+        4096,
+        8192
+      ],
+      "dtype": "torch.bfloat16",
+      "iters": 50,
+      "seed": 0,
+      "protocol": 3,
+      "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+      "rotation_k": 2,
+      "rotation_bytes": 268435456,
+      "l2_bytes": 100663296,
+      "min_bytes": 134217728,
+      "flops": 134217728,
+      "achieved_gbs_lower_bound": 443.8,
+      "gpu": "NVIDIA GeForce RTX 5090",
+      "torch": "2.11.0+cu128",
+      "impl": "eager bf16: pow, mean, rsqrt, mul, mul"
+    },
+    {
+      "ms": 0.29694,
+      "ok": true,
+      "shape": [
+        4096,
+        8192
+      ],
+      "dtype": "torch.bfloat16",
+      "iters": 50,
+      "seed": 0,
+      "protocol": 3,
+      "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+      "rotation_k": 2,
+      "rotation_bytes": 268435456,
+      "l2_bytes": 100663296,
+      "min_bytes": 134217728,
+      "flops": 134217728,
+      "achieved_gbs_lower_bound": 452.0,
+      "gpu": "NVIDIA GeForce RTX 5090",
+      "torch": "2.11.0+cu128",
+      "impl": "eager bf16: pow, mean, rsqrt, mul, mul"
+    },
+    {
+      "ms": 0.30307,
+      "ok": true,
+      "shape": [
+        4096,
+        8192
+      ],
+      "dtype": "torch.bfloat16",
+      "iters": 50,
+      "seed": 0,
+      "protocol": 3,
+      "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+      "rotation_k": 2,
+      "rotation_bytes": 268435456,
+      "l2_bytes": 100663296,
+      "min_bytes": 134217728,
+      "flops": 134217728,
+      "achieved_gbs_lower_bound": 442.9,
+      "gpu": "NVIDIA GeForce RTX 5090",
+      "torch": "2.11.0+cu128",
+      "impl": "eager bf16: pow, mean, rsqrt, mul, mul"
+    },
+    {
+      "ms": 0.30487,
+      "ok": true,
+      "shape": [
+        4096,
+        8192
+      ],
+      "dtype": "torch.bfloat16",
+      "iters": 50,
+      "seed": 0,
+      "protocol": 3,
+      "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+      "rotation_k": 2,
+      "rotation_bytes": 268435456,
+      "l2_bytes": 100663296,
+      "min_bytes": 134217728,
+      "flops": 134217728,
+      "achieved_gbs_lower_bound": 440.2,
+      "gpu": "NVIDIA GeForce RTX 5090",
+      "torch": "2.11.0+cu128",
+      "impl": "eager bf16: pow, mean, rsqrt, mul, mul"
+    }
+  ],
+  "roofline_inputs": {
+    "min_bytes": 134217728,
+    "flops": 134217728
+  }
+}

@@ -1,0 +1,45 @@
+﻿**gpu_info**
+```json
+{
+  "gpus": [
+    {
+      "name": "NVIDIA GeForce RTX 5090",
+      "driver": "617.42",
+      "memory_mib": 32607.0,
+      "power_limit_w": 575.0,
+      "compute_cap": "12.0",
+      "max_sm_clock_mhz": 3090.0,
+      "roofline_entry": {
+        "name": "NVIDIA GeForce RTX 5090",
+        "arch": "Blackwell (GB202)",
+        "sm": "sm_120",
+        "bf16_tflops": 209.5,
+        "fp8_tflops": 419.0,
+        "fp32_tflops": 104.8,
+        "mem_gbs": 1792.0,
+        "mem_gb": 32.0,
+        "smem_kb_block": 99,
+        "tdp_w": 575,
+        "source": "https://images.nvidia.com/aem-dam/Solutions/geforce/blackwell/nvidia-rtx-blackwell-gpu-architecture.pdf"
+      }
+    }
+  ],
+  "platform": "linux",
+  "wsl": true
+}
+```
+
+**roofline**
+```json
+{
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "dtype": "bf16",
+  "peak_tflops": 209.5,
+  "mem_gbs": 1792.0,
+  "ridge_arithmetic_intensity_flop_per_byte": 116.91,
+  "source": "https://images.nvidia.com/aem-dam/Solutions/geforce/blackwell/nvidia-rtx-blackwell-gpu-architecture.pdf",
+  "kernel_arithmetic_intensity": 0.75,
+  "bound": "memory",
+  "attainable_tflops": 1.34
+}
+```

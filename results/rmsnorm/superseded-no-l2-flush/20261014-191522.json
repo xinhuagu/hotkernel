@@ -1,0 +1,81 @@
+{
+ "target": "rmsnorm",
+ "note": "deliberately wrong candidate (weight never applied) to prove the incorrect path",
+ "who": "agent:claude-fable-5.1 + @xinhuagu",
+ "commit": "c3dd790",
+ "recorded_at": "20261014-191522",
+ "verify": {
+  "baseline": {
+   "n": 7,
+   "mean_ms": 0.29701,
+   "std_ms": 0.00398,
+   "min_ms": 0.29408,
+   "max_ms": 0.30567,
+   "samples_ms": [
+    0.29576,
+    0.30567,
+    0.29772,
+    0.29408,
+    0.29477,
+    0.29551,
+    0.29554
+   ]
+  },
+  "candidate": {
+   "n": 7,
+   "mean_ms": 0.49131,
+   "std_ms": 0.01269,
+   "min_ms": 0.48154,
+   "max_ms": 0.5149,
+   "samples_ms": [
+    0.48524,
+    0.48778,
+    0.48314,
+    0.5149,
+    0.48154,
+    0.50305,
+    0.48353
+   ]
+  },
+  "baseline_all_ok": true,
+  "candidate_all_ok": false,
+  "contract_mismatch": [],
+  "verdict": "incorrect",
+  "speedup": null,
+  "reason": "candidate printed ok=false in 7 of 7 runs; no speedup is reported for incorrect output",
+  "n": 7,
+  "warmup": 2,
+  "order": "interleaved baseline/candidate",
+  "cmds": {
+   "baseline": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/rmsnorm_baseline.py"
+   ],
+   "candidate": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "tests/fixtures/rmsnorm_wrong_candidate.py"
+   ]
+  },
+  "cwd": "/home/ubuntu/hotkernel",
+  "timestamp": "2026-10-14T19:15:22+0200",
+  "wall_s": 28.9,
+  "contract": {
+   "shape": [
+    4096,
+    8192
+   ],
+   "dtype": "torch.bfloat16",
+   "iters": 50,
+   "seed": 0,
+   "torch": "2.11.0+cu128"
+  },
+  "candidate_extra": {
+   "impl": "deliberately wrong (no weight)"
+  },
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "617.42",
+  "power_limit_w": 575.0,
+  "sm_clock_mhz": 2557.0,
+  "temperature_c": 44.0
+ }
+}

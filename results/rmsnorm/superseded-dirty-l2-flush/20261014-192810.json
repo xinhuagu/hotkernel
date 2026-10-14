@@ -1,0 +1,89 @@
+{
+ "target": "rmsnorm",
+ "note": "fused single-pass Triton kernel: one program per row, bf16->fp32 in registers, one read + one write instead of five eager kernels; L2 flushed per iteration",
+ "who": "hand-written by session (claude-fable-5.1) during tool bring-up; @xinhuagu",
+ "commit": "1968f3e",
+ "recorded_at": "20261014-192810",
+ "verify": {
+  "baseline": {
+   "n": 7,
+   "mean_ms": 0.31312,
+   "std_ms": 0.00806,
+   "min_ms": 0.29988,
+   "max_ms": 0.32034,
+   "samples_ms": [
+    0.31938,
+    0.31959,
+    0.32034,
+    0.29988,
+    0.30872,
+    0.30652,
+    0.31741
+   ]
+  },
+  "candidate": {
+   "n": 7,
+   "mean_ms": 0.09584,
+   "std_ms": 0.00205,
+   "min_ms": 0.0913,
+   "max_ms": 0.09711,
+   "samples_ms": [
+    0.09617,
+    0.09678,
+    0.09587,
+    0.0913,
+    0.09675,
+    0.09691,
+    0.09711
+   ]
+  },
+  "baseline_all_ok": true,
+  "candidate_all_ok": true,
+  "contract_mismatch": [],
+  "speedup": 3.2671,
+  "delta_ms": 0.21728,
+  "threshold_ms": 0.00629,
+  "significant": true,
+  "verdict": "faster",
+  "reason": "candidate mean 0.0958 ms vs baseline 0.3131 ms; |delta| 0.2173 ms > 2*SE 0.0063 ms (n=7)",
+  "n": 7,
+  "warmup": 2,
+  "order": "interleaved baseline/candidate",
+  "cmds": {
+   "baseline": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/rmsnorm_baseline.py"
+   ],
+   "candidate": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/rmsnorm_candidate.py"
+   ]
+  },
+  "cwd": "/home/ubuntu/hotkernel",
+  "timestamp": "2026-10-14T19:28:10+0200",
+  "wall_s": 29.2,
+  "contract": {
+   "shape": [
+    4096,
+    8192
+   ],
+   "dtype": "torch.bfloat16",
+   "iters": 50,
+   "seed": 0,
+   "timing": "per-call CUDA events, L2 flushed before each call",
+   "torch": "2.11.0+cu128"
+  },
+  "candidate_extra": {
+   "impl": "triton",
+   "triton": "3.6.0",
+   "kernel": "rmsnorm_fwd_kernel",
+   "block": 8192,
+   "num_warps": 8
+  },
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "617.42",
+  "power_limit_w": 575.0,
+  "sm_clock_mhz": 2520.0,
+  "temperature_c": 50.0
+ }
+}

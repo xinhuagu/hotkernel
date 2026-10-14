@@ -1,0 +1,97 @@
+{
+ "target": "gemv",
+ "note": "kernel found by autonomous loop (agent-run-20261014-201507, claude-opus-5-5) under protocol 2, re-measured under protocol 3: autotuned Triton row-block GEMV (repeat 3/3)",
+ "who": "re-measured under protocol 3 by session (claude-fable-5.1); @xinhuagu",
+ "commit": "fa26458",
+ "recorded_at": "20261014-204908",
+ "verify": {
+  "baseline": {
+   "n": 7,
+   "mean_ms": 0.09118,
+   "std_ms": 0.00453,
+   "min_ms": 0.08802,
+   "max_ms": 0.09891,
+   "samples_ms": [
+    0.0894,
+    0.09891,
+    0.08896,
+    0.08828,
+    0.09648,
+    0.0882,
+    0.08802
+   ]
+  },
+  "candidate": {
+   "n": 7,
+   "mean_ms": 0.08669,
+   "std_ms": 0.00188,
+   "min_ms": 0.08496,
+   "max_ms": 0.08993,
+   "samples_ms": [
+    0.08676,
+    0.08496,
+    0.08511,
+    0.08582,
+    0.08993,
+    0.08568,
+    0.08856
+   ]
+  },
+  "baseline_all_ok": true,
+  "candidate_all_ok": true,
+  "contract_mismatch": [],
+  "speedup": 1.0518,
+  "delta_ms": 0.00449,
+  "threshold_ms": 0.00371,
+  "significant": true,
+  "verdict": "faster",
+  "reason": "candidate mean 0.0867 ms vs baseline 0.0912 ms; |delta| 0.0045 ms > 2*SE 0.0037 ms (n=7)",
+  "n": 7,
+  "warmup": 2,
+  "order": "interleaved baseline/candidate",
+  "cmds": {
+   "baseline": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/gemv_baseline.py"
+   ],
+   "candidate": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "results/gemv/agent-run-20261014-201507/candidate_protocol3.py"
+   ]
+  },
+  "cwd": "/home/ubuntu/hotkernel",
+  "timestamp": "2026-10-14T20:49:08+0200",
+  "wall_s": 38.5,
+  "contract": {
+   "shape": [
+    8192,
+    8192
+   ],
+   "dtype": "torch.bfloat16",
+   "iters": 50,
+   "seed": 0,
+   "protocol": 3,
+   "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+   "rotation_k": 2,
+   "rotation_bytes": 268500992,
+   "l2_bytes": 100663296,
+   "torch": "2.11.0+cu128"
+  },
+  "roofline_inputs": {
+   "min_bytes": 134250496,
+   "flops": 134217728
+  },
+  "candidate_extra": {
+   "triton": "3.6.0",
+   "kernel": "_gemv_kernel (autotuned)",
+   "config": "BLOCK_M: 16, BLOCK_N: 256, num_warps: 4, num_ctas: 1, num_stages: 3, maxnreg: None",
+   "origin_run": "agent-run-20261014-201507"
+  },
+  "note": "speedup = this call's baseline mean / candidate mean and moves with the baseline's run-to-run noise (a few %); to rank hypotheses against each other compare candidate mean_ms, which is what record() uses for keep",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "617.42",
+  "power_limit_w": 575.0,
+  "sm_clock_mhz": 2910.0,
+  "temperature_c": 43.0
+ }
+}

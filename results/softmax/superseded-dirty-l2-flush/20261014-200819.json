@@ -1,0 +1,84 @@
+{
+ "target": "softmax",
+ "note": "Triton one-program-per-row softmax, whole 8192-col row in registers (single read+write), num_warps=16",
+ "who": "agent:claude-opus-5-5, autonomous loop, results/softmax/agent-run-20261014-200625",
+ "commit": "9935138",
+ "recorded_at": "20261014-200819",
+ "verify": {
+  "baseline": {
+   "n": 7,
+   "mean_ms": 0.10939,
+   "std_ms": 0.00027,
+   "min_ms": 0.10895,
+   "max_ms": 0.10973,
+   "samples_ms": [
+    0.10962,
+    0.10925,
+    0.10921,
+    0.10973,
+    0.10943,
+    0.10895,
+    0.10954
+   ]
+  },
+  "candidate": {
+   "n": 7,
+   "mean_ms": 0.09103,
+   "std_ms": 0.00026,
+   "min_ms": 0.0907,
+   "max_ms": 0.09138,
+   "samples_ms": [
+    0.09091,
+    0.09077,
+    0.09138,
+    0.09095,
+    0.09131,
+    0.09118,
+    0.0907
+   ]
+  },
+  "baseline_all_ok": true,
+  "candidate_all_ok": true,
+  "contract_mismatch": [],
+  "speedup": 1.2017,
+  "delta_ms": 0.01836,
+  "threshold_ms": 0.00028,
+  "significant": true,
+  "verdict": "faster",
+  "reason": "candidate mean 0.0910 ms vs baseline 0.1094 ms; |delta| 0.0184 ms > 2*SE 0.0003 ms (n=7)",
+  "n": 7,
+  "warmup": 2,
+  "order": "interleaved baseline/candidate",
+  "cmds": {
+   "baseline": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/softmax_baseline.py"
+   ],
+   "candidate": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/softmax_agent_candidate.py"
+   ]
+  },
+  "cwd": null,
+  "timestamp": "2026-10-14T20:08:11+0200",
+  "wall_s": 26.4,
+  "contract": {
+   "shape": [
+    4096,
+    8192
+   ],
+   "dtype": "torch.bfloat16",
+   "iters": 50,
+   "seed": 0,
+   "timing": "per-call CUDA events, L2 flushed before each call",
+   "torch": "2.11.0+cu128"
+  },
+  "candidate_extra": {},
+  "note": "speedup = this call's baseline mean / candidate mean and moves with the baseline's run-to-run noise (a few %); to rank hypotheses against each other compare candidate mean_ms, which is what record() uses for keep",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "617.42",
+  "power_limit_w": 575,
+  "sm_clock_mhz": 2490,
+  "temperature_c": 46
+ }
+}

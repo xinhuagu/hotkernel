@@ -1,0 +1,1 @@
+{"ms": 0.3186, "ok": true, "shape": [4096, 8192], "dtype": "torch.bfloat16", "iters": 50, "seed": 0, "timing": "per-call CUDA events, L2 flushed before each call", "min_bytes": 134217728, "achieved_gbs_lower_bound": 421.3, "gpu": "NVIDIA GeForce RTX 5090", "torch": "2.11.0+cu128"}

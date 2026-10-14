@@ -1,0 +1,2 @@
+﻿started 2026-10-14T20:06:25.5017731+02:00 target=softmax time_limit_s=1800 verify_limit=20 max_turns=200 from_blank=True model=default commit=9935138
+exited code  at 2026-10-14T20:12:38.7127414+02:00

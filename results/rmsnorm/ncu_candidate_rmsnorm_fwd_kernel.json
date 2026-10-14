@@ -1,0 +1,102 @@
+{
+ "tool": "ncu",
+ "report": "/home/ubuntu/hotkernel/results/profiles/ncu-20261014-190728.ncu-rep",
+ "details_csv": "/home/ubuntu/hotkernel/results/profiles/ncu-20261014-190728.details.csv",
+ "top": [
+  {
+   "id": "0",
+   "name": "rmsnorm_fwd_kernel",
+   "short_name": "rmsnorm_fwd_kernel",
+   "block_size": "(256, 1, 1)",
+   "grid_size": "(4096, 1, 1)",
+   "device": "0",
+   "cc": "12.0",
+   "metrics": {
+    "dram_frequency": 13.78,
+    "dram_frequency_unit": "Ghz",
+    "sm_frequency": 2.35,
+    "sm_frequency_unit": "Ghz",
+    "elapsed_cycles": 119287.0,
+    "elapsed_cycles_unit": "cycle",
+    "memory_throughput_pct": 82.24,
+    "dram_throughput_pct": 82.24,
+    "l1_throughput_pct": 23.76,
+    "l2_throughput_pct": 47.29,
+    "sm_throughput_pct": 12.99,
+    "registers_per_thread": 60.0,
+    "registers_per_thread_unit": "register/thread",
+    "dynamic_smem_per_block": 32.0,
+    "dynamic_smem_per_block_unit": "byte/block",
+    "static_smem_per_block": 0.0,
+    "static_smem_per_block_unit": "byte/block",
+    "waves_per_sm": 6.02,
+    "theoretical_occupancy_pct": 66.67,
+    "achieved_occupancy_pct": 60.03
+   },
+   "duration_us": 50.4,
+   "hints": [
+    {
+     "rule": "SOLBottleneck",
+     "type": "INF",
+     "estimated_speedup_pct": null,
+     "text": "This workload is utilizing greater than 80.0% of the available compute or memory performance of this device. To further improve performance, work will likely need to be shifted from the most utilized to another unit. Start by analyzing DRAM in the Memory Workload Analysis section."
+    },
+    {
+     "rule": "TheoreticalOccupancy",
+     "type": "OPT",
+     "estimated_speedup_pct": 33.33,
+     "text": "The 8.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the hardware maximum of 12. This kernel's theoretical occupancy (66.7%) is limited by the number of required registers."
+    }
+   ],
+   "bound_hint": "memory"
+  },
+  {
+   "id": "1",
+   "name": "rmsnorm_fwd_kernel",
+   "short_name": "rmsnorm_fwd_kernel",
+   "block_size": "(256, 1, 1)",
+   "grid_size": "(4096, 1, 1)",
+   "device": "0",
+   "cc": "12.0",
+   "metrics": {
+    "dram_frequency": 13.78,
+    "dram_frequency_unit": "Ghz",
+    "sm_frequency": 2.38,
+    "sm_frequency_unit": "Ghz",
+    "elapsed_cycles": 119388.0,
+    "elapsed_cycles_unit": "cycle",
+    "memory_throughput_pct": 82.92,
+    "dram_throughput_pct": 82.92,
+    "l1_throughput_pct": 23.67,
+    "l2_throughput_pct": 47.93,
+    "sm_throughput_pct": 12.95,
+    "registers_per_thread": 60.0,
+    "registers_per_thread_unit": "register/thread",
+    "dynamic_smem_per_block": 32.0,
+    "dynamic_smem_per_block_unit": "byte/block",
+    "static_smem_per_block": 0.0,
+    "static_smem_per_block_unit": "byte/block",
+    "waves_per_sm": 6.02,
+    "theoretical_occupancy_pct": 66.67,
+    "achieved_occupancy_pct": 58.95
+   },
+   "duration_us": 50.05,
+   "hints": [
+    {
+     "rule": "SOLBottleneck",
+     "type": "INF",
+     "estimated_speedup_pct": null,
+     "text": "This workload is utilizing greater than 80.0% of the available compute or memory performance of this device. To further improve performance, work will likely need to be shifted from the most utilized to another unit. Start by analyzing DRAM in the Memory Workload Analysis section."
+    },
+    {
+     "rule": "TheoreticalOccupancy",
+     "type": "OPT",
+     "estimated_speedup_pct": 33.33,
+     "text": "The 8.00 theoretical warps per scheduler this kernel can issue according to its occupancy are below the hardware maximum of 12. This kernel's theoretical occupancy (66.7%) is limited by the number of required registers."
+    }
+   ],
+   "bound_hint": "memory"
+  }
+ ],
+ "parse_error": null
+}

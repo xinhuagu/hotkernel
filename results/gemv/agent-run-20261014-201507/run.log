@@ -1,0 +1,2 @@
+﻿started 2026-10-14T20:15:07.2335081+02:00 target=gemv time_limit_s=1800 verify_limit=20 max_turns=200 from_blank=True model=default commit=b2405bd
+exited code  at 2026-10-14T20:22:20.1601935+02:00

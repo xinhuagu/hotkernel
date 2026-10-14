@@ -1,0 +1,56 @@
+{
+ "kernels": [
+  {
+   "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1})",
+   "device_time_us": 11045.3,
+   "calls": 112,
+   "avg_us": 98.62,
+   "pct": 58.16
+  },
+  {
+   "name": "void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::pow_tensor_scalar_kernel_impl<c10::BFloat16, c10::BFloat16>(at::TensorIteratorBase&, c10::BFloat16)::{lambda(c10::BFloat16)#1}, std::array<char*, 2ul> >(int, at::native::(anonymous namespace)::pow_tensor_scalar_kernel_impl<c10::BFloat16, c10::BFloat16>(at::TensorIteratorBase&, c10::BFloat16)::{lambda(c10::BFloat16)#1}, std::array<char*, 2ul>)",
+   "device_time_us": 3928.0,
+   "calls": 56,
+   "avg_us": 70.14,
+   "pct": 20.68
+  },
+  {
+   "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<c10::BFloat16, at::native::MeanOps<c10::BFloat16, float, float, c10::BFloat16>, unsigned int, c10::BFloat16, 4, 8> >(at::native::ReduceOp<c10::BFloat16, at::native::MeanOps<c10::BFloat16, float, float, c10::BFloat16>, unsigned int, c10::BFloat16, 4, 8>)",
+   "device_time_us": 902.2,
+   "calls": 56,
+   "avg_us": 16.11,
+   "pct": 4.75
+  }
+ ],
+ "total_kernel_time_us": 18990.1,
+ "n_kernels": 25,
+ "ops": [
+  {
+   "name": "aten::mul",
+   "device_time_us": 12100.1,
+   "calls": 116,
+   "avg_us": 104.31
+  },
+  {
+   "name": "aten::allclose",
+   "device_time_us": 4313.2,
+   "calls": 1,
+   "avg_us": 4313.23
+  },
+  {
+   "name": "aten::pow",
+   "device_time_us": 4308.3,
+   "calls": 57,
+   "avg_us": 75.58
+  }
+ ],
+ "ops_note": "inclusive GPU time per aten op (nested ops overlap; use kernels for shares)",
+ "script_exit_code": 0,
+ "torch": "2.11.0+cu128",
+ "cmd": [
+  "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+  "/tmp/tmpw09ykrza_hotkernel_torchprof.py",
+  "examples/rmsnorm_baseline.py",
+  "3"
+ ]
+}

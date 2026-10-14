@@ -1,0 +1,84 @@
+{
+ "target": "gemv",
+ "note": "Triton row-block GEMV, autotuned over 8 (BLOCK_M, BLOCK_N, warps) configs, fp32 acc, evict_first loads",
+ "who": "agent:claude-opus-5-5, autonomous loop, results/gemv/agent-run-20261014-201507",
+ "commit": "2d8fb61",
+ "recorded_at": "20261014-201745",
+ "verify": {
+  "baseline": {
+   "n": 7,
+   "mean_ms": 0.10005,
+   "std_ms": 0.00243,
+   "min_ms": 0.09803,
+   "max_ms": 0.10506,
+   "samples_ms": [
+    0.10114,
+    0.10506,
+    0.09803,
+    0.09966,
+    0.09872,
+    0.09845,
+    0.09932
+   ]
+  },
+  "candidate": {
+   "n": 7,
+   "mean_ms": 0.08992,
+   "std_ms": 0.0001,
+   "min_ms": 0.08981,
+   "max_ms": 0.0901,
+   "samples_ms": [
+    0.0901,
+    0.08988,
+    0.08985,
+    0.08988,
+    0.08993,
+    0.09,
+    0.08981
+   ]
+  },
+  "baseline_all_ok": true,
+  "candidate_all_ok": true,
+  "contract_mismatch": [],
+  "speedup": 1.1127,
+  "delta_ms": 0.01013,
+  "threshold_ms": 0.00184,
+  "significant": true,
+  "verdict": "faster",
+  "reason": "candidate mean 0.0899 ms vs baseline 0.1001 ms; |delta| 0.0101 ms > 2*SE 0.0018 ms (n=7)",
+  "n": 7,
+  "warmup": 2,
+  "order": "interleaved baseline/candidate",
+  "cmds": {
+   "baseline": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/gemv_baseline.py"
+   ],
+   "candidate": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/gemv_agent_candidate.py"
+   ]
+  },
+  "cwd": null,
+  "timestamp": "2026-10-14T20:17:37+0200",
+  "wall_s": 38.9,
+  "contract": {
+   "shape": [
+    8192,
+    8192
+   ],
+   "dtype": "torch.bfloat16",
+   "iters": 50,
+   "seed": 0,
+   "timing": "per-call CUDA events, L2 flushed before each call",
+   "torch": "2.11.0+cu128"
+  },
+  "candidate_extra": {},
+  "note": "speedup = this call's baseline mean / candidate mean and moves with the baseline's run-to-run noise (a few %); to rank hypotheses against each other compare candidate mean_ms, which is what record() uses for keep",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "617.42",
+  "power_limit_w": 575,
+  "sm_clock_mhz": 2917,
+  "temperature_c": 48
+ }
+}

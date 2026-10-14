@@ -1,0 +1,84 @@
+{
+ "target": "gemv",
+ "note": "blank candidate (torch.mv, identical to baseline): sanity check",
+ "who": "agent:claude-opus-5-5, autonomous loop, results/gemv/agent-run-20261014-201507",
+ "commit": "b2405bd",
+ "recorded_at": "20261014-201625",
+ "verify": {
+  "baseline": {
+   "n": 7,
+   "mean_ms": 0.10156,
+   "std_ms": 0.00411,
+   "min_ms": 0.098,
+   "max_ms": 0.10822,
+   "samples_ms": [
+    0.1065,
+    0.10822,
+    0.098,
+    0.09932,
+    0.10094,
+    0.09836,
+    0.09955
+   ]
+  },
+  "candidate": {
+   "n": 7,
+   "mean_ms": 0.10396,
+   "std_ms": 0.00408,
+   "min_ms": 0.09866,
+   "max_ms": 0.10816,
+   "samples_ms": [
+    0.107,
+    0.09866,
+    0.10802,
+    0.10816,
+    0.09874,
+    0.10414,
+    0.10298
+   ]
+  },
+  "baseline_all_ok": true,
+  "candidate_all_ok": true,
+  "contract_mismatch": [],
+  "speedup": 0.9769,
+  "delta_ms": -0.0024,
+  "threshold_ms": 0.00438,
+  "significant": false,
+  "verdict": "inconclusive",
+  "reason": "candidate mean 0.1040 ms vs baseline 0.1016 ms; |delta| 0.0024 ms <= 2*SE 0.0044 ms (n=7)",
+  "n": 7,
+  "warmup": 2,
+  "order": "interleaved baseline/candidate",
+  "cmds": {
+   "baseline": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/gemv_baseline.py"
+   ],
+   "candidate": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/gemv_agent_candidate.py"
+   ]
+  },
+  "cwd": null,
+  "timestamp": "2026-10-14T20:16:17+0200",
+  "wall_s": 33,
+  "contract": {
+   "shape": [
+    8192,
+    8192
+   ],
+   "dtype": "torch.bfloat16",
+   "iters": 50,
+   "seed": 0,
+   "timing": "per-call CUDA events, L2 flushed before each call",
+   "torch": "2.11.0+cu128"
+  },
+  "candidate_extra": {},
+  "note": "speedup = this call's baseline mean / candidate mean and moves with the baseline's run-to-run noise (a few %); to rank hypotheses against each other compare candidate mean_ms, which is what record() uses for keep",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "617.42",
+  "power_limit_w": 575,
+  "sm_clock_mhz": 2535,
+  "temperature_c": 45
+ }
+}

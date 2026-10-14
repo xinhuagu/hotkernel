@@ -24,7 +24,10 @@ baseline it writes; the generated candidate is the file you edit.
   and pays the previous call's output write-back, no cache flush). A candidate defines one
   function with the baseline's signature and calls `run(candidate, impl="...")`; it never owns
   a timing loop. `verify()` returns `invalid` if the two JSON lines disagree on shape, dtype,
-  iters, seed, protocol or timing, so changing them is not a shortcut.
+  iters, seed, protocol or timing, so changing them is not a shortcut. Some targets derive
+  the call's inputs from the random tensors (a quantized weight, for instance): the JSON
+  line then lists them under `inputs`, the baseline's docstring says what each one holds,
+  and `min_bytes` is the traffic one call must read.
 - The roofline floor to aim for is `roofline(..., measured_mem_gbs=<calibrated>)` ->
   `attainable_ms_measured` (1501 GB/s on the reference RTX 5090, see
   docs/platform-matrix.md); the spec-sheet `attainable_ms` is a bound no streaming kernel

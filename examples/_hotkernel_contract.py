@@ -95,12 +95,20 @@ class Target:
     copies (the big streamed tensors); the others are shared across calls. reference(*inputs)
     returns the correct output (usually the same math in fp32, cast back). flops is the nominal
     flop count per call for roofline() and may be None.
+
+    derive (optional): a function from the dict of raw random tensors (named by `shapes`) to
+    the dict of tensors the call actually takes, in call order. It is for inputs that cannot be
+    drawn from randn, such as quantized weights: the raw tensor is drawn, derive() quantizes it,
+    and the call receives the codes, scales and packed layouts. It runs once per rotated set,
+    outside the timed region. With derive, min_bytes should state the bytes one call must read
+    (one weight layout, not every layout derive returns); the rotation K is sized from it so
+    that every implementation streams more than 2 x L2 per cycle.
     """
 
     def __init__(self, name: str, dtype, shapes: dict[str, tuple[int, ...]], rotate: tuple[str, ...],
                  reference, rtol: float | None = None, atol: float | None = None, iters: int = 50,
                  seed: int = 0, flops: int | None = None, min_bytes: int | None = None,
-                 reference_name: str = "reference"):
+                 reference_name: str = "reference", derive=None, derive_name: str | None = None):
         self.name = name
         self.dtype = parse_dtype(dtype)
         self.shapes = {k: tuple(int(d) for d in v) for k, v in shapes.items()}
@@ -117,34 +125,58 @@ class Target:
         self.flops = None if flops is None else int(flops)
         self.min_bytes = None if min_bytes is None else int(min_bytes)
         self.reference_name = reference_name
+        self.derive = derive
+        self.derive_name = derive_name or (getattr(derive, "__name__", "derive") if derive else None)
+        self.input_names: list[str] = list(self.shapes)  # replaced by derive's keys on first use
 
     @property
     def primary(self) -> str:
         return self.rotate[0]
 
     def make_inputs(self, k: int) -> list[tuple]:
-        """K tuples in call order: rotated inputs are fresh per set, the others shared."""
+        """K tuples in call order: rotated inputs are fresh per set, the others shared. With
+        derive, each set is passed through derive() and the raw tensors are dropped."""
         torch.manual_seed(self.seed)
         rotated = {n: [torch.randn(*self.shapes[n], device="cuda", dtype=self.dtype) for _ in range(k)]
                    for n in self.rotate}
         shared = {n: torch.randn(*self.shapes[n], device="cuda", dtype=self.dtype)
                   for n in self.shapes if n not in self.rotate}
-        return [tuple(rotated[n][i] if n in rotated else shared[n] for n in self.shapes)
+        sets = [tuple(rotated[n][i] if n in rotated else shared[n] for n in self.shapes)
                 for i in range(k)]
+        if self.derive is None:
+            return sets
+        derived = []
+        for i, s in enumerate(sets):
+            d = self.derive(dict(zip(self.shapes, s, strict=True)))
+            if not isinstance(d, dict) or not d:
+                raise TypeError("derive() must return a non-empty dict of tensors in call order")
+            self.input_names = list(d)
+            derived.append(tuple(d.values()))
+            sets[i] = None  # the raw rotated tensor can go once its derived forms exist
+            for n in self.rotate:
+                rotated[n][i] = None
+        return derived
 
     def run(self, fn, impl: str, extra: dict | None = None) -> None:
         """Check fn against the reference, time it under protocol 3, print the JSON line, exit
         0 if correct and 1 if not. The candidate's only job is to pass fn."""
         rotated_bytes = sum(math.prod(self.shapes[n]) * torch.finfo(self.dtype).bits // 8
                             for n in self.rotate)
-        k = rotation_k(2 * rotated_bytes)  # assume output ~ input until the first call tells
+        # K is sized from the bytes one call must read: the rotated inputs plus the output,
+        # or min_bytes when the target states a smaller figure (derived inputs may hold the
+        # same weight in several layouts, of which a call reads one).
+        sizing = 2 * rotated_bytes if self.min_bytes is None else min(2 * rotated_bytes, self.min_bytes)
+        k = rotation_k(sizing)  # assume output ~ input until the first call tells
         inputs = self.make_inputs(k)
 
         out = fn(*inputs[0])
         ref = self.reference(*inputs[0])
         ok = bool(torch.allclose(out.float(), ref.float(), rtol=self.rtol, atol=self.atol))
+        if self.derive is not None:  # what actually differs between sets after derive()
+            rotated_bytes = sum(_nbytes(a) for a, b in zip(inputs[0], inputs[1], strict=True) if a is not b)
         pair_bytes = rotated_bytes + _nbytes(out)
-        k_needed = rotation_k(pair_bytes)
+        sizing = pair_bytes if self.min_bytes is None else min(pair_bytes, self.min_bytes)
+        k_needed = rotation_k(sizing)
         if k_needed > k:
             inputs = self.make_inputs(k_needed)
             k = k_needed
@@ -159,12 +191,15 @@ class Target:
             "target": self.name, "shapes": {n: list(s) for n, s in self.shapes.items()},
             "rotate": list(self.rotate), "rtol": self.rtol, "atol": self.atol,
             "reference": self.reference_name,
-            "rotation_k": k, "rotation_bytes": k * pair_bytes, "l2_bytes": l2_bytes(),
-            "min_bytes": min_bytes,
+            "rotation_k": k, "rotation_bytes": k * pair_bytes, "rotation_sizing_bytes": sizing,
+            "l2_bytes": l2_bytes(), "min_bytes": min_bytes,
             "achieved_gbs_lower_bound": round(min_bytes / (ms / 1e3) / 1e9, 1),
             "gpu": torch.cuda.get_device_name(0), "torch": torch.__version__,
             "impl": impl,
         }
+        if self.derive is not None:
+            line["derive"] = self.derive_name
+            line["inputs"] = list(self.input_names)
         if self.flops is not None:
             line["flops"] = self.flops
         line.update(extra or {})

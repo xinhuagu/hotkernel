@@ -49,7 +49,7 @@ and a non-gemv probe there exits with ok=false, which bench treats as a failure.
 ## Tool outputs that were unclear or made me guess
 
 - `profile(cmd=["python", ...])` failed with "No module named torch". bench/verify use
-  `/home/ubuntu/venvs/5090lab-cu128/bin/python`, but profile does not substitute
+  `<home>/venvs/5090lab-cu128/bin/python`, but profile does not substitute
   HOTKERNEL_PYTHON for "python". I had to copy the interpreter path from a bench() result.
 - None of the outputs says which autotune config was chosen. I inferred it from ncu's
   grid/block size.

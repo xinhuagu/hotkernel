@@ -18,7 +18,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\skills\\kernel-speedrun\\SKILL.md"
+ "file_path": "<repo>/skills/kernel-speedrun/SKILL.md"
 }
 ```
 
@@ -74,7 +74,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\decode_attn_baseline.py"
+ "file_path": "<repo>/examples/decode_attn_baseline.py"
 }
 ```
 
@@ -152,7 +152,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\decode_attn_agent_candidate.py"
+ "file_path": "<repo>/examples/decode_attn_agent_candidate.py"
 }
 ```
 
@@ -188,7 +188,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\_hotkernel_contract.py"
+ "file_path": "<repo>/examples/_hotkernel_contract.py"
 }
 ```
 
@@ -282,7 +282,7 @@ examples\decode_attn_sdpa.py
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\decode_attn_sdpa.py"
+ "file_path": "<repo>/examples/decode_attn_sdpa.py"
 }
 ```
 
@@ -481,11 +481,11 @@ examples\decode_attn_sdpa.py
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/decode_attn_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/decode_attn_agent_candidate.py"
     ]
   },
@@ -575,11 +575,11 @@ examples\decode_attn_sdpa.py
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_agent_candidate.py"
    ]
   },
@@ -599,16 +599,16 @@ examples\decode_attn_sdpa.py
    "protocol": 3,
    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
    "rotation_k": 2,
-   "rotation_b
-... [702 more chars]
+   "rotation_bytes": 26845
+... [690 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/decode_attn/20261014-222408.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/decode_attn/20261014-222408.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| decode_attn | NVIDIA GeForce RTX 5090 | 575 W | 0.1024 (7) | 0.0972 (7) | no gain | control: unchanged candidate (calls baseline cuDNN SDPA) ([log](results/decode_attn/20261014-222408.json)) | 2026-10-14 | 21ea4af | agent:claude-opus-5-5, autonomous loop, results/decode_attn/agent-run-20261014-222305 |",
   "verdict": "inconclusive",
   "speedup_cell": "no gain",
@@ -632,15 +632,15 @@ examples\decode_attn_sdpa.py
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\decode_attn_agent_candidate.py",
- "content": "\"\"\"Candidate for the \"decode_attn\" target: the file the kernel-speedrun loop edits.\n\nIt starts as the baseline itself, so the first verify() is a fair \"inconclusive\" and every\nlater verdict measures only what changed. Define decode_attn_candidate(x, k, v) and leave the\nrun() call alone: inputs, seed, reference, tolerances, rotation and timer are the baseline's,\nand verify() reports `invalid` if the contract changes. Triton and torch.compile are fair game.\n\"\"\"\n\nimport torch\nimport triton\nimport triton.language as tl\n\nfrom decode_attn_baseline import baseline_fn, run  # noqa: F401\n\nNSPLIT = 64\nBLOCK_N = 64\nWARPS = 4\nSTAGES = 3\n\n\n@triton.jit\ndef _split_kernel(Q, K, V, O_part, M_part, L_part, sm_scale,\n                  stride_kh, stride_vh,\n                  G: tl.constexpr, D: tl.constexpr, BLOCK_G: tl.constexpr,\n                  BLOCK_N: tl.constexpr, CHUNK: tl.constexpr, NSPLIT: tl.constexpr,\n                  STAGES: tl.constexpr):\n    kvh = tl.program_id(0)\n    s = tl.program_id(1)\n    offs_g = tl.arange(0, BLOCK_G)\n    offs_d = tl.arange(0, D)\n    gmask = offs_g < G\n    q = tl.load(Q + (kvh * G + offs_g)[:, None] * D + offs_d[None, :], mask=gmask[:, None], other=0.0)\n    m_i = tl.full([BLOCK_G], float(\"-inf\"), tl.float32)\n    l_i = tl.zeros([BLOCK_G], tl.float32)\n    acc = tl.zeros([BLOCK_G, D], tl.flo
-... [2436 more chars]
+ "file_path": "<repo>/examples/decode_attn_agent_candidate.py",
+ "content": "\"\"\"Candidate for the \"decode_attn\" target: the file the kernel-speedrun loop edits.\n\nIt starts as the baseline itself, so the first verify() is a fair \"inconclusive\" and every\nlater verdict measures only what changed. Define decode_attn_candidate(x, k, v) and leave the\nrun() call alone: inputs, seed, reference, tolerances, rotation and timer are the baseline's,\nand verify() reports `invalid` if the contract changes. Triton and torch.compile are fair game.\n\"\"\"\n\nimport torch\nimport triton\nimport triton.language as tl\n\nfrom decode_attn_baseline import baseline_fn, run  # noqa: F401\n\nNSPLIT = 64\nBLOCK_N = 64\nWARPS = 4\nSTAGES = 3\n\n\n@triton.jit\ndef _split_kernel(Q, K, V, O_part, M_part, L_part, sm_scale,\n                  stride_kh, stride_vh,\n                  G: tl.constexpr, D: tl.constexpr, BLOCK_G: tl.constexpr,\n                  BLOCK_N: tl.constexpr, CHUNK: tl.constexpr, NSPLIT: tl.constexpr,\n                  STAGES: tl.constexpr):\n    kvh = tl.program_id(0)\n    s = tl.program_id(1)\n    offs_g = tl.arange(0, BLOCK_G)\n    offs_d = tl.arange(0, D)\n    gmask = offs_g < G\n    q = tl.load(Q + (kvh * G + offs_g)[:, None] * D + offs_d[None, :], mask=gmask[:, None], other=0.0)\n    m_i = tl.full([BLOCK_G], float(\"-inf\"), tl.float32)\n    l_i = tl.zeros([BLOCK_G], tl.float32)\n    acc = tl.zeros([BLOCK_G, D], tl.float32)\n    start = s * CHUNK\n    k_base = K + k
+... [2388 more chars]
 ```
 
 **Tool result `Write`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -657,7 +657,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_agent_candidate.py"
   ],
   "n": 3,
@@ -797,8 +797,9 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
           128
         ],
         "k": [
-         
-... [760 more chars]
+          1,
+  
+... [754 more chars]
 ```
 
 **Assistant:**
@@ -870,11 +871,11 @@ The kernel is correct and lands at about 0.098 ms. Running verify on it now.
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/decode_attn_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/decode_attn_agent_candidate.py"
     ]
   },
@@ -966,11 +967,11 @@ The kernel is correct and lands at about 0.098 ms. Running verify on it now.
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_agent_candidate.py"
    ]
   },
@@ -990,8 +991,8 @@ The kernel is correct and lands at about 0.098 ms. Running verify on it now.
    "protocol": 3,
    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
    "rotation_k": 2,
-   "rotation
-... [823 more chars]
+   "rotation_bytes": 268
+... [811 more chars]
 ```
 
 ```json
@@ -1002,8 +1003,8 @@ The kernel is correct and lands at about 0.098 ms. Running verify on it now.
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/decode_attn/20261014-222538.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/decode_attn/20261014-222538.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| decode_attn | NVIDIA GeForce RTX 5090 | 575 W | 0.1015 (7) | 0.1066 (7) | no gain | Triton split-KV decode (GQA group packed in one tile), 2 kernels: NSPLIT=64,BLOCK_N=64,warps=4,stages=3 ([log](results/decode_attn/20261014-222538.json)) | 2026-10-14 | 21ea4af | agent:claude-opus-5-5, autonomous loop, results/decode_attn/agent-run-20261014-222305 |",
   "verdict": "inconclusive",
   "speedup_cell": "no gain",
@@ -1139,13 +1140,13 @@ The kernel is correct and lands at about 0.098 ms. Running verify on it now.
   "script_exit_code": 0,
   "torch": "2.11.0+cu128",
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "/tmp/tmpehq1l38j_hotkernel_torchprof.py",
     "examples/decode_attn_agent_candidate.py",
     "6"
   ],
-  "note": "whole-script profil
-... [135 more chars]
+  "note": "whole-script profile (set
+... [129 more chars]
 ```
 
 **Tool result `mcp__hotkernel__torch_trace`**
@@ -1246,7 +1247,7 @@ The kernel is correct and lands at about 0.098 ms. Running verify on it now.
   "script_exit_code": 0,
   "torch": "2.11.0+cu128",
   
-... [325 more chars]
+... [319 more chars]
 ```
 
 **Tool call `Edit`**
@@ -1254,7 +1255,7 @@ The kernel is correct and lands at about 0.098 ms. Running verify on it now.
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\decode_attn_agent_candidate.py",
+ "file_path": "<repo>/examples/decode_attn_agent_candidate.py",
  "old_string": "NSPLIT = 64\nBLOCK_N = 64\nWARPS = 4\nSTAGES = 3",
  "new_string": "NSPLIT = 128\nBLOCK_N = 128\nWARPS = 8\nSTAGES = 2"
 }
@@ -1263,7 +1264,7 @@ The kernel is correct and lands at about 0.098 ms. Running verify on it now.
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1280,7 +1281,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_agent_candidate.py"
   ],
   "n": 3,
@@ -1420,8 +1421,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
           128
         ],
         "k": [
-     
-... [766 more chars]
+          1
+... [760 more chars]
 ```
 
 **Assistant:**
@@ -1479,7 +1480,7 @@ The bench numbers are noisy (0.093 to 0.112 ms). I'll check the kernel-only devi
   "script_exit_code": 0,
   "torch": "2.11.0+cu128",
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "/tmp/tmpv9_9utwk_hotkernel_torchprof.py",
     "examples/decode_attn_agent_candidate.py",
     "2"
@@ -1577,11 +1578,11 @@ The kernel alone now averages 86.4 µs, below cuDNN's 90.1 µs. Running verify w
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/decode_attn_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/decode_attn_agent_candidate.py"
     ]
   },
@@ -1689,11 +1690,11 @@ The kernel alone now averages 86.4 µs, below cuDNN's 90.1 µs. Running verify w
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_agent_candidate.py"
    ]
   },
@@ -1706,16 +1707,17 @@ The kernel alone now averages 86.4 µs, below cuDNN's 90.1 µs. Running verify w
     8,
     32768,
     128
-   ]
-... [1023 more chars]
+   ],
+   "dtype"
+... [1011 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/decode_attn/20261014-222730.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/decode_attn/20261014-222730.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| decode_attn | NVIDIA GeForce RTX 5090 | 575 W | 0.1000 (15) | 0.1043 (15) | no gain | Triton split-KV, bigger tiles + more splits: NSPLIT=128,BLOCK_N=128,warps=8,stages=2 (n=15) ([log](results/decode_attn/20261014-222730.json)) | 2026-10-14 | 21ea4af | agent:claude-opus-5-5, autonomous loop, results/decode_attn/agent-run-20261014-222305 |",
   "verdict": "inconclusive",
   "speedup_cell": "no gain",
@@ -1739,15 +1741,15 @@ The kernel alone now averages 86.4 µs, below cuDNN's 90.1 µs. Running verify w
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\decode_attn_agent_candidate.py",
- "content": "\"\"\"Candidate for the \"decode_attn\" target: the file the kernel-speedrun loop edits.\n\nIt starts as the baseline itself, so the first verify() is a fair \"inconclusive\" and every\nlater verdict measures only what changed. Define decode_attn_candidate(x, k, v) and leave the\nrun() call alone: inputs, seed, reference, tolerances, rotation and timer are the baseline's,\nand verify() reports `invalid` if the contract changes. Triton and torch.compile are fair game.\n\"\"\"\n\nimport torch\nimport triton\nimport triton.language as tl\n\nfrom decode_attn_baseline import baseline_fn, run  # noqa: F401\n\nNSPLIT = 128\nBLOCK_N = 128\nWARPS = 8\nSTAGES = 2\n\n\n@triton.jit\ndef _fused_kernel(Q, K, V, Out, O_part, M_part, L_part, Count, sm_scale,\n                  stride_kh, stride_vh,\n                  G: tl.constexpr, D: tl.constexpr, BLOCK_G: tl.constexpr,\n                  BLOCK_N: tl.constexpr, CHUNK: tl.constexpr, NSPLIT: tl.constexpr,\n                  STAGES: tl.constexpr):\n    kvh = tl.program_id(0)\n    s = tl.program_id(1)\n    offs_g = tl.arange(0, BLOCK_G)\n    offs_d = tl.arange(0, D)\n    gmask = offs_g < G\n    q = tl.load(Q + (kvh * G + offs_g)[:, None] * D + offs_d[None, :], mask=gmask[:, None], other=0.0)\n    m_i = tl.full([BLOCK_G], float(\"-inf\"), tl.float32)\n    l_i = tl.zeros([BLOCK_G], tl.float32)\n    acc = tl.zeros([BLOCK
-... [2928 more chars]
+ "file_path": "<repo>/examples/decode_attn_agent_candidate.py",
+ "content": "\"\"\"Candidate for the \"decode_attn\" target: the file the kernel-speedrun loop edits.\n\nIt starts as the baseline itself, so the first verify() is a fair \"inconclusive\" and every\nlater verdict measures only what changed. Define decode_attn_candidate(x, k, v) and leave the\nrun() call alone: inputs, seed, reference, tolerances, rotation and timer are the baseline's,\nand verify() reports `invalid` if the contract changes. Triton and torch.compile are fair game.\n\"\"\"\n\nimport torch\nimport triton\nimport triton.language as tl\n\nfrom decode_attn_baseline import baseline_fn, run  # noqa: F401\n\nNSPLIT = 128\nBLOCK_N = 128\nWARPS = 8\nSTAGES = 2\n\n\n@triton.jit\ndef _fused_kernel(Q, K, V, Out, O_part, M_part, L_part, Count, sm_scale,\n                  stride_kh, stride_vh,\n                  G: tl.constexpr, D: tl.constexpr, BLOCK_G: tl.constexpr,\n                  BLOCK_N: tl.constexpr, CHUNK: tl.constexpr, NSPLIT: tl.constexpr,\n                  STAGES: tl.constexpr):\n    kvh = tl.program_id(0)\n    s = tl.program_id(1)\n    offs_g = tl.arange(0, BLOCK_G)\n    offs_d = tl.arange(0, D)\n    gmask = offs_g < G\n    q = tl.load(Q + (kvh * G + offs_g)[:, None] * D + offs_d[None, :], mask=gmask[:, None], other=0.0)\n    m_i = tl.full([BLOCK_G], float(\"-inf\"), tl.float32)\n    l_i = tl.zeros([BLOCK_G], tl.float32)\n    acc = tl.zeros([BLOCK_G, D], tl.float32)\n    start = s * CHUNK\n    
+... [2880 more chars]
 ```
 
 **Tool result `Write`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1768,7 +1770,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_agent_candidate.py"
   ],
   "n": 3,
@@ -1906,8 +1908,9 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
           32,
           1,
           128
-      
-... [805 more chars]
+        ],
+ 
+... [799 more chars]
 ```
 
 **Assistant:**
@@ -1951,7 +1954,7 @@ Fusing the combine made it slower: 0.114 ms. Checking the kernel's device time t
   "script_exit_code": 0,
   "torch": "2.11.0+cu128",
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "/tmp/tmpy1aty97l_hotkernel_torchprof.py",
     "examples/decode_attn_agent_candidate.py",
     "1"
@@ -1964,15 +1967,15 @@ Fusing the combine made it slower: 0.114 ms. Checking the kernel's device time t
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\decode_attn_agent_candidate.py",
- "content": "\"\"\"Candidate for the \"decode_attn\" target: the file the kernel-speedrun loop edits.\n\nIt starts as the baseline itself, so the first verify() is a fair \"inconclusive\" and every\nlater verdict measures only what changed. Define decode_attn_candidate(x, k, v) and leave the\nrun() call alone: inputs, seed, reference, tolerances, rotation and timer are the baseline's,\nand verify() reports `invalid` if the contract changes. Triton and torch.compile are fair game.\n\"\"\"\n\nimport torch\nimport triton\nimport triton.language as tl\n\nfrom decode_attn_baseline import baseline_fn, run  # noqa: F401\n\nNSPLIT = 128\nBLOCK_N = 128\nWARPS = 8\nSTAGES = 2\nCOMBINE_BLOCK_D = 32\n\n\n@triton.jit\ndef _split_kernel(Q, K, V, O_part, M_part, L_part, sm_scale,\n                  stride_kh, stride_vh,\n                  G: tl.constexpr, D: tl.constexpr, BLOCK_G: tl.constexpr,\n                  BLOCK_N: tl.constexpr, CHUNK: tl.constexpr, NSPLIT: tl.constexpr,\n                  STAGES: tl.constexpr):\n    kvh = tl.program_id(0)\n    s = tl.program_id(1)\n    offs_g = tl.arange(0, BLOCK_G)\n    offs_d = tl.arange(0, D)\n    gmask = offs_g < G\n    q = tl.load(Q + (kvh * G + offs_g)[:, None] * D + offs_d[None, :], mask=gmask[:, None], other=0.0)\n    m_i = tl.full([BLOCK_G], float(\"-inf\"), tl.float32)\n    l_i = tl.zeros([BLOCK_G], tl.float32)\n    acc = tl.ze
-... [2920 more chars]
+ "file_path": "<repo>/examples/decode_attn_agent_candidate.py",
+ "content": "\"\"\"Candidate for the \"decode_attn\" target: the file the kernel-speedrun loop edits.\n\nIt starts as the baseline itself, so the first verify() is a fair \"inconclusive\" and every\nlater verdict measures only what changed. Define decode_attn_candidate(x, k, v) and leave the\nrun() call alone: inputs, seed, reference, tolerances, rotation and timer are the baseline's,\nand verify() reports `invalid` if the contract changes. Triton and torch.compile are fair game.\n\"\"\"\n\nimport torch\nimport triton\nimport triton.language as tl\n\nfrom decode_attn_baseline import baseline_fn, run  # noqa: F401\n\nNSPLIT = 128\nBLOCK_N = 128\nWARPS = 8\nSTAGES = 2\nCOMBINE_BLOCK_D = 32\n\n\n@triton.jit\ndef _split_kernel(Q, K, V, O_part, M_part, L_part, sm_scale,\n                  stride_kh, stride_vh,\n                  G: tl.constexpr, D: tl.constexpr, BLOCK_G: tl.constexpr,\n                  BLOCK_N: tl.constexpr, CHUNK: tl.constexpr, NSPLIT: tl.constexpr,\n                  STAGES: tl.constexpr):\n    kvh = tl.program_id(0)\n    s = tl.program_id(1)\n    offs_g = tl.arange(0, BLOCK_G)\n    offs_d = tl.arange(0, D)\n    gmask = offs_g < G\n    q = tl.load(Q + (kvh * G + offs_g)[:, None] * D + offs_d[None, :], mask=gmask[:, None], other=0.0)\n    m_i = tl.full([BLOCK_G], float(\"-inf\"), tl.float32)\n    l_i = tl.zeros([BLOCK_G], tl.float32)\n    acc = tl.zeros([BLOCK_G, D], tl.float32)\n    start = s * C
+... [2872 more chars]
 ```
 
 **Tool result `Write`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__torch_trace`**
@@ -2070,7 +2073,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
       "short_name": "vectorized_elementwise_kernel"
     },
  
-... [2483 more chars]
+... [2477 more chars]
 ```
 
 **Tool call `mcp__hotkernel__verify`**
@@ -2158,11 +2161,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/decode_attn_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/decode_attn_agent_candidate.py"
     ]
   },
@@ -2270,11 +2273,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_agent_candidate.py"
    ]
   },
@@ -2288,16 +2291,16 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
     32768,
     128
    ],
-
-... [1067 more chars]
+   "dtype": 
+... [1055 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/decode_attn/20261014-223001.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/decode_attn/20261014-223001.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| decode_attn | NVIDIA GeForce RTX 5090 | 575 W | 0.1033 (15) | 0.1058 (15) | no gain | Triton split-KV NSPLIT=128,BLOCK_N=128,w8,s2 + combine grid (HQ, D/32) + cached scratch buffers (n=15) ([log](results/decode_attn/20261014-223001.json)) | 2026-10-14 | 21ea4af | agent:claude-opus-5-5, autonomous loop, results/decode_attn/agent-run-20261014-222305 |",
   "verdict": "inconclusive",
   "speedup_cell": "no gain",
@@ -2322,7 +2325,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\decode_attn_agent_candidate.py",
+ "file_path": "<repo>/examples/decode_attn_agent_candidate.py",
  "old_string": "NSPLIT = 128\nBLOCK_N = 128\nWARPS = 8\nSTAGES = 2",
  "new_string": "NSPLIT = 128\nBLOCK_N = 64\nWARPS = 4\nSTAGES = 4"
 }
@@ -2340,7 +2343,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool result `mcp__hotkernel__torch_trace`**
@@ -2350,14 +2353,14 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
   "error": "script failed under torch.profiler",
   "detail": {
     "cmd": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "/tmp/tmpm084prnx_hotkernel_torchprof.py",
       "examples/decode_attn_agent_candidate.py",
       "3"
     ],
     "returncode": 1,
     "stdout": "",
-    "stderr": "/home/ubuntu/venvs/5090lab-cu128/lib/python3.12/site-packages/torch/profiler/profiler.py:224: UserWarning: Warning: Profiler clears events at the end of each cycle.Only events from the current cycle will be reported.To keep events across cycles, set acc_events=True.\n  _warn_once(\nTraceback (most recent call last):\n  File \"/tmp/tmpm084prnx_hotkernel_torchprof.py\", line 13, in <module>\n    runpy.run_path(script, run_name=\"__main__\")\n  File \"<frozen runpy>\", line 286, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"examples/decode_attn_agent_candidate.py\", line 100, in <module>\n    run(decode_attn_candidate, impl=\"agent candidate\",\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/decode_attn_baseline.py\", line 45, in run\n    TARGET.run(fn, impl, extra)\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/_hotkernel_contract.py\", line 143, in run\n    out = fn(*inputs[0])\n          ^^^^^^^^^^^^^^\n  File \"examples/decode_attn_agent_candidate.py\", line 90, in decode_attn_candidate\n    _split_kernel[(HKV, NSPLIT)](x, k, v, o_part, m_part, l_part, D ** -0.5,\n  File \"/home/ubuntu/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/runtime/jit.py\", line 370, in <lambda>\n    return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)\n                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/runtime/jit.py\", line 743, in run\n    launch_metadata = kernel.launch_metadata(grid, stream, *bound_args.values())\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/compiler/compiler.py\", line 482, in launch_metadata\n    self._init_handles()\n  File \"/home/ubuntu/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/compiler/compiler.py\", line 456, in _init_handles\n    raise_(OutOfResources(self.metadata.shared, max_shared, \"shared memory\"))\n  File \"/home/ubuntu/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/compiler/compiler.py\", line 448, in raise_\n    raise err\ntriton.runtime.errors.OutOfResources: out of resource: shared memory, Required: 104448, Hardware limit: 101376. Reducing block sizes or `num_stages` may help.\n",
+    "stderr": "<home>/venvs/5090lab-cu128/lib/python3.12/site-packages/torch/profiler/profiler.py:224: UserWarning: Warning: Profiler clears events at the end of each cycle.Only events from the current cycle will be reported.To keep events across cycles, set acc_events=True.\n  _warn_once(\nTraceback (most recent call last):\n  File \"/tmp/tmpm084prnx_hotkernel_torchprof.py\", line 13, in <module>\n    runpy.run_path(script, run_name=\"__main__\")\n  File \"<frozen runpy>\", line 286, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"examples/decode_attn_agent_candidate.py\", line 100, in <module>\n    run(decode_attn_candidate, impl=\"agent candidate\",\n  File \"<repo>/examples/decode_attn_baseline.py\", line 45, in run\n    TARGET.run(fn, impl, extra)\n  File \"<repo>/examples/_hotkernel_contract.py\", line 143, in run\n    out = fn(*inputs[0])\n          ^^^^^^^^^^^^^^\n  File \"examples/decode_attn_agent_candidate.py\", line 90, in decode_attn_candidate\n    _split_kernel[(HKV, NSPLIT)](x, k, v, o_part, m_part, l_part, D ** -0.5,\n  File \"<home>/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/runtime/jit.py\", line 370, in <lambda>\n    return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)\n                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<home>/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/runtime/jit.py\", line 743, in run\n    launch_metadata = kernel.launch_metadata(grid, stream, *bound_args.values())\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<home>/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/compiler/compiler.py\", line 482, in launch_metadata\n    self._init_handles()\n  File \"<home>/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/compiler/compiler.py\", line 456, in _init_handles\n    raise_(OutOfResources(self.metadata.shared, max_shared, \"shared memory\"))\n  File \"<home>/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/compiler/compiler.py\", line 448, in raise_\n    raise err\ntriton.runtime.errors.OutOfResources: out of resource: shared memory, Required: 104448, Hardware limit: 101376. Reducing block sizes or `num_stages` may help.\n",
     "wall_s": 2.328
   }
 }
@@ -2372,7 +2375,7 @@ That config needs more shared memory than the card allows (out of resources), so
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\decode_attn_agent_candidate.py",
+ "file_path": "<repo>/examples/decode_attn_agent_candidate.py",
  "old_string": "STAGES = 4",
  "new_string": "STAGES = 3"
 }
@@ -2381,7 +2384,7 @@ That config needs more shared memory than the card allows (out of resources), so
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__torch_trace`**
@@ -2449,7 +2452,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
   "script_exit_code": 0,
   "torch": "2.11.0+cu128",
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "/tmp/tmpkbpe3677_hotkernel_torchprof.py",
     "examples/decode_attn_agent_candidate.py",
     "3"
@@ -2547,11 +2550,11 @@ The device time is 80.8 µs in an uncontended trace (the reference gemv kernels 
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/decode_attn_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/decode_attn_agent_candidate.py"
     ]
   },
@@ -2659,11 +2662,11 @@ The device time is 80.8 µs in an uncontended trace (the reference gemv kernels 
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_agent_candidate.py"
    ]
   },
@@ -2676,16 +2679,17 @@ The device time is 80.8 µs in an uncontended trace (the reference gemv kernels 
     8,
     32768,
     128
-   
-... [1064 more chars]
+   ],
+   "dtype
+... [1052 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/decode_attn/20261014-223152.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/decode_attn/20261014-223152.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| decode_attn | NVIDIA GeForce RTX 5090 | 575 W | 0.1013 (15) | 0.1056 (15) | no gain | Triton split-KV NSPLIT=128,BLOCK_N=64,w4,s3 (2 CTA/SM) + parallel combine + cached scratch (n=15) ([log](results/decode_attn/20261014-223152.json)) | 2026-10-14 | 21ea4af | agent:claude-opus-5-5, autonomous loop, results/decode_attn/agent-run-20261014-222305 |",
   "verdict": "inconclusive",
   "speedup_cell": "no gain",
@@ -2743,9 +2747,9 @@ The device time is 80.8 µs in an uncontended trace (the reference gemv kernels 
 ```
 {
   "tool": "nsys",
-  "nsys": "/home/ubuntu/opt/nvidia/opt/nvidia/nsight-systems/2026.1.3/bin/nsys",
-  "report": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/decode_attn/agent-run-20261014-222305/nsys-20261014-223203.nsys-rep",
-  "summary_csv": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/decode_attn/agent-run-20261014-222305/nsys-20261014-223203.kern_sum.csv",
+  "nsys": "<home>/opt/nvidia/opt/nvidia/nsight-systems/2026.1.3/bin/nsys",
+  "report": "<repo>/results/decode_attn/agent-run-20261014-222305/nsys-20261014-223203.nsys-rep",
+  "summary_csv": "<repo>/results/decode_attn/agent-run-20261014-222305/nsys-20261014-223203.kern_sum.csv",
   "profile_wall_s": 5.024,
   "top": [
     {
@@ -2825,8 +2829,12 @@ The device time is 80.8 µs in an uncontended trace (the reference gemv kernels 
       "short_name": "_combine_kernel",
       "time_pct": 1.3,
       "total_ns": 88414.0,
- 
-... [1717 more chars]
+      "calls": 58,
+      "avg_ns": 1524.4,
+      "med_ns": 1508.0,
+      "min_ns": 1319.0,
+    
+... [1623 more chars]
 ```
 
 **Tool call `Edit`**
@@ -2834,16 +2842,16 @@ The device time is 80.8 µs in an uncontended trace (the reference gemv kernels 
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\decode_attn_agent_candidate.py",
+ "file_path": "<repo>/examples/decode_attn_agent_candidate.py",
  "old_string": "def decode_attn_candidate(x, k, v):\n    B, HQ, _, D = x.shape\n    HKV, N = k.shape[1], k.shape[2]\n    o_part, m_part, l_part = _buffers(x.device, HQ, D)\n    out = torch.empty_like(x)\n    _split_kernel[(HKV, NSPLIT)](x, k, v, o_part, m_part, l_part, D ** -0.5,\n                                k.stride(1), v.stride(1),\n                                G=HQ // HKV, D=D, BLOCK_G=16, BLOCK_N=BLOCK_N, CHUNK=N // NSPLIT,\n                                NSPLIT=NSPLIT, STAGES=STAGES, num_warps=WARPS)\n    _combine_kernel[(HQ, D // COMBINE_BLOCK_D)](o_part, m_part, l_part, out, D=D, NSPLIT=NSPLIT,\n                                                BLOCK_D=COMBINE_BLOCK_D, num_warps=4)\n    return out",
- "new_string": "_compiled = {}\n\n\ndef decode_attn_candidate(x, k, v):\n    B, HQ, _, D = x.shape\n    HKV, N = k.shape[1], k.shape[2]\n    o_part, m_part, l_part = _buffers(x.device, HQ, D)\n    out = torch.empty_like(x)\n    key = (HQ, HKV, N, D, k.stride(1), v.stride(1))\n    ck = _compiled.get(key)\n    if ck is None:\n        # First call goes through the JIT; later calls launch the compiled kernels directly,\n        # skipping the per-call Python argument binding (host overhead matters at ~80 us/call).\n        split = _split_kernel[(HKV, NSPLIT)](x, k, v, o_part, m_part, l_part, D ** -0.5,\n                                  
-... [840 more chars]
+ "new_string": "_compiled = {}\n\n\ndef decode_attn_candidate(x, k, v):\n    B, HQ, _, D = x.shape\n    HKV, N = k.shape[1], k.shape[2]\n    o_part, m_part, l_part = _buffers(x.device, HQ, D)\n    out = torch.empty_like(x)\n    key = (HQ, HKV, N, D, k.stride(1), v.stride(1))\n    ck = _compiled.get(key)\n    if ck is None:\n        # First call goes through the JIT; later calls launch the compiled kernels directly,\n        # skipping the per-call Python argument binding (host overhead matters at ~80 us/call).\n        split = _split_kernel[(HKV, NSPLIT)](x, k, v, o_part, m_part, l_part, D ** -0.5,\n                                             k.stride(1), v.stride(1),\n          
+... [792 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -2862,12 +2870,12 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
   "error": "script failed on run 0",
   "detail": {
     "cmd": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/decode_attn_agent_candidate.py"
     ],
     "returncode": 1,
     "stdout": "",
-    "stderr": "Traceback (most recent call last):\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/decode_attn_agent_candidate.py\", line 115, in <module>\n    run(decode_attn_candidate, impl=\"agent candidate\",\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/decode_attn_baseline.py\", line 45, in run\n    TARGET.run(fn, impl, extra)\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/_hotkernel_contract.py\", line 153, in run\n    ms = time_kernel(fn, inputs, iters=self.iters)\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/_hotkernel_contract.py\", line 73, in time_kernel\n    held.append(fn(*inputs[i % k]))\n                ^^^^^^^^^^^^^^^^^^\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/decode_attn_agent_candidate.py\", line 109, in decode_attn_candidate\n    split_run(x, k, v, o_part, m_part, l_part, D ** -0.5, k.stride(1), v.stride(1))\n  File \"/home/ubuntu/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/compiler/compiler.py\", line 498, in runner\n    self.run(grid[0], grid[1], grid[2], stream, self.function, self.packed_metadata, launch_metadata,\n  File \"/home/ubuntu/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/backends/nvidia/driver.py\", line 713, in __call__\n    self.launch(gridX, gridY, gridZ, stream, function, self.launch_cooperative_grid, self.launch_pdl,\nTypeError: function takes exactly 29 arguments (22 given)\n",
+    "stderr": "Traceback (most recent call last):\n  File \"<repo>/examples/decode_attn_agent_candidate.py\", line 115, in <module>\n    run(decode_attn_candidate, impl=\"agent candidate\",\n  File \"<repo>/examples/decode_attn_baseline.py\", line 45, in run\n    TARGET.run(fn, impl, extra)\n  File \"<repo>/examples/_hotkernel_contract.py\", line 153, in run\n    ms = time_kernel(fn, inputs, iters=self.iters)\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<repo>/examples/_hotkernel_contract.py\", line 73, in time_kernel\n    held.append(fn(*inputs[i % k]))\n                ^^^^^^^^^^^^^^^^^^\n  File \"<repo>/examples/decode_attn_agent_candidate.py\", line 109, in decode_attn_candidate\n    split_run(x, k, v, o_part, m_part, l_part, D ** -0.5, k.stride(1), v.stride(1))\n  File \"<home>/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/compiler/compiler.py\", line 498, in runner\n    self.run(grid[0], grid[1], grid[2], stream, self.function, self.packed_metadata, launch_metadata,\n  File \"<home>/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/backends/nvidia/driver.py\", line 713, in __call__\n    self.launch(gridX, gridY, gridZ, stream, function, self.launch_cooperative_grid, self.launch_pdl,\nTypeError: function takes exactly 29 arguments (22 given)\n",
     "wall_s": 2.103
   }
 }
@@ -2882,7 +2890,7 @@ The direct launcher wants every argument, constexprs included, in signature orde
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\decode_attn_agent_candidate.py",
+ "file_path": "<repo>/examples/decode_attn_agent_candidate.py",
  "old_string": "    split_run(x, k, v, o_part, m_part, l_part, D ** -0.5, k.stride(1), v.stride(1))\n    comb_run(o_part, m_part, l_part, out)",
  "new_string": "    split_run(x, k, v, o_part, m_part, l_part, D ** -0.5, k.stride(1), v.stride(1),\n              HQ // HKV, D, 16, BLOCK_N, N // NSPLIT, NSPLIT, STAGES)\n    comb_run(o_part, m_part, l_part, out, D, NSPLIT, COMBINE_BLOCK_D)"
 }
@@ -2891,7 +2899,7 @@ The direct launcher wants every argument, constexprs included, in signature orde
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/decode_attn_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -2908,7 +2916,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_agent_candidate.py"
   ],
   "n": 5,
@@ -3043,8 +3051,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\decode_attn
       "shapes": {
         "x": [
           1,
-     
-... [3221 more chars]
+          3
+... [3215 more chars]
 ```
 
 

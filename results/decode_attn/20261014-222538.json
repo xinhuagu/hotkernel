@@ -51,11 +51,11 @@
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/decode_attn_agent_candidate.py"
    ]
   },

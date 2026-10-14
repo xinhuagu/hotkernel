@@ -13,7 +13,7 @@ I'll start by reading the skill, baseline, candidate and timer, and loading the 
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\skills\\kernel-speedrun\\SKILL.md"
+ "file_path": "<repo>/skills/kernel-speedrun/SKILL.md"
 }
 ```
 
@@ -69,7 +69,7 @@ I'll start by reading the skill, baseline, candidate and timer, and loading the 
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_baseline.py"
+ "file_path": "<repo>/examples/rmsnorm_baseline.py"
 }
 ```
 
@@ -138,7 +138,7 @@ I'll start by reading the skill, baseline, candidate and timer, and loading the 
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py"
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py"
 }
 ```
 
@@ -206,7 +206,7 @@ I'll start by reading the skill, baseline, candidate and timer, and loading the 
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\_timing.py"
+ "file_path": "<repo>/examples/_timing.py"
 }
 ```
 
@@ -386,7 +386,7 @@ Running the loop's opening steps in parallel: GPU info, roofline for the rmsnorm
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_baseline.py"
   ],
   "n": 5,
@@ -560,7 +560,7 @@ Running the loop's opening steps in parallel: GPU info, roofline for the rmsnorm
     },
     {
 
-... [2016 more chars]
+... [2010 more chars]
 ```
 
 **Tool call `mcp__hotkernel__verify`**
@@ -624,11 +624,11 @@ Running the loop's opening steps in parallel: GPU info, roofline for the rmsnorm
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_agent_candidate.py"
     ]
   },
@@ -709,11 +709,11 @@ Running the loop's opening steps in parallel: GPU info, roofline for the rmsnorm
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_agent_candidate.py"
    ]
   },
@@ -734,16 +734,16 @@ Running the loop's opening steps in parallel: GPU info, roofline for the rmsnorm
   "candidate_extra": {
    "impl": "agent candidate"
   },
-  "gpu": "NVIDIA GeF
-... [261 more chars]
+  "gpu": "NVIDIA GeForce RTX 509
+... [249 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/rmsnorm/20261014-194325.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/rmsnorm/20261014-194325.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| rmsnorm | NVIDIA GeForce RTX 5090 | 575 W | 0.3155 (7) | 0.3161 (7) | no gain | H0 control: candidate identical to baseline (eager bf16, 3 kernels, 5+ memory passes) ([log](results/rmsnorm/20261014-194325.json)) | 2026-10-14 | 7a101b7 | agent:claude-fable-5-1, autonomous loop |",
   "verdict": "inconclusive",
   "speedup_cell": "no gain",
@@ -757,10 +757,10 @@ Running the loop's opening steps in parallel: GPU info, roofline for the rmsnorm
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py",
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py",
  "old_string": "import torch\nfrom rmsnorm_baseline import (\n    COLS,\n    DTYPE,\n    EPS,\n    ITERS,\n    ROWS,\n    SEED,\n    TIMING,\n    rmsnorm_reference,\n    time_kernel,\n)\n\n\ndef rmsnorm_candidate(x: torch.Tensor, w: torch.Tensor) -> torch.Tensor:\n    # Starting point: identical to the baseline. Replace with something faster.\n    return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + EPS) * w",
- "new_string": "import torch\nimport triton\nimport triton.language as tl\nfrom rmsnorm_baseline import (\n    COLS,\n    DTYPE,\n    EPS,\n    ITERS,\n    ROWS,\n    SEED,\n    TIMING,\n    rmsnorm_reference,\n    time_kernel,\n)\n\n\n@triton.jit\ndef _rmsnorm_fused_kernel(\n    x_ptr, w_ptr, out_ptr,\n    stride_row,\n    eps,\n    N: tl.constexpr,\n    BLOCK: tl.constexpr,\n):\n    # One program per row. The whole row (N bf16 values) is loaded once into registers,\n    # the sum of squares is reduced in fp32, and the normalized row is written once.\n    row = tl.program_id(0)\n    cols = tl.arange(0, BLOCK)\n    mask = cols < N\n    x = tl.load(x_ptr + row * stride_row + cols, mask=mask, other=0.0).to(tl.float32)\n    w = tl.load(w_ptr + cols, mask=mask, other=0.0).to(tl.float32)\n    ms = tl.sum(x * x, axis=0) / N\n    inv = tl.rsqrt(ms + eps)\n    y = x * inv * w\n    tl.store(out_ptr + row * stride_row + cols, y.to(out_ptr.dtype.
-... [316 more chars]
+ "new_string": "import torch\nimport triton\nimport triton.language as tl\nfrom rmsnorm_baseline import (\n    COLS,\n    DTYPE,\n    EPS,\n    ITERS,\n    ROWS,\n    SEED,\n    TIMING,\n    rmsnorm_reference,\n    time_kernel,\n)\n\n\n@triton.jit\ndef _rmsnorm_fused_kernel(\n    x_ptr, w_ptr, out_ptr,\n    stride_row,\n    eps,\n    N: tl.constexpr,\n    BLOCK: tl.constexpr,\n):\n    # One program per row. The whole row (N bf16 values) is loaded once into registers,\n    # the sum of squares is reduced in fp32, and the normalized row is written once.\n    row = tl.program_id(0)\n    cols = tl.arange(0, BLOCK)\n    mask = cols < N\n    x = tl.load(x_ptr + row * stride_row + cols, mask=mask, other=0.0).to(tl.float32)\n    w = tl.load(w_ptr + cols, mask=mask, other=0.0).to(tl.float32)\n    ms = tl.sum(x * x, axis=0) / N\n    inv = tl.rsqrt(ms + eps)\n    y = x * inv * w\n    tl.store(out_ptr + row * stride_row + cols, y.to(out_ptr.dtype.element_ty), mask=mask)\n\n\ndef rmsnorm_candida
+... [268 more chars]
 ```
 
 ```json
@@ -770,7 +770,7 @@ Running the loop's opening steps in parallel: GPU info, roofline for the rmsnorm
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__verify`**
@@ -834,11 +834,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_agent_candidate.py"
     ]
   },
@@ -923,11 +923,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_agent_candidate.py"
    ]
   },
@@ -948,8 +948,9 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "candidate_extra": {
    "impl": "agent candidate"
   },
-  "gpu": "NVIDIA GeForce R
-... [309 more chars]
+  "gpu": "NVIDIA GeForce RTX 5090",
+  
+... [297 more chars]
 ```
 
 **Tool call `mcp__hotkernel__disasm`**
@@ -967,8 +968,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/rmsnorm/20261014-194428.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/rmsnorm/20261014-194428.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| rmsnorm | NVIDIA GeForce RTX 5090 | 575 W | 0.3007 (7) | 0.0908 (7) | 3.31x | H1: fused Triton kernel, one program per row, whole 8192-wide row in registers, fp32 reduce, BLOCK=8192 num_warps=8 (read once, write once) ([log](results/rmsnorm/20261014-194428.json)) | 2026-10-14 | 7a101b7 | agent:claude-fable-5-1, autonomous loop |",
   "verdict": "faster",
   "speedup_cell": "3.31x",
@@ -981,13 +982,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 
 ```
 <persisted-output>
-Output too large (54.7KB). Full output saved to: C:\Users\xinhu\.claude\projects\C--Users-xinhu-Documents-github-ai---hotkernel\cfc50eda-b48f-4447-b8d5-ee4cefc0708a\tool-results\toolu_01UXqVGzLxcJj7Bf7FHQA7xE.json
-
-Preview (first 2KB):
+Output too large (54.7KB). Full output saved to: <home>/.claude/projects/<path-slug>/cfc50eda-b48f-4447-b8d5-ee4cefc0708a/tool-results/toolu_01UXqVGzLxcJj7Bf7FHQA7xE.json/n/nPreview (first 2KB):
 [
   {
     "type": "text",
-    "text": "{\n  \"path\": \"/home/ubuntu/.triton/cache/57SQSXILSLJEYIH7YJBZ2RLRWNBM4LQFIZ4VKAYLTSDMAP5P5KNQ/_rmsnorm_fused_kernel.cubin\",\n  \"level\": \"sass\",\n  \"n_lines\": 585,\n  \"text\": \"\\n\\tcode for sm_120a\\n\\t.target\\tsm_120a\\n\\n\\t\\tFunction : _rmsnorm_fused_kernel\\n\\t.headerflags\\t@\\\"EF_CUDA_SM120 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM120)\\\"\\n        /*0000*/                   LDC R1, c[0x0][0x37c]                                       ?trans1;           /* 0x0000df00ff017b82 */\\n                                                                                                                  /* 0x000fe20000000800 */\\n        /*0010*/                   S2R R43, SR_TID.X                          &wr=0x0          ?trans7;           /* 0x00000000002b7919 */\\n                                                                                                                  /* 0x000e2e0000002100 */\\n        /*0020*/                   S2UR UR4, SR_CTAID.X                       &wr=0x1          ?trans1;           /* 0x00000000000479c3 */\\n                                                                                                                  /* 0x000e620000002500 */\\n        /*0030*/                   LDCU.64 UR6, c[0x0][0x358]                 &wr=0x2          ?trans7;           /* 0x00006b00ff0677ac */\\n                                                                                                                  /* 0x000eae0008000a00 */\\n        /*0040*/                   LDC R22, c[0x0][0x398]                     &wr=0x1          ?trans8;           /* 0x0000e600ff167b82 */\\n                                                                                                                  /* 0x000e700000000800 */\\n        /*0050*/                   LDC.64 R2, c[0x0][0x380]                   &wr=0x3          ?trans1;           /* 0x0000e000ff027b82 */\\n                                                     
+    "text": "{\n  \"path\": \"<home>/.triton/cache/57SQSXILSLJEYIH7YJBZ2RLRWNBM4LQFIZ4VKAYLTSDMAP5P5KNQ/_rmsnorm_fused_kernel.cubin\",\n  \"level\": \"sass\",\n  \"n_lines\": 585,\n  \"text\": \"\\n\\tcode for sm_120a\\n\\t.target\\tsm_120a\\n\\n\\t\\tFunction : _rmsnorm_fused_kernel\\n\\t.headerflags\\t@\\\"EF_CUDA_SM120 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM120)\\\"\\n        /*0000*/                   LDC R1, c[0x0][0x37c]                                       ?trans1;           /* 0x0000df00ff017b82 */\\n                                                                                                                  /* 0x000fe20000000800 */\\n        /*0010*/                   S2R R43, SR_TID.X                          &wr=0x0          ?trans7;           /* 0x00000000002b7919 */\\n                                                                                                                  /* 0x000e2e0000002100 */\\n        /*0020*/                   S2UR UR4, SR_CTAID.X                       &wr=0x1          ?trans1;           /* 0x00000000000479c3 */\\n                                                                                                                  /* 0x000e620000002500 */\\n        /*0030*/                   LDCU.64 UR6, c[0x0][0x358]                 &wr=0x2          ?trans7;           /* 0x00006b00ff0677ac */\\n                                                                                                                  /* 0x000eae0008000a00 */\\n        /*0040*/                   LDC R22, c[0x0][0x398]                     &wr=0x1          ?trans8;           /* 0x0000e600ff167b82 */\\n                                                                                                                  /* 0x000e700000000800 */\\n        /*0050*/                   LDC.64 R2, c[0x0][0x380]                   &wr=0x3          ?trans1;           /* 0x0000e000ff027b82 */\\n                                                     
 ...
 </persisted-output>
 ```
@@ -997,7 +996,7 @@ Preview (first 2KB):
 ```json
 {
  "pattern": "(LDG|STG|STL|LDL|SHFL|BAR)[^ ]*",
- "path": "C:\\Users\\xinhu\\.claude\\projects\\C--Users-xinhu-Documents-github-ai---hotkernel\\cfc50eda-b48f-4447-b8d5-ee4cefc0708a\\tool-results\\toolu_01UXqVGzLxcJj7Bf7FHQA7xE.json",
+ "path": "<home>/.claude/projects/<path-slug>/cfc50eda-b48f-4447-b8d5-ee4cefc0708a/tool-results/toolu_01UXqVGzLxcJj7Bf7FHQA7xE.json",
  "output_mode": "content",
  "-o": true
 }
@@ -1031,7 +1030,7 @@ Preview (first 2KB):
 ```json
 {
  "cmd": [
-  "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+  "<home>/venvs/5090lab-cu128/bin/python",
   "examples/rmsnorm_agent_candidate.py"
  ],
  "tool": "ncu",
@@ -1045,8 +1044,8 @@ Preview (first 2KB):
 ```
 {
   "tool": "ncu",
-  "report": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/profiles/ncu-20261014-194504.ncu-rep",
-  "details_csv": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/profiles/ncu-20261014-194504.details.csv",
+  "report": "<repo>/results/profiles/ncu-20261014-194504.ncu-rep",
+  "details_csv": "<repo>/results/profiles/ncu-20261014-194504.details.csv",
   "top": [
     {
       "id": "3",
@@ -1118,8 +1117,10 @@ Preview (first 2KB):
         "registers_per_thread": 64.0,
         "registers_per_thread_unit": "register/thread",
         "dynamic_smem_per_block": 32.0,
-        "dynamic_smem_per_block_unit": "byte/block
-... [6881 more chars]
+        "dynamic_smem_per_block_unit": "byte/block",
+        "static_smem_per_block": 0.0,
+        "static_smem_per_block_unit": "byte/blo
+... [6793 more chars]
 ```
 
 **Tool call `Edit`**
@@ -1127,7 +1128,7 @@ Preview (first 2KB):
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py",
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py",
  "old_string": "        N=n, BLOCK=triton.next_power_of_2(n), num_warps=8,",
  "new_string": "        N=n, BLOCK=triton.next_power_of_2(n), num_warps=16,"
 }
@@ -1136,7 +1137,7 @@ Preview (first 2KB):
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__verify`**
@@ -1200,11 +1201,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_agent_candidate.py"
     ]
   },
@@ -1285,11 +1286,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_agent_candidate.py"
    ]
   },
@@ -1310,16 +1311,17 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "candidate_extra": {
    "impl": "agent candidate"
   },
-  "gpu": "NVIDIA GeForce RT
-... [338 more chars]
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "
+... [326 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/rmsnorm/20261014-194640.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/rmsnorm/20261014-194640.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| rmsnorm | NVIDIA GeForce RTX 5090 | 575 W | 0.3009 (7) | 0.0911 (7) | 3.30x | H2: same fused kernel with num_warps=16 (16 elems/thread, fewer regs) - faster than baseline but no gain over H1 (0.0911 vs 0.0908 ms, within noise); reverted to 8 warps ([log](results/rmsnorm/20261014-194640.json)) | 2026-10-14 | 7a101b7 | agent:claude-fable-5-1, autonomous loop |",
   "verdict": "faster",
   "speedup_cell": "3.30x",
@@ -1333,7 +1335,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py",
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py",
  "old_string": "    x = tl.load(x_ptr + row * stride_row + cols, mask=mask, other=0.0).to(tl.float32)\n    w = tl.load(w_ptr + cols, mask=mask, other=0.0).to(tl.float32)\n    ms = tl.sum(x * x, axis=0) / N\n    inv = tl.rsqrt(ms + eps)\n    y = x * inv * w\n    tl.store(out_ptr + row * stride_row + cols, y.to(out_ptr.dtype.element_ty), mask=mask)",
  "new_string": "    # x and out are streamed exactly once -> evict_first; w is re-read by every row -> evict_last.\n    x = tl.load(x_ptr + row * stride_row + cols, mask=mask, other=0.0,\n                eviction_policy=\"evict_first\").to(tl.float32)\n    w = tl.load(w_ptr + cols, mask=mask, other=0.0, eviction_policy=\"evict_last\").to(tl.float32)\n    ms = tl.sum(x * x, axis=0) / N\n    inv = tl.rsqrt(ms + eps)\n    y = x * inv * w\n    tl.store(out_ptr + row * stride_row + cols, y.to(out_ptr.dtype.element_ty), mask=mask,\n             eviction_policy=\"evict_first\")"
 }
@@ -1342,7 +1344,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `Edit`**
@@ -1350,7 +1352,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py",
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py",
  "old_string": "        N=n, BLOCK=triton.next_power_of_2(n), num_warps=16,",
  "new_string": "        N=n, BLOCK=triton.next_power_of_2(n), num_warps=8,"
 }
@@ -1359,7 +1361,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Assistant:**
@@ -1427,11 +1429,11 @@ Still looping: H2 is recorded, and the candidate now carries H3 (eviction hints,
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_agent_candidate.py"
     ]
   },
@@ -1512,11 +1514,11 @@ Still looping: H2 is recorded, and the candidate now carries H3 (eviction hints,
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_agent_candidate.py"
    ]
   },
@@ -1537,16 +1539,17 @@ Still looping: H2 is recorded, and the candidate now carries H3 (eviction hints,
   "candidate_extra": {
    "impl": "agent candidate"
   },
-  "gpu": "NVIDIA GeForce R
-... [301 more chars]
+  "gpu": "NVIDIA GeForce RTX 5090",
+  
+... [289 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/rmsnorm/20261014-194749.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/rmsnorm/20261014-194749.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| rmsnorm | NVIDIA GeForce RTX 5090 | 575 W | 0.3013 (7) | 0.0925 (7) | 3.26x | H3: H1 + eviction hints (x/out evict_first, w evict_last) - faster than baseline but slower than H1 (0.0925 vs 0.0908 ms); reverted ([log](results/rmsnorm/20261014-194749.json)) | 2026-10-14 | 7a101b7 | agent:claude-fable-5-1, autonomous loop |",
   "verdict": "faster",
   "speedup_cell": "3.26x",
@@ -1560,16 +1563,16 @@ Still looping: H2 is recorded, and the candidate now carries H3 (eviction hints,
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py",
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py",
  "old_string": "@triton.jit\ndef _rmsnorm_fused_kernel(\n    x_ptr, w_ptr, out_ptr,\n    stride_row,\n    eps,\n    N: tl.constexpr,\n    BLOCK: tl.constexpr,\n):\n    # One program per row. The whole row (N bf16 values) is loaded once into registers,\n    # the sum of squares is reduced in fp32, and the normalized row is written once.\n    row = tl.program_id(0)\n    cols = tl.arange(0, BLOCK)\n    mask = cols < N\n    # x and out are streamed exactly once -> evict_first; w is re-read by every row -> evict_last.\n    x = tl.load(x_ptr + row * stride_row + cols, mask=mask, other=0.0,\n                eviction_policy=\"evict_first\").to(tl.float32)\n    w = tl.load(w_ptr + cols, mask=mask, other=0.0, eviction_policy=\"evict_last\").to(tl.float32)\n    ms = tl.sum(x * x, axis=0) / N\n    inv = tl.rsqrt(ms + eps)\n    y = x * inv * w\n    tl.store(out_ptr + row * stride_row + cols, y.to(out_ptr.dtype.element_ty), mask=mask,\n             eviction_policy=\"evict_first\")\n\n\ndef rmsnorm_candidate(x: torch.Tensor, w: torch.Tensor) -> torch.Tensor:\n    out = torch.empty_like(x)\n    rows, n = x.shape\n    _rmsnorm_fused_kernel[(rows,)](\n        x, w, out, x.stride(0), EPS,\n        N=n, BLOCK=triton.next_power_of_2(n), num_warps=8,\n    )\n    return out",
- "new_string": "@triton.jit\ndef _rmsnorm_fused_kernel(\n    x_ptr, w_ptr, out_ptr,\n    stri
-... [1250 more chars]
+ "new_string": "@triton.jit\ndef _rmsnorm_fused_kernel(\n    x_ptr, w_ptr, out_ptr,\n    stride_row,\n    eps,\n    n_rows,\n    N: tl.conste
+... [1202 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__verify`**
@@ -1637,11 +1640,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_agent_candidate.py"
     ]
   },
@@ -1722,11 +1725,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_agent_candidate.py"
    ]
   },
@@ -1747,16 +1750,17 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "candidate_extra": {
    "impl": "agent candidate"
   },
-  "gpu": "NVIDIA GeForce RTX 5
-... [322 more chars]
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "dri
+... [310 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/rmsnorm/20261014-194911.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/rmsnorm/20261014-194911.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| rmsnorm | NVIDIA GeForce RTX 5090 | 575 W | 0.3028 (7) | 0.1022 (7) | 2.96x | H4: persistent grid (4 programs/SM = 680), each loops over rows with w loaded once - faster than baseline but slower than H1 (0.1022 vs 0.0908 ms); reverted ([log](results/rmsnorm/20261014-194911.json)) | 2026-10-14 | 7a101b7 | agent:claude-fable-5-1, autonomous loop |",
   "verdict": "faster",
   "speedup_cell": "2.96x",
@@ -1770,16 +1774,16 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py",
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py",
  "old_string": "    n_rows,\n    N: tl.constexpr,\n    BLOCK: tl.constexpr,\n):\n    # Persistent: a fixed grid of programs, each walks rows pid, pid+grid, ... and loads w\n    # once. Each row (N bf16 values) is read once into registers, reduced in fp32, written once.\n    pid = tl.program_id(0)\n    nprog = tl.num_programs(0)\n    cols = tl.arange(0, BLOCK)\n    mask = cols < N\n    w = tl.load(w_ptr + cols, mask=mask, other=0.0).to(tl.float32)\n    for row in range(pid, n_rows, nprog):\n        x = tl.load(x_ptr + row * stride_row + cols, mask=mask, other=0.0).to(tl.float32)\n        ms = tl.sum(x * x, axis=0) / N\n        inv = tl.rsqrt(ms + eps)\n        y = x * inv * w\n        tl.store(out_ptr + row * stride_row + cols, y.to(out_ptr.dtype.element_ty), mask=mask)\n\n\n_NUM_SMS = torch.cuda.get_device_properties(0).multi_processor_count\n\n\ndef rmsnorm_candidate(x: torch.Tensor, w: torch.Tensor) -> torch.Tensor:\n    out = torch.empty_like(x)\n    rows, n = x.shape\n    grid = min(rows, _NUM_SMS * 4)  # 4 resident blocks per SM at 64 regs/thread, 256 threads\n    _rmsnorm_fused_kernel[(grid,)](\n        x, w, out, x.stride(0), EPS, rows,\n        N=n, BLOCK=triton.next_power_of_2(n), num_warps=8,\n    )\n    return out",
- "new_string": "    n_rows,\n    N: tl.constexpr,\n    BLOCK: tl.constexpr,\n    R: tl.constexpr,\n):\n    # R rows per 
-... [1057 more chars]
+ "new_string": "    n_rows,\n    N: tl.constexpr,\n    BLOCK: tl.constexpr,\n    R: tl.constexpr,\n):\n    # R rows per program as one [R, BLOCK] tile: w is loaded once
+... [1009 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__verify`**
@@ -1843,11 +1847,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_agent_candidate.py"
     ]
   },
@@ -1928,11 +1932,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_agent_candidate.py"
    ]
   },
@@ -1953,16 +1957,17 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "candidate_extra": {
    "impl": "agent candidate"
   },
-  "gpu": "NVIDIA GeForce RT
-... [328 more chars]
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "
+... [316 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/rmsnorm/20261014-195026.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/rmsnorm/20261014-195026.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| rmsnorm | NVIDIA GeForce RTX 5090 | 575 W | 0.3021 (7) | 0.0937 (7) | 3.22x | H5: 2 rows per program as a [2,8192] tile, w loaded once per pair, num_warps=16 - faster than baseline but slower than H1 (0.0937 vs 0.0908 ms); reverted to H1 ([log](results/rmsnorm/20261014-195026.json)) | 2026-10-14 | 7a101b7 | agent:claude-fable-5-1, autonomous loop |",
   "verdict": "faster",
   "speedup_cell": "3.22x",
@@ -1976,16 +1981,16 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py",
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py",
  "old_string": "    n_rows,\n    N: tl.constexpr,\n    BLOCK: tl.constexpr,\n    R: tl.constexpr,\n):\n    # R rows per program as one [R, BLOCK] tile: w is loaded once per R rows and the R row\n    # loads are in flight together. Each row is read once, reduced in fp32, written once.\n    pid = tl.program_id(0)\n    rows = pid * R + tl.arange(0, R)\n    cols = tl.arange(0, BLOCK)\n    rmask = rows < n_rows\n    cmask = cols < N\n    mask = rmask[:, None] & cmask[None, :]\n    offs = rows[:, None] * stride_row + cols[None, :]\n    x = tl.load(x_ptr + offs, mask=mask, other=0.0).to(tl.float32)\n    w = tl.load(w_ptr + cols, mask=cmask, other=0.0).to(tl.float32)\n    ms = tl.sum(x * x, axis=1) / N\n    inv = tl.rsqrt(ms + eps)\n    y = x * inv[:, None] * w[None, :]\n    tl.store(out_ptr + offs, y.to(out_ptr.dtype.element_ty), mask=mask)\n\n\ndef rmsnorm_candidate(x: torch.Tensor, w: torch.Tensor) -> torch.Tensor:\n    out = torch.empty_like(x)\n    rows, n = x.shape\n    R = 2\n    _rmsnorm_fused_kernel[(triton.cdiv(rows, R),)](\n        x, w, out, x.stride(0), EPS, rows,\n        N=n, BLOCK=triton.next_power_of_2(n), R=R, num_warps=16,\n    )\n    return out",
- "new_string": "    N: tl.constexpr,\n    BLOCK: tl.constexpr,\n):\n    # One program per row. The whole row (N bf16 values) is loaded once into registers,\n    # the sum of squares is reduc
-... [950 more chars]
+ "new_string": "    N: tl.constexpr,\n    BLOCK: tl.constexpr,\n):\n    # One program per row. The whole row (N bf16 values) is loaded once into registers,\n    # the sum of squares is reduced in fp32, and the normalized row is written on
+... [902 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Assistant:**
@@ -2053,11 +2058,11 @@ Candidate is back to the H1 kernel. Running the reproduction verify of the resto
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_agent_candidate.py"
     ]
   },
@@ -2142,11 +2147,11 @@ Reproduced: 3.31x, 0.0906 ms. Recording this final row.
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_agent_candidate.py"
    ]
   },
@@ -2167,16 +2172,17 @@ Reproduced: 3.31x, 0.0906 ms. Recording this final row.
   "candidate_extra": {
    "impl": "agent candidate"
   },
-  "gpu": "NVIDIA GeForce RTX
-... [329 more chars]
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "d
+... [317 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/rmsnorm/20261014-195124.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/rmsnorm/20261014-195124.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| rmsnorm | NVIDIA GeForce RTX 5090 | 575 W | 0.3001 (7) | 0.0906 (7) | 3.31x | H1 reproduction: candidate restored to the H1 fused Triton kernel (1 row/program, BLOCK=8192, num_warps=8) after H2-H5 failed to beat it; final state of the file ([log](results/rmsnorm/20261014-195124.json)) | 2026-10-14 | 7a101b7 | agent:claude-fable-5-1, autonomous loop |",
   "verdict": "faster",
   "speedup_cell": "3.31x",

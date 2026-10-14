@@ -1,4 +1,4 @@
-cache dir: /home/ubuntu/.triton/cache
+cache dir: <home>/.triton/cache
 files: ['hk_probe_add.source', 'hk_probe_add.ttir', 'hk_probe_add.ttgir', 'hk_probe_add.llir', 'hk_probe_add.ptx', 'hk_probe_add.cubin', 'hk_probe_add.json']
 ptx target line: ['.target sm_120a']
 --- cuobjdump -sass: rc=0 lines=121 wall=0.23s stderr=''

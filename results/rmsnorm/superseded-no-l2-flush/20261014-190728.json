@@ -51,15 +51,15 @@
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_candidate.py"
    ]
   },
-  "cwd": "/home/ubuntu/hotkernel",
+  "cwd": "<repo>",
   "timestamp": "2026-10-14T19:07:28+0200",
   "wall_s": 32.7,
   "contract": {

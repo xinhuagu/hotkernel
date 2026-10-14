@@ -30,7 +30,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204018.json"
+   "log": "<repo>/results/rmsnorm/20261014-204018.json"
   },
   {
    "rep": 1,
@@ -57,7 +57,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204049.json"
+   "log": "<repo>/results/rmsnorm/20261014-204049.json"
   },
   {
    "rep": 1,
@@ -84,7 +84,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204121.json"
+   "log": "<repo>/results/rmsnorm/20261014-204121.json"
   },
   {
    "rep": 1,
@@ -111,7 +111,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204149.json"
+   "log": "<repo>/results/rmsnorm/20261014-204149.json"
   },
   {
    "rep": 1,
@@ -138,7 +138,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/softmax/20261014-204218.json"
+   "log": "<repo>/results/softmax/20261014-204218.json"
   },
   {
    "rep": 1,
@@ -165,7 +165,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/gemv/20261014-204300.json"
+   "log": "<repo>/results/gemv/20261014-204300.json"
   },
   {
    "rep": 2,
@@ -192,7 +192,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204328.json"
+   "log": "<repo>/results/rmsnorm/20261014-204328.json"
   },
   {
    "rep": 2,
@@ -219,7 +219,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204359.json"
+   "log": "<repo>/results/rmsnorm/20261014-204359.json"
   },
   {
    "rep": 2,
@@ -246,7 +246,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204430.json"
+   "log": "<repo>/results/rmsnorm/20261014-204430.json"
   },
   {
    "rep": 2,
@@ -273,7 +273,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204458.json"
+   "log": "<repo>/results/rmsnorm/20261014-204458.json"
   },
   {
    "rep": 2,
@@ -300,7 +300,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/softmax/20261014-204527.json"
+   "log": "<repo>/results/softmax/20261014-204527.json"
   },
   {
    "rep": 2,
@@ -327,7 +327,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/gemv/20261014-204606.json"
+   "log": "<repo>/results/gemv/20261014-204606.json"
   },
   {
    "rep": 3,
@@ -354,7 +354,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204634.json"
+   "log": "<repo>/results/rmsnorm/20261014-204634.json"
   },
   {
    "rep": 3,
@@ -381,7 +381,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204703.json"
+   "log": "<repo>/results/rmsnorm/20261014-204703.json"
   },
   {
    "rep": 3,
@@ -408,7 +408,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204733.json"
+   "log": "<repo>/results/rmsnorm/20261014-204733.json"
   },
   {
    "rep": 3,
@@ -435,7 +435,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/rmsnorm/20261014-204800.json"
+   "log": "<repo>/results/rmsnorm/20261014-204800.json"
   },
   {
    "rep": 3,
@@ -462,7 +462,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/softmax/20261014-204828.json"
+   "log": "<repo>/results/softmax/20261014-204828.json"
   },
   {
    "rep": 3,
@@ -489,7 +489,7 @@
     "torch": "2.11.0+cu128"
    },
    "mismatch": [],
-   "log": "/home/ubuntu/hotkernel/results/gemv/20261014-204908.json"
+   "log": "<repo>/results/gemv/20261014-204908.json"
   }
  ]
 }

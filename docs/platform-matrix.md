@@ -13,12 +13,12 @@ being run.
 | Driver | 617.42 (nvidia-smi header: `KMD Version: 617.42`, `CUDA UMD Version: 13.4`) |
 | Host | Windows 11 Home 10.0.26200 |
 | WSL2 | Ubuntu 24.04 LTS, kernel 6.18.33.2-microsoft-standard-WSL2, user `ubuntu` |
-| Torch env (WSL2) | `~/venvs/5090lab-cu128`: Python 3.12.3, torch 2.11.0+cu128, Triton 3.6.0, cuDNN 9.19 (built by the homerun project) |
+| Torch env (WSL2) | `~/venvs/5090lab-cu128`: Python 3.12.3, torch 2.11.0+cu128, Triton 3.6.0, cuDNN 9.19 (a pre-existing venv, reused as is) |
 | uv | WSL2: uv 0.13.0 at `~/.local/bin/uv`. Windows: none before day 1; installed with `python -m pip install uv` into the system Python 3.12 (`uv 0.13.0`, on PATH via `...\Python312\Scripts`) |
 | CUDA toolkit | **Not installed on either side.** WSL2 has no `/usr/local/cuda`, no `nvcc`, no cuda dpkg packages. Windows has no `C:\Program Files\NVIDIA GPU Computing Toolkit` and `CUDA_PATH` is unset. |
 
-The repo lives on the Windows filesystem (`C:\Users\xinhu\Documents\github\ai模型\hotkernel`).
-WSL2 reaches it through the symlink `~/hotkernel -> /mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel`,
+The repo lives on the Windows filesystem, under the user's home in a folder whose path has a
+non-ASCII component. WSL2 reaches it through the symlink `~/hotkernel -> /mnt/c/Users/<name>/.../hotkernel`,
 which keeps the non-ASCII path out of every command line below.
 
 ## The matrix
@@ -82,8 +82,8 @@ claude mcp add hotkernel -- wsl.exe -e bash -lc "HOTKERNEL_PYTHON=/home/ubuntu/v
 
 Run it from PowerShell or cmd, not Git Bash: MSYS path conversion rewrote `/home/ubuntu/...`
 to `C:/Program Files/Git/home/ubuntu/...` and the server then failed to start.
-`claude mcp get hotkernel` reports `Status: Connected` (local scope, project
-`C:\Users\xinhu\Documents\github\ai模型\hotkernel`).
+`claude mcp get hotkernel` reports `Status: Connected` (local scope, project = the repo's
+Windows path).
 
 The plan's one-liner `claude mcp add hotkernel -- uv run --directory <repo> hotkernel` also
 works on Windows now that uv is installed there, but that server only has `gpu_info` and

@@ -16,4 +16,4 @@
 [3] rmsnorm  rmsnorm_wrong_candidate.py   incorrect    None     b=0.2918 c=0.4832
 [3] softmax  candidate_protocol3.py       faster       1.1831   b=0.1068 c=0.0903
 [3] gemv     candidate_protocol3.py       faster       1.0518   b=0.0912 c=0.0867
-summary: /home/ubuntu/hotkernel/results/env/remeasure_protocol3_20261014-204908.json
+summary: <repo>/results/env/remeasure_protocol3_20261014-204908.json

@@ -33,7 +33,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\skills\\kernel-speedrun\\SKILL.md"
+ "file_path": "<repo>/skills/kernel-speedrun/SKILL.md"
 }
 ```
 
@@ -89,7 +89,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_baseline.py"
+ "file_path": "<repo>/examples/int4_gemv_baseline.py"
 }
 ```
 
@@ -161,7 +161,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py"
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py"
 }
 ```
 
@@ -169,7 +169,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\_hotkernel_contract.py"
+ "file_path": "<repo>/examples/_hotkernel_contract.py"
 }
 ```
 
@@ -284,7 +284,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_paths.py"
+ "file_path": "<repo>/examples/int4_gemv_paths.py"
 }
 ```
 
@@ -507,11 +507,11 @@ Floor 0.0238 ms (stop target ≤ 0.0261 ms). Control verify:
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/int4_gemv_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/int4_gemv_agent_candidate.py"
     ]
   },
@@ -599,11 +599,11 @@ Floor 0.0238 ms (stop target ≤ 0.0261 ms). Control verify:
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py"
    ]
   },
@@ -622,15 +622,16 @@ Floor 0.0238 ms (stop target ≤ 0.0261 ms). Control verify:
    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
    "rotation_k": 6,
    "rotation_bytes": 427917312,
-... [679 more chars]
+   "l2_byte
+... [667 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/int4_gemv/20261014-224818.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/int4_gemv/20261014-224818.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| int4_gemv | NVIDIA GeForce RTX 5090 | 575 W | 0.0326 (7) | 0.0338 (7) | no gain | control: unchanged candidate (baseline tinygemm call) ([log](results/int4_gemv/20261014-224818.json)) | 2026-10-14 | 9c3d623 | agent:claude-opus-5-5, autonomous loop, results/int4_gemv/agent-run-20261014-224714 |",
   "verdict": "inconclusive",
   "speedup_cell": "no gain",
@@ -654,15 +655,15 @@ Floor 0.0238 ms (stop target ≤ 0.0261 ms). Control verify:
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
- "content": "\"\"\"Blank candidate for the int4_gemv target: the file the agent edits in the kernel-speedrun\nloop.\n\nIt starts as the baseline's own call (torch._weight_int4pack_mm), so the first verify() is a\nfair \"inconclusive\" and every later verdict measures only what the agent changed. Define\nint4_gemv_candidate(x, w_q, scales, zeros, w_packed, scales_and_zeros) and leave the run()\ncall alone: inputs, quantization, seed, reference, tolerances, rotation and timer are the\nbaseline's, and verify() reports `invalid` if the contract changes.\n\nEither weight layout may be read, never both per call: w_q is (n, k/2) uint8 with the even\ncolumn in the high nibble, scales and zeros are (n, k/128) bf16 and dequant(q) = (q - 8) *\nscale + zero; w_packed and scales_and_zeros are the same codes in tinygemm's layout. Triton\nand torch.compile are fair game.\n\"\"\"\n\nimport torch\nimport triton\nimport triton.language as tl\n\nfrom int4_gemv_baseline import baseline_fn, run  # noqa: F401\n\nBLOCK_N, BLOCK_KB, NUM_WARPS = 4, 256, 4  # rows per program, code bytes per step (2 groups of 64 B)\n\n\n@triton.jit\ndef _int4_gemv_kernel(x_ptr, wq_ptr, s_ptr, z_ptr, y_ptr, N, KB: tl.constexpr, NG: tl.constexpr,\n                      BLOCK_N: tl.constexpr, BLOCK_KB: tl.constexpr):\n    # One program: BLOCK_N rows of W. Per group of 128 values (64 code bytes):\n    # sum_j ((
-... [1716 more chars]
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
+ "content": "\"\"\"Blank candidate for the int4_gemv target: the file the agent edits in the kernel-speedrun\nloop.\n\nIt starts as the baseline's own call (torch._weight_int4pack_mm), so the first verify() is a\nfair \"inconclusive\" and every later verdict measures only what the agent changed. Define\nint4_gemv_candidate(x, w_q, scales, zeros, w_packed, scales_and_zeros) and leave the run()\ncall alone: inputs, quantization, seed, reference, tolerances, rotation and timer are the\nbaseline's, and verify() reports `invalid` if the contract changes.\n\nEither weight layout may be read, never both per call: w_q is (n, k/2) uint8 with the even\ncolumn in the high nibble, scales and zeros are (n, k/128) bf16 and dequant(q) = (q - 8) *\nscale + zero; w_packed and scales_and_zeros are the same codes in tinygemm's layout. Triton\nand torch.compile are fair game.\n\"\"\"\n\nimport torch\nimport triton\nimport triton.language as tl\n\nfrom int4_gemv_baseline import baseline_fn, run  # noqa: F401\n\nBLOCK_N, BLOCK_KB, NUM_WARPS = 4, 256, 4  # rows per program, code bytes per step (2 groups of 64 B)\n\n\n@triton.jit\ndef _int4_gemv_kernel(x_ptr, wq_ptr, s_ptr, z_ptr, y_ptr, N, KB: tl.constexpr, NG: tl.constexpr,\n                      BLOCK_N: tl.constexpr, BLOCK_KB: tl.constexpr):\n    # One program: BLOCK_N rows of W. Per group of 128 values (64 code bytes):\n    # sum_j ((q_j - 8) s + z) x_j = s * (sum_j q_j x_j - 8 xs)
+... [1668 more chars]
 ```
 
 **Tool result `Write`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -679,7 +680,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py"
   ],
   "n": 5,
@@ -804,8 +805,9 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
       "shapes": {
         "x": [
           8192
-       
-... [3273 more chars]
+        ],
+  
+... [3267 more chars]
 ```
 
 **Tool call `ToolSearch`**
@@ -939,13 +941,13 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
   "script_exit_code": 0,
   "torch": "2.11.0+cu128",
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "/tmp/tmpyc4_g5cg_hotkernel_torchprof.py",
     "examples/int4_gemv_agent_candidate.py",
     "6"
   ],
-  "note": "whole-script profile (setup, reference, correctness
-... [103 more chars]
+  "note": "whole-script profile (setup, reference, correctness check
+... [97 more chars]
 ```
 
 **Tool result `mcp__hotkernel__torch_trace`**
@@ -1046,9 +1048,9 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
   "script_exit_code": 0,
   "torch": "2.11.0+cu128",
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
-    "/tmp/tmpdnccb7
-... [244 more chars]
+    "<home>/venvs/5090lab-cu128/bin/python",
+    "/tmp/tmpdnccb7jq_hot
+... [238 more chars]
 ```
 
 **Tool call `Edit`**
@@ -1056,16 +1058,16 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "def int4_gemv_candidate(x, w_q, scales, zeros, w_packed, scales_and_zeros):\n    n, kb = w_q.shape\n    y = torch.empty(n, device=x.device, dtype=x.dtype)\n    _int4_gemv_kernel[(n // BLOCK_N,)](x, w_q, scales, zeros, y, n, KB=kb, NG=scales.shape[1],\n                                       BLOCK_N=BLOCK_N, BLOCK_KB=BLOCK_KB, num_warps=NUM_WARPS)\n    return y",
- "new_string": "if len(sys.argv) > 1:  # sweep hook for bench(): \"BLOCK_N,BLOCK_KB,warps[,fast]\"\n    _a = sys.argv[1].split(\",\")\n    BLOCK_N, BLOCK_KB, NUM_WARPS = int(_a[0]), int(_a[1]), int(_a[2])\n    FAST = len(_a) < 4 or _a[3] != \"0\"\nelse:\n    FAST = True\n\n_compiled = {}\n\n\ndef int4_gemv_candidate(x, w_q, scales, zeros, w_packed, scales_and_zeros):\n    n, kb = w_q.shape\n    ng = scales.shape[1]\n    y = torch.empty(n, device=x.device, dtype=x.dtype)\n    grid = (n // BLOCK_N,)\n    runner = _compiled.get((n, kb, ng)) if FAST else None\n    if runner is not None:\n        # Launch the already-compiled kernel directly: skips the JIT's per-call argument\n        # binding and cache lookup, which costs more CPU time than the kernel itself here.\n        runner(x, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n        return y\n    ck = _int4_gemv_kernel[grid](x, w_q, scales, zeros, y, n, KB=kb, NG=ng,\n                                 BLOCK_N=BLOC
-... [100 more chars]
+ "new_string": "if len(sys.argv) > 1:  # sweep hook for bench(): \"BLOCK_N,BLOCK_KB,warps[,fast]\"\n    _a = sys.argv[1].split(\",\")\n    BLOCK_N, BLOCK_KB, NUM_WARPS = int(_a[0]), int(_a[1]), int(_a[2])\n    FAST = len(_a) < 4 or _a[3] != \"0\"\nelse:\n    FAST = True\n\n_compiled = {}\n\n\ndef int4_gemv_candidate(x, w_q, scales, zeros, w_packed, scales_and_zeros):\n    n, kb = w_q.shape\n    ng = scales.shape[1]\n    y = torch.empty(n, device=x.device, dtype=x.dtype)\n    grid = (n // BLOCK_N,)\n    runner = _compiled.get((n, kb, ng)) if FAST else None\n    if runner is not None:\n        # Launch the already-compiled kernel directly: skips the JIT's per-call argument\n        # binding and cache lookup, which costs more CPU time than the kernel itself here.\n        runner(x, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n        return y\n    ck = _int4_gemv_kernel[grid](x, w_q, scales, zeros, y, n, KB=kb, NG=ng,\n                                 BLOCK_N=BLOCK_N, BLOCK_KB=BLOCK_KB, num_warps=NUM_WARPS)\n  
+... [52 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `Edit`**
@@ -1073,7 +1075,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "import torch\nimport triton",
  "new_string": "import sys\n\nimport torch\nimport triton"
 }
@@ -1082,7 +1084,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Assistant:**
@@ -1108,13 +1110,13 @@ Wrote a Triton int4 GEMV (kernel ~31 µs vs tinygemm ~28 µs, plus launch overhe
   "error": "script failed on run 0",
   "detail": {
     "cmd": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/int4_gemv_agent_candidate.py",
       "4,256,4,1"
     ],
     "returncode": 1,
     "stdout": "",
-    "stderr": "Traceback (most recent call last):\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/int4_gemv_agent_candidate.py\", line 83, in <module>\n    run(int4_gemv_candidate, impl=\"agent candidate\",\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/int4_gemv_baseline.py\", line 54, in run\n    TARGET.run(fn, impl=impl, extra=extra)\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/_hotkernel_contract.py\", line 185, in run\n    ms = time_kernel(fn, inputs, iters=self.iters)\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/_hotkernel_contract.py\", line 73, in time_kernel\n    held.append(fn(*inputs[i % k]))\n                ^^^^^^^^^^^^^^^^^^\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/int4_gemv_agent_candidate.py\", line 74, in int4_gemv_candidate\n    runner(x, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n  File \"/home/ubuntu/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/compiler/compiler.py\", line 498, in runner\n    self.run(grid[0], grid[1], grid[2], stream, self.function, self.packed_metadata, launch_metadata,\n                      ~~~~^^^\nIndexError: tuple index out of range\n",
+    "stderr": "Traceback (most recent call last):\n  File \"<repo>/examples/int4_gemv_agent_candidate.py\", line 83, in <module>\n    run(int4_gemv_candidate, impl=\"agent candidate\",\n  File \"<repo>/examples/int4_gemv_baseline.py\", line 54, in run\n    TARGET.run(fn, impl=impl, extra=extra)\n  File \"<repo>/examples/_hotkernel_contract.py\", line 185, in run\n    ms = time_kernel(fn, inputs, iters=self.iters)\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<repo>/examples/_hotkernel_contract.py\", line 73, in time_kernel\n    held.append(fn(*inputs[i % k]))\n                ^^^^^^^^^^^^^^^^^^\n  File \"<repo>/examples/int4_gemv_agent_candidate.py\", line 74, in int4_gemv_candidate\n    runner(x, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n  File \"<home>/venvs/5090lab-cu128/lib/python3.12/site-packages/triton/compiler/compiler.py\", line 498, in runner\n    self.run(grid[0], grid[1], grid[2], stream, self.function, self.packed_metadata, launch_metadata,\n                      ~~~~^^^\nIndexError: tuple index out of range\n",
     "wall_s": 2.197
   }
 }
@@ -1129,7 +1131,7 @@ Grid needs 3 dims for the raw runner.
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "    _compiled[(n, kb, ng)] = ck[grid]",
  "new_string": "    _compiled[(n, kb, ng)] = ck[(grid[0], 1, 1)]"
 }
@@ -1138,7 +1140,7 @@ Grid needs 3 dims for the raw runner.
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1158,7 +1160,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "4,256,4,1"
   ],
@@ -1283,8 +1285,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
       "target": "int4_gemv",
       "shapes": {
         "x": [
-    
-... [3291 more chars]
+          
+... [3285 more chars]
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1308,7 +1310,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "4,512,4"
   ],
@@ -1433,8 +1435,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
       "target": "int4_gemv",
       "shapes": {
         "x": [
-     
-... [914 more chars]
+          8
+... [908 more chars]
 ```
 
 **Tool call `Edit`**
@@ -1442,16 +1444,16 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "    runner = _compiled.get((n, kb, ng)) if FAST else None\n    if runner is not None:\n        # Launch the already-compiled kernel directly: skips the JIT's per-call argument\n        # binding and cache lookup, which costs more CPU time than the kernel itself here.\n        runner(x, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n        return y\n    ck = _int4_gemv_kernel[grid](x, w_q, scales, zeros, y, n, KB=kb, NG=ng,\n                                 BLOCK_N=BLOCK_N, BLOCK_KB=BLOCK_KB, num_warps=NUM_WARPS)\n    _compiled[(n, kb, ng)] = ck[(grid[0], 1, 1)]\n    return y",
- "new_string": "    c = _compiled.get((n, kb, ng)) if FAST else None\n    if c is not None:\n        # Launch the already-compiled kernel straight through Triton's C launcher: skips the\n        # JIT's per-call argument binding, cache lookup and stream query. The timer measures\n        # CPU dispatch gaps too, and here they are comparable to the ~30 us kernel.\n        ck, stream = c\n        ck.run(grid[0], 1, 1, stream, ck.function, ck.packed_metadata, None, None, None,\n               x, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n        return y\n    ck = _int4_gemv_kernel[grid](x, w_q, scales, zeros, y, n, KB=kb, NG=ng,\n                                 BLOCK_N=BLOCK_N, BLOCK_KB=BLOCK_KB, num_warps=NUM_WARPS)\n    ck._init_handle
-... [96 more chars]
+ "new_string": "    c = _compiled.get((n, kb, ng)) if FAST else None\n    if c is not None:\n        # Launch the already-compiled kernel straight through Triton's C launcher: skips the\n        # JIT's per-call argument binding, cache lookup and stream query. The timer measures\n        # CPU dispatch gaps too, and here they are comparable to the ~30 us kernel.\n        ck, stream = c\n        ck.run(grid[0], 1, 1, stream, ck.function, ck.packed_metadata, None, None, None,\n               x, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n        return y\n    ck = _int4_gemv_kernel[grid](x, w_q, scales, zeros, y, n, KB=kb, NG=ng,\n                                 BLOCK_N=BLOCK_N, BLOCK_KB=BLOCK_KB, num_warps=NUM_WARPS)\n    ck._init_handles()\n    _compiled[(n, kb, ng)] = (ck, torch.cud
+... [48 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1471,7 +1473,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "4,256,4"
   ],
@@ -1596,8 +1598,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
       "target": "int4_gemv",
       "shapes": {
         "x": [
-     
-... [914 more chars]
+          8
+... [908 more chars]
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1617,7 +1619,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "8,512,4"
   ],
@@ -1742,8 +1744,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
       "target": "int4_gemv",
       "shapes": {
         "x": [
-       
-... [912 more chars]
+          819
+... [906 more chars]
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1763,7 +1765,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "16,512,8"
   ],
@@ -1888,8 +1890,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
       "target": "int4_gemv",
       "shapes": {
         "x": [
-   
-... [918 more chars]
+         
+... [912 more chars]
 ```
 
 **Tool call `Edit`**
@@ -1897,7 +1899,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "    acc = tl.zeros((BLOCK_N, GPB), dtype=tl.float32)\n    for kb in range(0, KB, BLOCK_KB):\n        b = tl.load(wq_ptr + rows[:, None] * KB + kb + cols[None, :]).to(tl.int32)",
  "new_string": "    acc = tl.zeros((BLOCK_N, GPB), dtype=tl.float32)\n    wrow = wq_ptr + rows[:, None] * KB + cols[None, :]\n    b_next = tl.load(wrow)\n    for kb in range(0, KB, BLOCK_KB):\n        # Register double buffer: issue the next tile's loads before this tile's math\n        # (wraps to tile 0 on the last step, an L2 hit, so no mask is needed).\n        b = b_next.to(tl.int32)\n        b_next = tl.load(wrow + (kb + BLOCK_KB) % KB)"
 }
@@ -1906,7 +1908,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1926,7 +1928,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "16,512,8"
   ],
@@ -2051,8 +2053,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
       "target": "int4_gemv",
       "shapes": {
         "x": [
-    
-... [916 more chars]
+          
+... [910 more chars]
 ```
 
 **Assistant:**
@@ -2076,7 +2078,7 @@ Still tuning the Triton kernel with bench() sweeps; best so far is ~0.034 ms vs 
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "8,256,4"
   ],
@@ -2201,8 +2203,8 @@ Still tuning the Triton kernel with bench() sweeps; best so far is ~0.034 ms vs 
       "target": "int4_gemv",
       "shapes": {
         "x": [
-      
-... [913 more chars]
+          81
+... [907 more chars]
 ```
 
 **Tool call `Edit`**
@@ -2210,7 +2212,7 @@ Still tuning the Triton kernel with bench() sweeps; best so far is ~0.034 ms vs 
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "    wrow = wq_ptr + rows[:, None] * KB + cols[None, :]\n    b_next = tl.load(wrow)\n    for kb in range(0, KB, BLOCK_KB):\n        # Register double buffer: issue the next tile's loads before this tile's math\n        # (wraps to tile 0 on the last step, an L2 hit, so no mask is needed).\n        b = b_next.to(tl.int32)\n        b_next = tl.load(wrow + (kb + BLOCK_KB) % KB)",
  "new_string": "    for kb in range(0, KB, BLOCK_KB):\n        b = tl.load(wq_ptr + rows[:, None] * KB + kb + cols[None, :]).to(tl.int32)"
 }
@@ -2219,7 +2221,7 @@ Still tuning the Triton kernel with bench() sweeps; best so far is ~0.034 ms vs 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `Edit`**
@@ -2227,7 +2229,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "BLOCK_N, BLOCK_KB, NUM_WARPS = 4, 256, 4  # rows per program, code bytes per step (2 groups of 64 B)",
  "new_string": "BLOCK_N, BLOCK_KB, NUM_WARPS = 16, 512, 8  # rows per program, code bytes per step (8 groups of 64 B)"
 }
@@ -2236,7 +2238,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__verify`**
@@ -2304,11 +2306,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/int4_gemv_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/int4_gemv_agent_candidate.py"
     ]
   },
@@ -2398,11 +2400,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py"
    ]
   },
@@ -2421,16 +2423,16 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
    "rotation_k": 6,
    "rotation_bytes": 427917312,
-
-... [827 more chars]
+   "l2_bytes
+... [815 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/int4_gemv/20261014-225254.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/int4_gemv/20261014-225254.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| int4_gemv | NVIDIA GeForce RTX 5090 | 575 W | 0.0326 (7) | 0.0360 (7) | no gain | Triton GEMV on w_q uint8 layout, group-factored dequant (s*(sum qx - 8 sum x) + z sum x), direct compiled-kernel launch; BLOCK_N=16,BLOCK_KB=512,warps=8 ([log](results/int4_gemv/20261014-225254.json)) | 2026-10-14 | 9c3d623 | agent:claude-opus-5-5, autonomous loop, results/int4_gemv/agent-run-20261014-224714 |",
   "verdict": "inconclusive",
   "speedup_cell": "no gain",
@@ -2487,8 +2489,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```
 {
   "tool": "ncu",
-  "report": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/profiles/ncu-20261014-225301.ncu-rep",
-  "details_csv": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/profiles/ncu-20261014-225301.details.csv",
+  "report": "<repo>/results/profiles/ncu-20261014-225301.ncu-rep",
+  "details_csv": "<repo>/results/profiles/ncu-20261014-225301.details.csv",
   "top": [
     {
       "id": "0",
@@ -2544,8 +2546,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
           "rule": "WorkloadImbalance",
           "type": "OPT",
           "estimated_speedup_pct": 18.36,
-          "text": "One or more SMs have a much higher number of active cycles than the average number of active cycles. Maximum instance value is 26.51% above the average, while the
-... [15656 more chars]
+          "text": "One or more SMs have a much higher number of active cycles than the average number of active cycles. Maximum instance value is 26.51% above the average, while the minimum instance value is 7.57% below the average."
+        },
+        {
+          "rul
+... [15568 more chars]
 ```
 
 **Assistant:**
@@ -2569,7 +2574,7 @@ ncu: latency-bound, 80 regs → 3 blocks/SM, 512 blocks = 1 wave + 2-block tail.
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "4,512,2"
   ],
@@ -2694,8 +2699,8 @@ ncu: latency-bound, 80 regs → 3 blocks/SM, 512 blocks = 1 wave + 2-block tail.
       "target": "int4_gemv",
       "shapes": {
         "x": [
-      
-... [914 more chars]
+          81
+... [908 more chars]
 ```
 
 **Tool call `mcp__hotkernel__disasm`**
@@ -2712,13 +2717,11 @@ ncu: latency-bound, 80 regs → 3 blocks/SM, 512 blocks = 1 wave + 2-block tail.
 
 ```
 <persisted-output>
-Output too large (54.7KB). Full output saved to: C:\Users\xinhu\.claude\projects\C--Users-xinhu-Documents-github-ai---hotkernel\996bed93-d170-4113-81f4-8f1e93fd99f0\tool-results\toolu_01CVoz7tyjRFoF6yL1MQjCUn.json
-
-Preview (first 2KB):
+Output too large (54.7KB). Full output saved to: <home>/.claude/projects/<path-slug>/996bed93-d170-4113-81f4-8f1e93fd99f0/tool-results/toolu_01CVoz7tyjRFoF6yL1MQjCUn.json/n/nPreview (first 2KB):
 [
   {
     "type": "text",
-    "text": "{\n  \"path\": \"/home/ubuntu/.triton/cache/LCF7ARZ5W7B5EGCPFJ6KAECYGPFIP4WDJB6YYWO6QS5NIZHKMVWA/_int4_gemv_kernel.cubin\",\n  \"level\": \"sass\",\n  \"n_lines\": 1305,\n  \"text\": \"\\n\\tcode for sm_120a\\n\\t.target\\tsm_120a\\n\\n\\t\\tFunction : _int4_gemv_kernel\\n\\t.headerflags\\t@\\\"EF_CUDA_SM120 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM120)\\\"\\n        /*0000*/                   LDC R1, c[0x0][0x37c]                       &wr=0x0          ?trans1;          /* 0x0000df00ff017b82 */\\n                                                                                                                  /* 0x000e220000000800 */\\n        /*0010*/                   S2R R43, SR_TID.X                           &wr=0x1          ?trans7;          /* 0x00000000002b7919 */\\n                                                                                                                  /* 0x000e6e0000002100 */\\n        /*0020*/                   S2UR UR8, SR_CgaCtaId                       &wr=0x2          ?trans1;          /* 0x00000000000879c3 */\\n                                                                                                                  /* 0x000ea20000008800 */\\n        /*0030*/                   UMOV UR4, 0x400                                              ?trans1;          /* 0x0000040000047882 */\\n                                                                                                                  /* 0x000fe20000000000 */\\n        /*0040*/                   HFMA2 R48, -RZ, RZ, 0, 0                                     ?trans1;          /* 0x00000000ff307431 */\\n                                                                                                                  /* 0x000fe200000001ff */\\n        /*0050*/                   S2R R8, SR_CTAID.X                          &wr=0x3          ?trans1;          /* 0x0000000000087919 */\\n                                                            
+    "text": "{\n  \"path\": \"<home>/.triton/cache/LCF7ARZ5W7B5EGCPFJ6KAECYGPFIP4WDJB6YYWO6QS5NIZHKMVWA/_int4_gemv_kernel.cubin\",\n  \"level\": \"sass\",\n  \"n_lines\": 1305,\n  \"text\": \"\\n\\tcode for sm_120a\\n\\t.target\\tsm_120a\\n\\n\\t\\tFunction : _int4_gemv_kernel\\n\\t.headerflags\\t@\\\"EF_CUDA_SM120 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM120)\\\"\\n        /*0000*/                   LDC R1, c[0x0][0x37c]                       &wr=0x0          ?trans1;          /* 0x0000df00ff017b82 */\\n                                                                                                                  /* 0x000e220000000800 */\\n        /*0010*/                   S2R R43, SR_TID.X                           &wr=0x1          ?trans7;          /* 0x00000000002b7919 */\\n                                                                                                                  /* 0x000e6e0000002100 */\\n        /*0020*/                   S2UR UR8, SR_CgaCtaId                       &wr=0x2          ?trans1;          /* 0x00000000000879c3 */\\n                                                                                                                  /* 0x000ea20000008800 */\\n        /*0030*/                   UMOV UR4, 0x400                                              ?trans1;          /* 0x0000040000047882 */\\n                                                                                                                  /* 0x000fe20000000000 */\\n        /*0040*/                   HFMA2 R48, -RZ, RZ, 0, 0                                     ?trans1;          /* 0x00000000ff307431 */\\n                                                                                                                  /* 0x000fe200000001ff */\\n        /*0050*/                   S2R R8, SR_CTAID.X                          &wr=0x3          ?trans1;          /* 0x0000000000087919 */\\n                                                            
 ...
 </persisted-output>
 ```
@@ -2728,7 +2731,7 @@ Preview (first 2KB):
 ```json
 {
  "pattern": "LDG[A-Z0-9.]*|STS[A-Z0-9.]*|LDS[A-Z0-9.]*|BAR[A-Z.]*|SHFL[A-Z.]*",
- "path": "C:\\Users\\xinhu\\.claude\\projects\\C--Users-xinhu-Documents-github-ai---hotkernel\\996bed93-d170-4113-81f4-8f1e93fd99f0\\tool-results\\toolu_01CVoz7tyjRFoF6yL1MQjCUn.json",
+ "path": "<home>/.claude/projects/<path-slug>/996bed93-d170-4113-81f4-8f1e93fd99f0/tool-results/toolu_01CVoz7tyjRFoF6yL1MQjCUn.json",
  "output_mode": "content",
  "-o": true,
  "head_limit": 80
@@ -2776,7 +2779,7 @@ Preview (first 2KB):
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "offset": 20,
  "limit": 40
 }
@@ -2832,22 +2835,22 @@ Preview (first 2KB):
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
- "old_string": "def _int4_gemv_kernel(x_ptr, wq_ptr, s_ptr, z_ptr, y_ptr, N, KB: tl.constexpr, NG: tl.constexpr,\n                      BLOCK_N: tl.constexpr, BLOCK_KB: tl.constexpr):\n    # One program: BLOCK_N rows of W. Per group of 128 values (64 code bytes):\n    # sum_j ((q_j - 8) s + z) x_j = s * (sum_j q_j x_j - 8 xs) + z * xs, xs = sum_j x_j.\n    pid = tl.program_id(0)\n    rows = pid * BLOCK_N + tl.arange(0, BLOCK_N)\n    GPB: tl.constexpr = BLOCK_KB // 64  # groups per step\n    cols = tl.arange(0, BLOCK_KB)\n    gidx = tl.arange(0, GPB)\n    acc = tl.zeros((BLOCK_N, GPB), dtype=tl.float32)\n    for kb in range(0, KB, BLOCK_KB):\n        b = tl.load(wq_ptr + rows[:, None] * KB + kb + cols[None, :]).to(tl.int32)\n        xe = tl.load(x_ptr + 2 * (kb + cols)).to(tl.float32)\n        xo = tl.load(x_ptr + 2 * (kb + cols) + 1).to(tl.float32)\n        hi = (b >> 4).to(tl.float32)\n        lo = (b & 15).to(tl.float32)\n        p = hi * xe[None, :] + lo * xo[None, :]\n        gq = tl.sum(tl.reshape(p, (BLOCK_N, GPB, 64)), axis=2)\n        xs = tl.sum(tl.reshape(xe + xo, (GPB, 64)), axis=1)\n        g0 = kb // 64\n        s = tl.load(s_ptr + rows[:, None] * NG + g0 + gidx[None, :]).to(tl.float32)\n        z = tl.load(z_ptr + rows[:, None] * NG + g0 + gidx[None, :]).to(tl.float32)\n        acc += s * (gq - 8.0 * xs[None, :]) + z * xs[None, :
-... [1740 more chars]
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
+ "old_string": "def _int4_gemv_kernel(x_ptr, wq_ptr, s_ptr, z_ptr, y_ptr, N, KB: tl.constexpr, NG: tl.constexpr,\n                      BLOCK_N: tl.constexpr, BLOCK_KB: tl.constexpr):\n    # One program: BLOCK_N rows of W. Per group of 128 values (64 code bytes):\n    # sum_j ((q_j - 8) s + z) x_j = s * (sum_j q_j x_j - 8 xs) + z * xs, xs = sum_j x_j.\n    pid = tl.program_id(0)\n    rows = pid * BLOCK_N + tl.arange(0, BLOCK_N)\n    GPB: tl.constexpr = BLOCK_KB // 64  # groups per step\n    cols = tl.arange(0, BLOCK_KB)\n    gidx = tl.arange(0, GPB)\n    acc = tl.zeros((BLOCK_N, GPB), dtype=tl.float32)\n    for kb in range(0, KB, BLOCK_KB):\n        b = tl.load(wq_ptr + rows[:, None] * KB + kb + cols[None, :]).to(tl.int32)\n        xe = tl.load(x_ptr + 2 * (kb + cols)).to(tl.float32)\n        xo = tl.load(x_ptr + 2 * (kb + cols) + 1).to(tl.float32)\n        hi = (b >> 4).to(tl.float32)\n        lo = (b & 15).to(tl.float32)\n        p = hi * xe[None, :] + lo * xo[None, :]\n        gq = tl.sum(tl.reshape(p, (BLOCK_N, GPB, 64)), axis=2)\n        xs = tl.sum(tl.reshape(xe + xo, (GPB, 64)), axis=1)\n        g0 = kb // 64\n        s = tl.load(s_ptr + rows[:, None] * NG + g0 + gidx[None, :]).to(tl.float32)\n        z = tl.load(z_ptr + rows[:, None] * NG + g0 + gidx[None, :]).to(tl.float32)\n        acc += s * (gq - 8.0 * xs[None, :]) + z * xs[None, :]\n    y = tl.sum(acc, axis=1)\n    tl.store(y_p
+... [1692 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully.
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully.
 ```
 
 **Tool call `Read`**
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "offset": 57,
  "limit": 35
 }
@@ -2898,7 +2901,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "    r3 = (pid * BLOCK_N + tl.arange(0, BLOCK_N))[:, None, None]",
  "new_string": "    rows = pid * BLOCK_N + tl.arange(0, BLOCK_N)\n    r3 = rows[:, None, None]"
 }
@@ -2907,7 +2910,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully.
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully.
 ```
 
 **Tool call `Edit`**
@@ -2915,7 +2918,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "    tl.store(y_ptr + r3.reshape(BLOCK_N), y.to(tl.bfloat16))",
  "new_string": "    tl.store(y_ptr + rows, y.to(tl.bfloat16))"
 }
@@ -2924,7 +2927,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully.
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully.
 ```
 
 **Tool call `Edit`**
@@ -2932,7 +2935,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "    y = torch.empty(n, device=x.device, dtype=x.dtype)\n    grid = (n // BLOCK_N,)",
  "new_string": "    y = torch.empty(n, device=x.device, dtype=x.dtype)\n    x32 = x.view(torch.int32)  # bf16 pairs (x[2j], x[2j+1]) as one word\n    grid = (n // BLOCK_N,)"
 }
@@ -2941,7 +2944,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully.
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully.
 ```
 
 **Tool call `Edit`**
@@ -2949,7 +2952,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "               x, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n        return y\n    ck = _int4_gemv_kernel[grid](x, w_q,",
  "new_string": "               x32, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n        return y\n    ck = _int4_gemv_kernel[grid](x32, w_q,"
 }
@@ -2958,7 +2961,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully.
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully.
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -2978,7 +2981,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "4,512,2"
   ],
@@ -3103,8 +3106,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
       "target": "int4_gemv",
       "shapes": {
         "x": [
-       
-... [912 more chars]
+          819
+... [906 more chars]
 ```
 
 **Assistant:**
@@ -3128,7 +3131,7 @@ The 3D-tile rewrite passes correctness but is slower (min 0.037 ms). Trying one 
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "8,256,4"
   ],
@@ -3253,8 +3256,9 @@ The 3D-tile rewrite passes correctness but is slower (min 0.037 ms). Trying one 
       "target": "int4_gemv",
       "shapes": {
         "x": [
-         
-... [910 more chars]
+          8192
+
+... [904 more chars]
 ```
 
 **Assistant:**
@@ -3265,7 +3269,7 @@ v2 is worse; reverting to the v1 kernel with the 4,512,2 tiling (best bench) for
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "offset": 24,
  "limit": 34
 }
@@ -3315,15 +3319,15 @@ v2 is worse; reverting to the v1 kernel with the 4,512,2 tiling (best bench) for
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
- "old_string": "BLOCK_N, BLOCK_KB, NUM_WARPS = 16, 512, 8  # rows per program, code bytes per step (8 groups of 64 B)\n\n\n@triton.jit\ndef _int4_gemv_kernel(x32_ptr, wq_ptr, s_ptr, z_ptr, y_ptr, N, KB: tl.constexpr, NG: tl.constexpr,\n                      BLOCK_N: tl.constexpr, BLOCK_KB: tl.constexpr):\n    # One program: BLOCK_N rows of W, tiles shaped (rows, groups, 64 code bytes) so the\n    # per-group scale/zero broadcast along the last axis with no layout shuffle. Per element:\n    # ((q - 8) s + z) x = s (q x) + (z - 8 s) x. Everything accumulates elementwise; the one\n    # cross-thread reduction happens after the loop.\n    # x32 is x viewed as int32: word j holds x[2j] (low half) and x[2j+1] (high half), the\n    # two values whose codes share byte j of w_q (high nibble, low nibble).\n    pid = tl.program_id(0)\n    GPB: tl.constexpr = BLOCK_KB // 64  # groups per step\n    rows = pid * BLOCK_N + tl.arange(0, BLOCK_N)\n    r3 = rows[:, None, None]\n    g3 = tl.arange(0, GPB)[None, :, None]\n    c3 = tl.arange(0, 64)[None, None, :]\n    acc = tl.zeros((BLOCK_N, GPB, 64), dtype=tl.float32)\n    for kb in range(0, KB, BLOCK_KB):\n        b = tl.load(wq_ptr + r3 * KB + kb + g3 * 64 + c3).to(tl.int32)\n        x32 = tl.load(x32_ptr + kb + g3 * 64 + c3)\n        xe = (x32 << 16).to(tl.float32, bitcast=True)\n        xo = (x32 & -65536).t
-... [1979 more chars]
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
+ "old_string": "BLOCK_N, BLOCK_KB, NUM_WARPS = 16, 512, 8  # rows per program, code bytes per step (8 groups of 64 B)\n\n\n@triton.jit\ndef _int4_gemv_kernel(x32_ptr, wq_ptr, s_ptr, z_ptr, y_ptr, N, KB: tl.constexpr, NG: tl.constexpr,\n                      BLOCK_N: tl.constexpr, BLOCK_KB: tl.constexpr):\n    # One program: BLOCK_N rows of W, tiles shaped (rows, groups, 64 code bytes) so the\n    # per-group scale/zero broadcast along the last axis with no layout shuffle. Per element:\n    # ((q - 8) s + z) x = s (q x) + (z - 8 s) x. Everything accumulates elementwise; the one\n    # cross-thread reduction happens after the loop.\n    # x32 is x viewed as int32: word j holds x[2j] (low half) and x[2j+1] (high half), the\n    # two values whose codes share byte j of w_q (high nibble, low nibble).\n    pid = tl.program_id(0)\n    GPB: tl.constexpr = BLOCK_KB // 64  # groups per step\n    rows = pid * BLOCK_N + tl.arange(0, BLOCK_N)\n    r3 = rows[:, None, None]\n    g3 = tl.arange(0, GPB)[None, :, None]\n    c3 = tl.arange(0, 64)[None, None, :]\n    acc = tl.zeros((BLOCK_N, GPB, 64), dtype=tl.float32)\n    for kb in range(0, KB, BLOCK_KB):\n        b = tl.load(wq_ptr + r3 * KB + kb + g3 * 64 + c3).to(tl.int32)\n        x32 = tl.load(x32_ptr + kb + g3 * 64 + c3)\n        xe = (x32 << 16).to(tl.float32, bitcast=True)\n        xo = (x32 & -65536).to(tl.float32, bitcast=True)\n        g0 = kb // 
+... [1931 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully.
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully.
 ```
 
 **Tool call `Edit`**
@@ -3331,7 +3335,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "    x32 = x.view(torch.int32)  # bf16 pairs (x[2j], x[2j+1]) as one word\n    grid",
  "new_string": "    grid"
 }
@@ -3340,7 +3344,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully.
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully.
 ```
 
 **Tool call `Edit`**
@@ -3348,7 +3352,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "               x32, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n        return y\n    ck = _int4_gemv_kernel[grid](x32, w_q,",
  "new_string": "               x, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n        return y\n    ck = _int4_gemv_kernel[grid](x, w_q,"
 }
@@ -3357,7 +3361,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully.
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully.
 ```
 
 **Tool call `mcp__hotkernel__verify`**
@@ -3425,11 +3429,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/int4_gemv_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/int4_gemv_agent_candidate.py"
     ]
   },
@@ -3519,11 +3523,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py"
    ]
   },
@@ -3541,16 +3545,17 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
    "protocol": 3,
    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
    "rotation_k": 6,
-   "rotation_bytes": 427917312
-... [790 more chars]
+   "rotation_bytes": 427917312,
+   "l2_byt
+... [778 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/int4_gemv/20261014-225540.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/int4_gemv/20261014-225540.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| int4_gemv | NVIDIA GeForce RTX 5090 | 575 W | 0.0369 (7) | 0.0389 (7) | no gain | same Triton GEMV, smaller blocks for more waves (ncu showed 1 wave + 2-block tail): BLOCK_N=4,BLOCK_KB=512,warps=2 ([log](results/int4_gemv/20261014-225540.json)) | 2026-10-14 | 9c3d623 | agent:claude-opus-5-5, autonomous loop, results/int4_gemv/agent-run-20261014-224714 |",
   "verdict": "inconclusive",
   "speedup_cell": "no gain",
@@ -3579,15 +3584,15 @@ Next hypothesis: load tiles natively in 3D (rows, groups, 64 B) so the per-group
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
- "old_string": "def _int4_gemv_kernel(x_ptr, wq_ptr, s_ptr, z_ptr, y_ptr, N, KB: tl.constexpr, NG: tl.constexpr,\n                      BLOCK_N: tl.constexpr, BLOCK_KB: tl.constexpr):\n    # One program: BLOCK_N rows of W. Per group of 128 values (64 code bytes):\n    # sum_j ((q_j - 8) s + z) x_j = s * (sum_j q_j x_j - 8 xs) + z * xs, xs = sum_j x_j.\n    pid = tl.program_id(0)\n    rows = pid * BLOCK_N + tl.arange(0, BLOCK_N)\n    GPB: tl.constexpr = BLOCK_KB // 64  # groups per step\n    cols = tl.arange(0, BLOCK_KB)\n    gidx = tl.arange(0, GPB)\n    acc = tl.zeros((BLOCK_N, GPB), dtype=tl.float32)\n    for kb in range(0, KB, BLOCK_KB):\n        b = tl.load(wq_ptr + rows[:, None] * KB + kb + cols[None, :]).to(tl.int32)\n        xe = tl.load(x_ptr + 2 * (kb + cols)).to(tl.float32)\n        xo = tl.load(x_ptr + 2 * (kb + cols) + 1).to(tl.float32)\n        hi = (b >> 4).to(tl.float32)\n        lo = (b & 15).to(tl.float32)\n        p = hi * xe[None, :] + lo * xo[None, :]\n        gq = tl.sum(tl.reshape(p, (BLOCK_N, GPB, 64)), axis=2)\n        xs = tl.sum(tl.reshape(xe + xo, (GPB, 64)), axis=1)\n        g0 = kb // 64\n        s = tl.load(s_ptr + rows[:, None] * NG + g0 + gidx[None, :]).to(tl.float32)\n        z = tl.load(z_ptr + rows[:, None] * NG + g0 + gidx[None, :]).to(tl.float32)\n        acc += s * (gq - 8.0 * xs[None, :]) + z * xs[None, :
-... [1864 more chars]
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
+ "old_string": "def _int4_gemv_kernel(x_ptr, wq_ptr, s_ptr, z_ptr, y_ptr, N, KB: tl.constexpr, NG: tl.constexpr,\n                      BLOCK_N: tl.constexpr, BLOCK_KB: tl.constexpr):\n    # One program: BLOCK_N rows of W. Per group of 128 values (64 code bytes):\n    # sum_j ((q_j - 8) s + z) x_j = s * (sum_j q_j x_j - 8 xs) + z * xs, xs = sum_j x_j.\n    pid = tl.program_id(0)\n    rows = pid * BLOCK_N + tl.arange(0, BLOCK_N)\n    GPB: tl.constexpr = BLOCK_KB // 64  # groups per step\n    cols = tl.arange(0, BLOCK_KB)\n    gidx = tl.arange(0, GPB)\n    acc = tl.zeros((BLOCK_N, GPB), dtype=tl.float32)\n    for kb in range(0, KB, BLOCK_KB):\n        b = tl.load(wq_ptr + rows[:, None] * KB + kb + cols[None, :]).to(tl.int32)\n        xe = tl.load(x_ptr + 2 * (kb + cols)).to(tl.float32)\n        xo = tl.load(x_ptr + 2 * (kb + cols) + 1).to(tl.float32)\n        hi = (b >> 4).to(tl.float32)\n        lo = (b & 15).to(tl.float32)\n        p = hi * xe[None, :] + lo * xo[None, :]\n        gq = tl.sum(tl.reshape(p, (BLOCK_N, GPB, 64)), axis=2)\n        xs = tl.sum(tl.reshape(xe + xo, (GPB, 64)), axis=1)\n        g0 = kb // 64\n        s = tl.load(s_ptr + rows[:, None] * NG + g0 + gidx[None, :]).to(tl.float32)\n        z = tl.load(z_ptr + rows[:, None] * NG + g0 + gidx[None, :]).to(tl.float32)\n        acc += s * (gq - 8.0 * xs[None, :]) + z * xs[None, :]\n    y = tl.sum(acc, axis=1)\n    tl.store(y_p
+... [1816 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully.
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully.
 ```
 
 **Tool call `Edit`**
@@ -3595,7 +3600,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "    grid = (n // BLOCK_N,)",
  "new_string": "    x32 = x.view(torch.int32)  # bf16 pairs (x[2j], x[2j+1]) as one word\n    grid = (n // BLOCK_N,)"
 }
@@ -3604,7 +3609,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully.
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully.
 ```
 
 **Tool call `Edit`**
@@ -3612,7 +3617,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\int4_gemv_agent_candidate.py",
+ "file_path": "<repo>/examples/int4_gemv_agent_candidate.py",
  "old_string": "               x, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n        return y\n    ck = _int4_gemv_kernel[grid](x, w_q,",
  "new_string": "               x32, w_q, scales, zeros, y, n, kb, ng, BLOCK_N, BLOCK_KB)\n        return y\n    ck = _int4_gemv_kernel[grid](x32, w_q,"
 }
@@ -3621,7 +3626,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_agent_candidate.py has been updated successfully.
+The file <repo>/examples/int4_gemv_agent_candidate.py has been updated successfully.
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -3638,7 +3643,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py"
   ],
   "n": 3,
@@ -3763,8 +3768,9 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\int4_gemv_a
       "shapes": {
         "x": [
           8192
-     
-... [900 more chars]
+        ],
+
+... [894 more chars]
 ```
 
 **Assistant:**
@@ -3788,7 +3794,7 @@ v3 is a clear step: min 0.0296 ms, mean 0.0306 ms (baseline ~0.029–0.033). One
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "4,1024,4"
   ],
@@ -3913,8 +3919,8 @@ v3 is a clear step: min 0.0296 ms, mean 0.0306 ms (baseline ~0.029–0.033). One
       "target": "int4_gemv",
       "shapes": {
         "x": [
-   
-... [917 more chars]
+         
+... [911 more chars]
 ```
 
 **Assistant:**
@@ -3986,11 +3992,11 @@ Worse. Verifying v3 at the default 4,512,2.
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/int4_gemv_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/int4_gemv_agent_candidate.py"
     ]
   },
@@ -4080,11 +4086,11 @@ Worse. Verifying v3 at the default 4,512,2.
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py"
    ]
   },
@@ -4102,16 +4108,17 @@ Worse. Verifying v3 at the default 4,512,2.
    "protocol": 3,
    "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
    "rotation_k": 6,
-   "rotation_bytes": 42791731
-... [852 more chars]
+   "rotation_bytes": 427917312,
+   "l2_by
+... [840 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/int4_gemv/20261014-225710.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/int4_gemv/20261014-225710.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| int4_gemv | NVIDIA GeForce RTX 5090 | 575 W | 0.0321 (7) | 0.0356 (7) | no gain | Triton GEMV v3: tiles loaded as (rows, groups, 64B) so group sums are shuffle reductions (no smem reshape), x read as bf16 pairs via int32 view; BLOCK_N=4,BLOCK_KB=512,warps=2 ([log](results/int4_gemv/20261014-225710.json)) | 2026-10-14 | 9c3d623 | agent:claude-opus-5-5, autonomous loop, results/int4_gemv/agent-run-20261014-224714 |",
   "verdict": "inconclusive",
   "speedup_cell": "no gain",
@@ -4155,8 +4162,8 @@ v3 is now near parity (candidate median ~0.0298 ms vs baseline ~0.0288 ms) but s
 ```
 {
   "tool": "ncu",
-  "report": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/profiles/ncu-20261014-225714.ncu-rep",
-  "details_csv": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/profiles/ncu-20261014-225714.details.csv",
+  "report": "<repo>/results/profiles/ncu-20261014-225714.ncu-rep",
+  "details_csv": "<repo>/results/profiles/ncu-20261014-225714.details.csv",
   "top": [
     {
       "id": "1",
@@ -4223,8 +4230,10 @@ v3 is now near parity (candidate median ~0.0298 ms vs baseline ~0.0288 ms) but s
         "memory_throughput_pct": 67.87,
         "dram_throughput_pct": 67.87,
         "l1_throughput_pct": 40.24,
-        "l2_th
-... [2993 more chars]
+        "l2_throughput_pct": 36.86,
+        "sm_throughput_pct": 36.48,
+        "registers_per_thread"
+... [2905 more chars]
 ```
 
 **Assistant:**
@@ -4248,7 +4257,7 @@ Kernel is memory-bound now (DRAM 66–68%) but only 0.6 waves and 49% achieved o
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "4,1024,2"
   ],
@@ -4373,8 +4382,8 @@ Kernel is memory-bound now (DRAM 66–68%) but only 0.6 waves and 49% achieved o
       "target": "int4_gemv",
       "shapes": {
         "x": [
-  
-... [919 more chars]
+        
+... [913 more chars]
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -4394,7 +4403,7 @@ Kernel is memory-bound now (DRAM 66–68%) but only 0.6 waves and 49% achieved o
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "2,512,1"
   ],
@@ -4519,8 +4528,8 @@ Kernel is memory-bound now (DRAM 66–68%) but only 0.6 waves and 49% achieved o
       "target": "int4_gemv",
       "shapes": {
         "x": [
-        
-... [911 more chars]
+          8192
+... [905 more chars]
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -4544,7 +4553,7 @@ Kernel is memory-bound now (DRAM 66–68%) but only 0.6 waves and 49% achieved o
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/int4_gemv_agent_candidate.py",
     "8,512,4"
   ],
@@ -4669,8 +4678,8 @@ Kernel is memory-bound now (DRAM 66–68%) but only 0.6 waves and 49% achieved o
       "target": "int4_gemv",
       "shapes": {
         "x": [
-     
-... [914 more chars]
+          8
+... [908 more chars]
 ```
 
 **Assistant:**
@@ -4681,15 +4690,15 @@ No tiling beat v3 at 4,512,2, so the candidate stays at that config. Writing not
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\results\\int4_gemv\\agent-run-20261014-224714\\notes.md",
- "content": "# int4_gemv agent run 20261014-224714\n\nwho: `agent:claude-opus-5-5, autonomous loop, results/int4_gemv/agent-run-20261014-224714`\nCard: RTX 5090, driver 617.42, 575 W. 4 verify() calls used out of 20, stopped at about 23:02 (of a 30 min budget).\n\n## Result\n\n**No win recorded.** Every verify() came back `inconclusive` and every record() answered `keep: false`.\nNo row ever had `faster`, so there is no best candidate and no speedup to claim.\n\nRoofline (min_bytes 35,684,352 B, measured_mem_gbs 1501): attainable_ms_measured = **0.02377 ms**.\nThe baseline (tinygemm `_weight_int4pack_mm`, inner_k_tiles=4) measured 0.032-0.037 ms mean and 0.0285 ms min, already ~83% of that floor at its min.\n\n## Hypotheses (verify -> record)\n\n| # | Change | Candidate mean (ms) | Baseline mean (ms) | Verdict | keep | Log |\n|---|--------|------|------|---------|------|-----|\n| 0 | control: unchanged candidate | 0.0338 | 0.0326 | inconclusive | false | results/int4_gemv/20261014-224818.json |\n| 1 | Triton GEMV on w_q (uint8), group-factored dequant `s*(Σqx - 8Σx) + z*Σx`, reshape-reduce per group, direct `CompiledKernel.run` launch; BLOCK_N=16,BLOCK_KB=512,warps=8 | 0.0360 | 0.0326 | inconclusive | false | results/int4_gemv/20261014-225254.json |\n| 2 | same kernel, smaller blocks (ncu: 512 blocks = 1 wave + a 2-block tail at 80 regs); BLOCK_N=4,
-... [3159 more chars]
+ "file_path": "<repo>/results/int4_gemv/agent-run-20261014-224714/notes.md",
+ "content": "# int4_gemv agent run 20261014-224714\n\nwho: `agent:claude-opus-5-5, autonomous loop, results/int4_gemv/agent-run-20261014-224714`\nCard: RTX 5090, driver 617.42, 575 W. 4 verify() calls used out of 20, stopped at about 23:02 (of a 30 min budget).\n\n## Result\n\n**No win recorded.** Every verify() came back `inconclusive` and every record() answered `keep: false`.\nNo row ever had `faster`, so there is no best candidate and no speedup to claim.\n\nRoofline (min_bytes 35,684,352 B, measured_mem_gbs 1501): attainable_ms_measured = **0.02377 ms**.\nThe baseline (tinygemm `_weight_int4pack_mm`, inner_k_tiles=4) measured 0.032-0.037 ms mean and 0.0285 ms min, already ~83% of that floor at its min.\n\n## Hypotheses (verify -> record)\n\n| # | Change | Candidate mean (ms) | Baseline mean (ms) | Verdict | keep | Log |\n|---|--------|------|------|---------|------|-----|\n| 0 | control: unchanged candidate | 0.0338 | 0.0326 | inconclusive | false | results/int4_gemv/20261014-224818.json |\n| 1 | Triton GEMV on w_q (uint8), group-factored dequant `s*(Σqx - 8Σx) + z*Σx`, reshape-reduce per group, direct `CompiledKernel.run` launch; BLOCK_N=16,BLOCK_KB=512,warps=8 | 0.0360 | 0.0326 | inconclusive | false | results/int4_gemv/20261014-225254.json |\n| 2 | same kernel, smaller blocks (ncu: 512 blocks = 1 wave + a 2-block tail at 80 regs); BLOCK_N=4,BLOCK_KB=512,warps=2 | 0.0389 | 0.0369 | inconclus
+... [3109 more chars]
 ```
 
 **Tool result `Write`**
 
 ```
-File created successfully at: C:\Users\xinhu\Documents\github\ai模型\hotkernel\results\int4_gemv\agent-run-20261014-224714\notes.md (file state is current in your context — no need to Read it back)
+File created successfully at: <repo>/results/int4_gemv/agent-run-20261014-224714/notes.md (file state is current in your context — no need to Read it back)
 ```
 
 **Assistant:**

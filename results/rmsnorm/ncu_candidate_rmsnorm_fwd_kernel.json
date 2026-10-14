@@ -1,7 +1,7 @@
 {
  "tool": "ncu",
- "report": "/home/ubuntu/hotkernel/results/profiles/ncu-20261014-190728.ncu-rep",
- "details_csv": "/home/ubuntu/hotkernel/results/profiles/ncu-20261014-190728.details.csv",
+ "report": "<repo>/results/profiles/ncu-20261014-190728.ncu-rep",
+ "details_csv": "<repo>/results/profiles/ncu-20261014-190728.details.csv",
  "top": [
   {
    "id": "0",

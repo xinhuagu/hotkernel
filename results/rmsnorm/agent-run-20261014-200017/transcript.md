@@ -32,7 +32,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\skills\\kernel-speedrun\\SKILL.md"
+ "file_path": "<repo>/skills/kernel-speedrun/SKILL.md"
 }
 ```
 
@@ -88,7 +88,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_baseline.py"
+ "file_path": "<repo>/examples/rmsnorm_baseline.py"
 }
 ```
 
@@ -157,7 +157,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py"
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py"
 }
 ```
 
@@ -225,7 +225,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\_timing.py"
+ "file_path": "<repo>/examples/_timing.py"
 }
 ```
 
@@ -359,7 +359,7 @@ MCP servers: hotkernel
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py",
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py",
  "old_string": "import torch\nfrom rmsnorm_baseline import (",
  "new_string": "import torch\nimport triton\nimport triton.language as tl\nfrom rmsnorm_baseline import ("
 }
@@ -368,7 +368,7 @@ MCP servers: hotkernel
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `Edit`**
@@ -376,7 +376,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py",
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py",
  "old_string": "def rmsnorm_candidate(x: torch.Tensor, w: torch.Tensor) -> torch.Tensor:\n    # Starting point: identical to the baseline. Replace with something faster.\n    return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + EPS) * w",
  "new_string": "@triton.jit\ndef _rmsnorm_kernel(x_ptr, w_ptr, y_ptr, n_cols, eps, BLOCK: tl.constexpr):\n    # One program per row: the whole row stays in registers, one read and one write.\n    row = tl.program_id(0)\n    offs = tl.arange(0, BLOCK)\n    mask = offs < n_cols\n    x = tl.load(x_ptr + row * n_cols + offs, mask=mask, other=0.0).to(tl.float32)\n    w = tl.load(w_ptr + offs, mask=mask, other=0.0).to(tl.float32)\n    rstd = tl.rsqrt(tl.sum(x * x, axis=0) / n_cols + eps)\n    tl.store(y_ptr + row * n_cols + offs, (x * rstd * w).to(tl.bfloat16), mask=mask)\n\n\ndef rmsnorm_candidate(x: torch.Tensor, w: torch.Tensor) -> torch.Tensor:\n    y = torch.empty_like(x)\n    rows, cols = x.shape\n    _rmsnorm_kernel[(rows,)](x, w, y, cols, EPS, BLOCK=triton.next_power_of_2(cols), num_warps=8)\n    return y"
 }
@@ -389,7 +389,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Assistant:**
@@ -461,11 +461,11 @@ Attainable 0.0749 ms; target within 10% → ≤0.0824 ms. Hypothesis 1: a single
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_agent_candidate.py"
     ]
   },
@@ -546,11 +546,11 @@ Attainable 0.0749 ms; target within 10% → ≤0.0824 ms. Hypothesis 1: a single
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_agent_candidate.py"
    ]
   },
@@ -571,16 +571,17 @@ Attainable 0.0749 ms; target within 10% → ≤0.0824 ms. Hypothesis 1: a single
   "candidate_extra": {
    "impl": "agent candidate"
   },
-  "gpu": "NVIDIA GeForce 
-... [253 more chars]
+  "gpu": "NVIDIA GeForce RTX 5090",
+ 
+... [241 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/rmsnorm/20261014-200116.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/rmsnorm/20261014-200116.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| rmsnorm | NVIDIA GeForce RTX 5090 | 575 W | 0.3166 (7) | 0.0945 (7) | 3.35x | Fused Triton kernel, one program per row (BLOCK=8192, num_warps=8), fp32 accumulate ([log](results/rmsnorm/20261014-200116.json)) | 2026-10-14 | bdb60ae | agent:claude-opus-5-5, autonomous loop |",
   "verdict": "faster",
   "speedup_cell": "3.35x",
@@ -599,7 +600,7 @@ Attainable 0.0749 ms; target within 10% → ≤0.0824 ms. Hypothesis 1: a single
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py",
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py",
  "old_string": "num_warps=8)",
  "new_string": "num_warps=16)"
 }
@@ -619,7 +620,7 @@ Attainable 0.0749 ms; target within 10% → ≤0.0824 ms. Hypothesis 1: a single
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool result `mcp__hotkernel__verify`**
@@ -672,11 +673,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_agent_candidate.py"
     ]
   },
@@ -757,11 +758,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_agent_candidate.py"
    ]
   },
@@ -782,16 +783,17 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "candidate_extra": {
    "impl": "agent candidate"
   },
-  "gpu": "NVIDIA GeForce R
-... [211 more chars]
+  "gpu": "NVIDIA GeForce RTX 5090",
+  
+... [199 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/rmsnorm/20261014-200159.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/rmsnorm/20261014-200159.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| rmsnorm | NVIDIA GeForce RTX 5090 | 575 W | 0.3008 (7) | 0.0920 (7) | 3.27x | Fused Triton row kernel, num_warps 8 -> 16 ([log](results/rmsnorm/20261014-200159.json)) | 2026-10-14 | bdb60ae | agent:claude-opus-5-5, autonomous loop |",
   "verdict": "faster",
   "speedup_cell": "3.27x",
@@ -810,7 +812,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py",
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py",
  "old_string": "    x = tl.load(x_ptr + row * n_cols + offs, mask=mask, other=0.0).to(tl.float32)\n    w = tl.load(w_ptr + offs, mask=mask, other=0.0).to(tl.float32)\n    rstd = tl.rsqrt(tl.sum(x * x, axis=0) / n_cols + eps)\n    tl.store(y_ptr + row * n_cols + offs, (x * rstd * w).to(tl.bfloat16), mask=mask)",
  "new_string": "    x = tl.load(x_ptr + row * n_cols + offs, mask=mask, other=0.0,\n                eviction_policy=\"evict_first\").to(tl.float32)\n    w = tl.load(w_ptr + offs, mask=mask, other=0.0, eviction_policy=\"evict_last\").to(tl.float32)\n    rstd = tl.rsqrt(tl.sum(x * x, axis=0) / n_cols + eps)\n    tl.store(y_ptr + row * n_cols + offs, (x * rstd * w).to(tl.bfloat16), mask=mask,\n             eviction_policy=\"evict_first\")"
 }
@@ -819,7 +821,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__verify`**
@@ -883,11 +885,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/rmsnorm_agent_candidate.py"
     ]
   },
@@ -968,11 +970,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/rmsnorm_agent_candidate.py"
    ]
   },
@@ -993,16 +995,17 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
   "candidate_extra": {
    "impl": "agent candidate"
   },
-  "gpu": "NVIDIA GeForce R
-... [241 more chars]
+  "gpu": "NVIDIA GeForce RTX 5090",
+  
+... [229 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/rmsnorm/20261014-200245.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/rmsnorm/20261014-200245.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| rmsnorm | NVIDIA GeForce RTX 5090 | 575 W | 0.3061 (7) | 0.0922 (7) | 3.32x | Fused Triton row kernel (16 warps) + evict_first on x/y, evict_last on w ([log](results/rmsnorm/20261014-200245.json)) | 2026-10-14 | bdb60ae | agent:claude-opus-5-5, autonomous loop |",
   "verdict": "faster",
   "speedup_cell": "3.32x",
@@ -1025,7 +1028,7 @@ Three `keep: false` in a row, so the stop rule applies. Next I'll revert the las
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\rmsnorm_agent_candidate.py",
+ "file_path": "<repo>/examples/rmsnorm_agent_candidate.py",
  "old_string": "    x = tl.load(x_ptr + row * n_cols + offs, mask=mask, other=0.0,\n                eviction_policy=\"evict_first\").to(tl.float32)\n    w = tl.load(w_ptr + offs, mask=mask, other=0.0, eviction_policy=\"evict_last\").to(tl.float32)\n    rstd = tl.rsqrt(tl.sum(x * x, axis=0) / n_cols + eps)\n    tl.store(y_ptr + row * n_cols + offs, (x * rstd * w).to(tl.bfloat16), mask=mask,\n             eviction_policy=\"evict_first\")",
  "new_string": "    x = tl.load(x_ptr + row * n_cols + offs, mask=mask, other=0.0).to(tl.float32)\n    w = tl.load(w_ptr + offs, mask=mask, other=0.0).to(tl.float32)\n    rstd = tl.rsqrt(tl.sum(x * x, axis=0) / n_cols + eps)\n    tl.store(y_ptr + row * n_cols + offs, (x * rstd * w).to(tl.bfloat16), mask=mask)"
 }
@@ -1034,22 +1037,22 @@ Three `keep: false` in a row, so the stop rule applies. Next I'll revert the las
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/rmsnorm_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `Write`**
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\results\\rmsnorm\\agent-run-20261014-200017\\notes.md",
- "content": "# rmsnorm agent run 20261014-200017\n\nAgent: claude-opus-5-5, autonomous loop. Card: RTX 5090, driver 617.42, 575 W.\nShape 4096x8192 bf16. roofline(flops=1.34e8, bytes=1.34e8): memory-bound, attainable_ms 0.0749\n(the 10% stop line is 0.0824 ms).\n\n## Result\n\nBest verdict this run: `faster`, 3.27x (candidate 0.0920 ms vs baseline 0.3008 ms, n=7),\nlog `results/rmsnorm/20261014-200159.json`. It did not beat the target's earlier best\n(0.09065 ms, `results/rmsnorm/20261014-195124.json`, from a previous run), so every row here\nanswered `keep: false`. Stopped after three consecutive `keep: false` (3 of 10 verify calls used).\nThe best mean is still 23% above the roofline floor.\n\n## Hypotheses\n\n| # | Change | Verdict | Candidate ms | Speedup | keep | Log |\n|---|---|---|---|---|---|---|\n| 1 | Fused Triton kernel, one program per row, BLOCK=8192, num_warps=8, fp32 accumulate | faster | 0.0945 | 3.35x | false | 20261014-200116.json |\n| 2 | Same, num_warps 8 -> 16 | faster | 0.0920 | 3.27x | false | 20261014-200159.json |\n| 3 | #2 + evict_first on x/y, evict_last on w | faster | 0.0922 | 3.32x | false | 20261014-200245.json |\n\nThe speedup column reflects baseline noise. Hypothesis 2 has the lowest candidate mean but the\nlowest speedup, because its baseline came out at 0.3008 ms against 0.3166 ms in run 1.\n\nThe candidate file was
-... [1171 more chars]
+ "file_path": "<repo>/results/rmsnorm/agent-run-20261014-200017/notes.md",
+ "content": "# rmsnorm agent run 20261014-200017\n\nAgent: claude-opus-5-5, autonomous loop. Card: RTX 5090, driver 617.42, 575 W.\nShape 4096x8192 bf16. roofline(flops=1.34e8, bytes=1.34e8): memory-bound, attainable_ms 0.0749\n(the 10% stop line is 0.0824 ms).\n\n## Result\n\nBest verdict this run: `faster`, 3.27x (candidate 0.0920 ms vs baseline 0.3008 ms, n=7),\nlog `results/rmsnorm/20261014-200159.json`. It did not beat the target's earlier best\n(0.09065 ms, `results/rmsnorm/20261014-195124.json`, from a previous run), so every row here\nanswered `keep: false`. Stopped after three consecutive `keep: false` (3 of 10 verify calls used).\nThe best mean is still 23% above the roofline floor.\n\n## Hypotheses\n\n| # | Change | Verdict | Candidate ms | Speedup | keep | Log |\n|---|---|---|---|---|---|---|\n| 1 | Fused Triton kernel, one program per row, BLOCK=8192, num_warps=8, fp32 accumulate | faster | 0.0945 | 3.35x | false | 20261014-200116.json |\n| 2 | Same, num_warps 8 -> 16 | faster | 0.0920 | 3.27x | false | 20261014-200159.json |\n| 3 | #2 + evict_first on x/y, evict_last on w | faster | 0.0922 | 3.32x | false | 20261014-200245.json |\n\nThe speedup column reflects baseline noise. Hypothesis 2 has the lowest candidate mean but the\nlowest speedup, because its baseline came out at 0.3008 ms against 0.3166 ms in run 1.\n\nThe candidate file was left at hypothesis 2 (16 warps, no cache hints).\
+... [1121 more chars]
 ```
 
 **Tool result `Write`**
 
 ```
-File created successfully at: C:\Users\xinhu\Documents\github\ai模型\hotkernel\results\rmsnorm\agent-run-20261014-200017\notes.md (file state is current in your context — no need to Read it back)
+File created successfully at: <repo>/results/rmsnorm/agent-run-20261014-200017/notes.md (file state is current in your context — no need to Read it back)
 ```
 
 **Assistant:**

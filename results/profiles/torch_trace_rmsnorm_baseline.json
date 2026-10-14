@@ -48,7 +48,7 @@
  "script_exit_code": 0,
  "torch": "2.11.0+cu128",
  "cmd": [
-  "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+  "<home>/venvs/5090lab-cu128/bin/python",
   "/tmp/tmpw09ykrza_hotkernel_torchprof.py",
   "examples/rmsnorm_baseline.py",
   "3"

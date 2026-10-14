@@ -32,7 +32,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\skills\\kernel-speedrun\\SKILL.md"
+ "file_path": "<repo>/skills/kernel-speedrun/SKILL.md"
 }
 ```
 
@@ -88,7 +88,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_baseline.py"
+ "file_path": "<repo>/examples/softmax_baseline.py"
 }
 ```
 
@@ -159,7 +159,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py"
+ "file_path": "<repo>/examples/softmax_agent_candidate.py"
 }
 ```
 
@@ -227,7 +227,7 @@ MCP servers: hotkernel
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\_timing.py"
+ "file_path": "<repo>/examples/_timing.py"
 }
 ```
 
@@ -370,7 +370,7 @@ MCP servers: hotkernel
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_baseline.py"
   ],
   "n": 5,
@@ -531,11 +531,11 @@ MCP servers: hotkernel
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/softmax_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/softmax_agent_candidate.py"
     ]
   },
@@ -615,11 +615,11 @@ MCP servers: hotkernel
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_agent_candidate.py"
    ]
   },
@@ -638,16 +638,16 @@ MCP servers: hotkernel
    "torch": "2.11.0+cu128"
   },
   "candidate_extra": {},
-  "note": "speedup = this call's baseline mean /
-... [471 more chars]
+  "note": "speedup = this call's baseline mean / candidate m
+... [459 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/softmax/20261014-200724.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/softmax/20261014-200724.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| softmax | NVIDIA GeForce RTX 5090 | 575 W | 0.1174 (7) | 0.1179 (7) | no gain | Unchanged blank candidate (torch.softmax), sanity check ([log](results/softmax/20261014-200724.json)) | 2026-10-14 | 9935138 | agent:claude-opus-5-5, autonomous loop, results/softmax/agent-run-20261014-200625 |",
   "verdict": "inconclusive",
   "speedup_cell": "no gain",
@@ -671,7 +671,7 @@ MCP servers: hotkernel
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py",
+ "file_path": "<repo>/examples/softmax_agent_candidate.py",
  "old_string": "import torch\nfrom softmax_baseline import (",
  "new_string": "import torch\nimport triton\nimport triton.language as tl\nfrom softmax_baseline import ("
 }
@@ -680,7 +680,7 @@ MCP servers: hotkernel
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `Edit`**
@@ -688,7 +688,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py",
+ "file_path": "<repo>/examples/softmax_agent_candidate.py",
  "old_string": "def softmax_candidate(x: torch.Tensor) -> torch.Tensor:\n    # Starting point: identical to the baseline. Replace with something faster.\n    return torch.softmax(x, dim=-1)",
  "new_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, stride, n_cols, BLOCK: tl.constexpr):\n    # One program per row; the whole row lives in registers, so it is read once and written once.\n    row = tl.program_id(0)\n    offs = tl.arange(0, BLOCK)\n    mask = offs < n_cols\n    x = tl.load(x_ptr + row * stride + offs, mask=mask, other=-float(\"inf\")).to(tl.float32)\n    x = x - tl.max(x, axis=0)\n    e = tl.exp(x)\n    y = e / tl.sum(e, axis=0)\n    tl.store(y_ptr + row * stride + offs, y.to(y_ptr.dtype.element_ty), mask=mask)\n\n\ndef softmax_candidate(x: torch.Tensor) -> torch.Tensor:\n    rows, cols = x.shape\n    y = torch.empty_like(x)\n    _softmax_row_kernel[(rows,)](x, y, x.stride(0), cols, BLOCK=triton.next_power_of_2(cols),\n                                 num_warps=16)\n    return y"
 }
@@ -697,7 +697,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Assistant:**
@@ -718,7 +718,7 @@ Wrote a one-pass Triton row-softmax kernel; checking it compiles and passes with
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_agent_candidate.py"
   ],
   "n": 3,
@@ -849,11 +849,11 @@ Correct, ~0.091 ms in bench. Running verify.
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/softmax_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/softmax_agent_candidate.py"
     ]
   },
@@ -933,11 +933,11 @@ Correct, ~0.091 ms in bench. Running verify.
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_agent_candidate.py"
    ]
   },
@@ -956,16 +956,16 @@ Correct, ~0.091 ms in bench. Running verify.
    "torch": "2.11.0+cu128"
   },
   "candidate_extra": {},
-  "note": "speedup = this call's baseline mean / candidate
-... [507 more chars]
+  "note": "speedup = this call's baseline mean / candidate mean and mo
+... [495 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/softmax/20261014-200819.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/softmax/20261014-200819.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| softmax | NVIDIA GeForce RTX 5090 | 575 W | 0.1094 (7) | 0.0910 (7) | 1.20x | Triton one-program-per-row softmax, whole 8192-col row in registers (single read+write), num_warps=16 ([log](results/softmax/20261014-200819.json)) | 2026-10-14 | 9935138 | agent:claude-opus-5-5, autonomous loop, results/softmax/agent-run-20261014-200625 |",
   "verdict": "faster",
   "speedup_cell": "1.20x",
@@ -993,7 +993,7 @@ Kept: 0.0910 ms (1.20x, `20261014-200819.json`), ~1475 GB/s. The floor is 0.0749
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py",
+ "file_path": "<repo>/examples/softmax_agent_candidate.py",
  "old_string": "                                 num_warps=16)",
  "new_string": "                                 num_warps=8)"
 }
@@ -1002,7 +1002,7 @@ Kept: 0.0910 ms (1.20x, `20261014-200819.json`), ~1475 GB/s. The floor is 0.0749
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1019,7 +1019,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_agent_candidate.py"
   ],
   "n": 3,
@@ -1090,16 +1090,16 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py",
+ "file_path": "<repo>/examples/softmax_agent_candidate.py",
  "old_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, stride, n_cols, BLOCK: tl.constexpr):\n    # One program per row; the whole row lives in registers, so it is read once and written once.\n    row = tl.program_id(0)\n    offs = tl.arange(0, BLOCK)\n    mask = offs < n_cols\n    x = tl.load(x_ptr + row * stride + offs, mask=mask, other=-float(\"inf\")).to(tl.float32)\n    x = x - tl.max(x, axis=0)\n    e = tl.exp(x)\n    y = e / tl.sum(e, axis=0)\n    tl.store(y_ptr + row * stride + offs, y.to(y_ptr.dtype.element_ty), mask=mask)\n\n\ndef softmax_candidate(x: torch.Tensor) -> torch.Tensor:\n    rows, cols = x.shape\n    y = torch.empty_like(x)\n    _softmax_row_kernel[(rows,)](x, y, x.stride(0), cols, BLOCK=triton.next_power_of_2(cols),\n                                 num_warps=8)\n    return y",
- "new_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, stride, n_rows, n_cols, BLOCK: tl.constexpr,\n                        STAGES: tl.constexpr):\n    # Persistent: each program walks rows start, start+grid, ...; the whole row lives in\n    # registers (one read, one write) and the pipelined loop prefetches the next row.\n    start = tl.program_id(0)\n    step = tl.num_programs(0)\n    offs = tl.arange(0, BLOCK)\n    mask = offs < n_cols\n    for row in tl.range(start, n_rows, step, num_stages=STAGES):\n        x = tl.load(
-... [752 more chars]
+ "new_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, stride, n_rows, n_cols, BLOCK: tl.constexpr,\n                        STAGES: tl.constexpr):\n    # Persistent: each program walks rows start, start+grid, ...; the whole row lives in\n    # registers (one read, one write) and the pipelined loop prefetches the next row.\n    start = tl.program_id(0)\n    step = tl.num_programs(0)\n    offs = tl.arange(0, BLOCK)\n    mask = offs < n_cols\n    for row in tl.range(start, n_rows, step, num_stages=STAGES):\n        x = tl.load(x_ptr + row * stride + offs, mask=mask, other=-f
+... [704 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1116,7 +1116,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_agent_candidate.py"
   ],
   "n": 3,
@@ -1187,7 +1187,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py",
+ "file_path": "<repo>/examples/softmax_agent_candidate.py",
  "old_string": "    grid = (min(rows, _NUM_SMS * 4),)\n    _softmax_row_kernel[grid](x, y, x.stride(0), rows, cols, BLOCK=triton.next_power_of_2(cols),\n                              STAGES=2, num_warps=8)",
  "new_string": "    grid = (min(rows, _NUM_SMS * 6),)\n    _softmax_row_kernel[grid](x, y, x.stride(0), rows, cols, BLOCK=triton.next_power_of_2(cols),\n                              STAGES=1, num_warps=8)"
 }
@@ -1196,7 +1196,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1213,7 +1213,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_agent_candidate.py"
   ],
   "n": 3,
@@ -1288,16 +1288,16 @@ Persistent is worse either way (~0.099–0.100 ms). Restoring the kept non-persi
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py",
+ "file_path": "<repo>/examples/softmax_agent_candidate.py",
  "old_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, stride, n_rows, n_cols, BLOCK: tl.constexpr,\n                        STAGES: tl.constexpr):\n    # Persistent: each program walks rows start, start+grid, ...; the whole row lives in\n    # registers (one read, one write) and the pipelined loop prefetches the next row.\n    start = tl.program_id(0)\n    step = tl.num_programs(0)\n    offs = tl.arange(0, BLOCK)\n    mask = offs < n_cols\n    for row in tl.range(start, n_rows, step, num_stages=STAGES):\n        x = tl.load(x_ptr + row * stride + offs, mask=mask, other=-float(\"inf\"),\n                    eviction_policy=\"evict_first\").to(tl.float32)\n        x = x - tl.max(x, axis=0)\n        e = tl.exp(x)\n        y = e / tl.sum(e, axis=0)\n        tl.store(y_ptr + row * stride + offs, y.to(y_ptr.dtype.element_ty), mask=mask,\n                 cache_modifier=\".cs\")\n\n\n_NUM_SMS = torch.cuda.get_device_properties(0).multi_processor_count\n\n\ndef softmax_candidate(x: torch.Tensor) -> torch.Tensor:\n    rows, cols = x.shape\n    y = torch.empty_like(x)\n    grid = (min(rows, _NUM_SMS * 6),)\n    _softmax_row_kernel[grid](x, y, x.stride(0), rows, cols, BLOCK=triton.next_power_of_2(cols),\n                              STAGES=1, num_warps=8)\n    return y",
- "new_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, strid
-... [753 more chars]
+ "new_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, stride, n_cols, BLOCK: tl.constexpr):\n    # One prog
+... [705 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__profile`**
@@ -1321,13 +1321,13 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
   "error": "ncu failed",
   "detail": {
     "cmd": [
-      "/home/ubuntu/opt/nvidia/opt/nvidia/nsight-compute/2026.2.1/ncu",
+      "<home>/opt/nvidia/opt/nvidia/nsight-compute/2026.2.1/ncu",
       "--set",
       "basic",
       "--launch-count",
       "5",
       "-o",
-      "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/profiles/ncu-20261014-200923",
+      "<repo>/results/profiles/ncu-20261014-200923",
       "--force-overwrite",
       "--kernel-name",
       "regex:_softmax_row_kernel",
@@ -1336,7 +1336,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
     ],
     "returncode": 1,
     "stdout": "==ERROR== The application returned an error code (1).\n",
-    "stderr": "Traceback (most recent call last):\n  File \"/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/examples/softmax_agent_candidate.py\", line 12, in <module>\n    import torch\nModuleNotFoundError: No module named 'torch'\n",
+    "stderr": "Traceback (most recent call last):\n  File \"<repo>/examples/softmax_agent_candidate.py\", line 12, in <module>\n    import torch\nModuleNotFoundError: No module named 'torch'\n",
     "wall_s": 0.553
   }
 }
@@ -1351,7 +1351,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```json
 {
  "cmd": [
-  "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+  "<home>/venvs/5090lab-cu128/bin/python",
   "examples/softmax_agent_candidate.py"
  ],
  "tool": "ncu",
@@ -1365,8 +1365,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```
 {
   "tool": "ncu",
-  "report": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/profiles/ncu-20261014-200926.ncu-rep",
-  "details_csv": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/profiles/ncu-20261014-200926.details.csv",
+  "report": "<repo>/results/profiles/ncu-20261014-200926.ncu-rep",
+  "details_csv": "<repo>/results/profiles/ncu-20261014-200926.details.csv",
   "top": [
     {
       "id": "1",
@@ -1445,8 +1445,8 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
           "rule": "SOLBottleneck",
           "type": "INF",
           "estimated_speedup_pct": null,
-        
-... [5285 more chars]
+          "text": "This workload is utilizing greater than 80.0% of the available compute or mem
+... [5197 more chars]
 ```
 
 **Tool call `Edit`**
@@ -1454,7 +1454,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py",
+ "file_path": "<repo>/examples/softmax_agent_candidate.py",
  "old_string": "    x = tl.load(x_ptr + row * stride + offs, mask=mask, other=-float(\"inf\")).to(tl.float32)\n    x = x - tl.max(x, axis=0)\n    e = tl.exp(x)\n    y = e / tl.sum(e, axis=0)\n    tl.store(y_ptr + row * stride + offs, y.to(y_ptr.dtype.element_ty), mask=mask)",
  "new_string": "    x = tl.load(x_ptr + row * stride + offs, mask=mask, other=-float(\"inf\"),\n                eviction_policy=\"evict_first\").to(tl.float32)\n    x = x - tl.max(x, axis=0)\n    e = tl.exp(x)\n    y = e / tl.sum(e, axis=0)\n    tl.store(y_ptr + row * stride + offs, y.to(y_ptr.dtype.element_ty), mask=mask,\n             cache_modifier=\".cs\")"
 }
@@ -1463,7 +1463,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1480,7 +1480,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_agent_candidate.py"
   ],
   "n": 5,
@@ -1585,7 +1585,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py",
+ "file_path": "<repo>/examples/softmax_agent_candidate.py",
  "old_string": "    x = tl.load(x_ptr + row * stride + offs, mask=mask, other=-float(\"inf\"),\n                eviction_policy=\"evict_first\").to(tl.float32)\n    x = x - tl.max(x, axis=0)\n    e = tl.exp(x)\n    y = e / tl.sum(e, axis=0)\n    tl.store(y_ptr + row * stride + offs, y.to(y_ptr.dtype.element_ty), mask=mask,\n             cache_modifier=\".cs\")",
  "new_string": "    x = tl.load(x_ptr + row * stride + offs, mask=mask, other=-float(\"inf\")).to(tl.float32)\n    x = x - tl.max(x, axis=0)\n    e = tl.exp(x)\n    y = e / tl.sum(e, axis=0)\n    tl.store(y_ptr + row * stride + offs, y.to(y_ptr.dtype.element_ty), mask=mask)"
 }
@@ -1594,7 +1594,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `Edit`**
@@ -1602,7 +1602,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py",
+ "file_path": "<repo>/examples/softmax_agent_candidate.py",
  "old_string": "                                 num_warps=16)",
  "new_string": "                                 num_warps=8)"
 }
@@ -1611,7 +1611,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__verify`**
@@ -1675,11 +1675,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/softmax_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/softmax_agent_candidate.py"
     ]
   },
@@ -1759,11 +1759,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_agent_candidate.py"
    ]
   },
@@ -1782,16 +1782,16 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
    "torch": "2.11.0+cu128"
   },
   "candidate_extra": {},
-  "note": "speedup = this call's baseline mean / candidate me
-... [460 more chars]
+  "note": "speedup = this call's baseline mean / candidate mean and moves
+... [448 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/softmax/20261014-201039.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/softmax/20261014-201039.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| softmax | NVIDIA GeForce RTX 5090 | 575 W | 0.1095 (7) | 0.0901 (7) | 1.22x | Same one-row-per-program Triton kernel, num_warps 16 -> 8 ([log](results/softmax/20261014-201039.json)) | 2026-10-14 | 9935138 | agent:claude-opus-5-5, autonomous loop, results/softmax/agent-run-20261014-200625 |",
   "verdict": "faster",
   "speedup_cell": "1.22x",
@@ -1819,7 +1819,7 @@ Kept: 0.0901 ms (1.22x, `20261014-201039.json`). Screening num_warps=4 next.
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py",
+ "file_path": "<repo>/examples/softmax_agent_candidate.py",
  "old_string": "                                 num_warps=8)",
  "new_string": "                                 num_warps=4)"
 }
@@ -1828,7 +1828,7 @@ Kept: 0.0901 ms (1.22x, `20261014-201039.json`). Screening num_warps=4 next.
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1845,7 +1845,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_agent_candidate.py"
   ],
   "n": 5,
@@ -1954,16 +1954,16 @@ num_warps=4 is 0.0906 ms, no better than 8. Restoring 8 and screening one last s
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py",
+ "file_path": "<repo>/examples/softmax_agent_candidate.py",
  "old_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, stride, n_cols, BLOCK: tl.constexpr):\n    # One program per row; the whole row lives in registers, so it is read once and written once.\n    row = tl.program_id(0)\n    offs = tl.arange(0, BLOCK)\n    mask = offs < n_cols\n    x = tl.load(x_ptr + row * stride + offs, mask=mask, other=-float(\"inf\")).to(tl.float32)\n    x = x - tl.max(x, axis=0)\n    e = tl.exp(x)\n    y = e / tl.sum(e, axis=0)\n    tl.store(y_ptr + row * stride + offs, y.to(y_ptr.dtype.element_ty), mask=mask)\n\n\ndef softmax_candidate(x: torch.Tensor) -> torch.Tensor:\n    rows, cols = x.shape\n    y = torch.empty_like(x)\n    _softmax_row_kernel[(rows,)](x, y, x.stride(0), cols, BLOCK=triton.next_power_of_2(cols),\n                                 num_warps=4)\n    return y",
- "new_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, stride, n_rows, n_cols, ROWS_PER: tl.constexpr,\n                        BLOCK: tl.constexpr):\n    # ROWS_PER rows per program; the whole tile lives in registers, so it is read once and\n    # written once.\n    rows = tl.program_id(0) * ROWS_PER + tl.arange(0, ROWS_PER)\n    offs = tl.arange(0, BLOCK)\n    mask = (rows[:, None] < n_rows) & (offs[None, :] < n_cols)\n    ptrs = rows[:, None] * stride + offs[None, :]\n    x = tl.load(x_ptr + ptrs, mask=mask, other=-float(\
-... [518 more chars]
+ "new_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, stride, n_rows, n_cols, ROWS_PER: tl.constexpr,\n                        BLOCK: tl.constexpr):\n    # ROWS_PER rows per program; the whole tile lives in registers, so it is read once and\n    # written once.\n    rows = tl.program_id(0) * ROWS_PER + tl.arange(0, ROWS_PER)\n    offs = tl.arange(0, BLOCK)\n    mask = (rows[:, None] < n_rows) & (offs[None, :] < n_cols)\n    ptrs = rows[:, None] * stride + offs[None, :]\n    x = tl.load(x_ptr + ptrs, mask=mask, other=-float(\"inf\")).to(tl.float32)\n    x = x - tl.max(x, a
+... [470 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__bench`**
@@ -1980,7 +1980,7 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 ```
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_agent_candidate.py"
   ],
   "n": 5,
@@ -2089,16 +2089,16 @@ The 2-row tile is worse (0.0931 ms). Restoring the kept kernel (1 row/program, n
 ```json
 {
  "replace_all": false,
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\examples\\softmax_agent_candidate.py",
+ "file_path": "<repo>/examples/softmax_agent_candidate.py",
  "old_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, stride, n_rows, n_cols, ROWS_PER: tl.constexpr,\n                        BLOCK: tl.constexpr):\n    # ROWS_PER rows per program; the whole tile lives in registers, so it is read once and\n    # written once.\n    rows = tl.program_id(0) * ROWS_PER + tl.arange(0, ROWS_PER)\n    offs = tl.arange(0, BLOCK)\n    mask = (rows[:, None] < n_rows) & (offs[None, :] < n_cols)\n    ptrs = rows[:, None] * stride + offs[None, :]\n    x = tl.load(x_ptr + ptrs, mask=mask, other=-float(\"inf\")).to(tl.float32)\n    x = x - tl.max(x, axis=1)[:, None]\n    e = tl.exp(x)\n    y = e / tl.sum(e, axis=1)[:, None]\n    tl.store(y_ptr + ptrs, y.to(y_ptr.dtype.element_ty), mask=mask)\n\n\ndef softmax_candidate(x: torch.Tensor) -> torch.Tensor:\n    rows, cols = x.shape\n    y = torch.empty_like(x)\n    rows_per = 2\n    _softmax_row_kernel[(triton.cdiv(rows, rows_per),)](\n        x, y, x.stride(0), rows, cols, ROWS_PER=rows_per, BLOCK=triton.next_power_of_2(cols),\n        num_warps=16)\n    return y",
- "new_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, stride, n_cols, BLOCK: tl.constexpr):\n    # One program per row; the whole row lives in registers, so it is read once and written once.\n    row = tl.program_id(0)\n    offs = tl.arange(0, BLOCK)\n    mask = offs < n_cols\n    x = tl.load
-... [518 more chars]
+ "new_string": "@triton.jit\ndef _softmax_row_kernel(x_ptr, y_ptr, stride, n_cols, BLOCK: tl.constexpr):\n    # One program per row; the whole row lives in registers, so it is read once and written once.\n    row = tl.program_id(0)\n    offs = tl.arange(0, BLOCK)\n    mask = offs < n_cols\n    x = tl.load(x_ptr + row * stride + offs, mask=mask, other=-
+... [470 more chars]
 ```
 
 **Tool result `Edit`**
 
 ```
-The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
+The file <repo>/examples/softmax_agent_candidate.py has been updated successfully. (file state is current in your context — no need to Read it back)
 ```
 
 **Tool call `mcp__hotkernel__verify`**
@@ -2162,11 +2162,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
   "order": "interleaved baseline/candidate",
   "cmds": {
     "baseline": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/softmax_baseline.py"
     ],
     "candidate": [
-      "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+      "<home>/venvs/5090lab-cu128/bin/python",
       "examples/softmax_agent_candidate.py"
     ]
   },
@@ -2246,11 +2246,11 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
   "order": "interleaved baseline/candidate",
   "cmds": {
    "baseline": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_baseline.py"
    ],
    "candidate": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/softmax_agent_candidate.py"
    ]
   },
@@ -2269,16 +2269,16 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
    "torch": "2.11.0+cu128"
   },
   "candidate_extra": {},
-  "note": "speedup = this call's baseline mean / candidate m
-... [486 more chars]
+  "note": "speedup = this call's baseline mean / candidate mean and move
+... [474 more chars]
 ```
 
 **Tool result `mcp__hotkernel__record`**
 
 ```
 {
-  "log": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/results/softmax/20261014-201208.json",
-  "leaderboard": "/mnt/c/Users/xinhu/Documents/github/ai模型/hotkernel/LEADERBOARD.md",
+  "log": "<repo>/results/softmax/20261014-201208.json",
+  "leaderboard": "<repo>/LEADERBOARD.md",
   "row": "| softmax | NVIDIA GeForce RTX 5090 | 575 W | 0.1095 (7) | 0.0906 (7) | 1.21x | Reproduction of the kept kernel (one row per program, num_warps=8), unchanged code ([log](results/softmax/20261014-201208.json)) | 2026-10-14 | 9935138 | agent:claude-opus-5-5, autonomous loop, results/softmax/agent-run-20261014-200625 |",
   "verdict": "faster",
   "speedup_cell": "1.21x",
@@ -2301,15 +2301,15 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\softmax_age
 
 ```json
 {
- "file_path": "C:\\Users\\xinhu\\Documents\\github\\ai模型\\hotkernel\\results\\softmax\\agent-run-20261014-200625\\notes.md",
- "content": "# softmax — autonomous kernel-speedrun run 20261014-200625\n\nwho: `agent:claude-opus-5-5, autonomous loop, results/softmax/agent-run-20261014-200625`\nGPU: RTX 5090, driver 617.42, 575 W. Shape 4096x8192 bf16, 50 iters, L2 flushed before each call.\n\n## Result\n\n**Best: `faster`, 1.22x. Candidate 0.0901 ms vs baseline 0.1095 ms (n=7). Log\n`results/softmax/20261014-201039.json`.** Reproduced by a later verify on unchanged code:\n`faster`, 1.21x, 0.0906 vs 0.1095 ms, `results/softmax/20261014-201208.json`.\n\nThe candidate file now holds that kernel: Triton, one program per row, the whole 8192-col row\nin registers (one read and one write per element), fp32 max/exp/sum, num_warps=8.\n\nroofline(flops=1.68e8, bytes=1.34e8) gives attainable_ms = 0.0749. The stop target\n(within 10%, ≤0.0824 ms) was **not** reached; the best is 20% above the floor.\n\n## Hypotheses (4 verify calls, 4 record calls)\n\n| # | Change | Verdict | Candidate ms | keep | Log |\n|---|---|---|---|---|---|\n| 0 | Unchanged blank candidate (sanity) | inconclusive | 0.1179 | false | 20261014-200724.json |\n| 1 | Triton single-pass row softmax, num_warps=16 | faster 1.20x | 0.0910 | **true** | 20261014-200819.json |\n| 2 | Same, num_warps 16 -> 8 | faster 1.22x | 0.0901 | **true** | 20261014-201039.json |\n| 3 | Reproduction of #2, unchanged code | faster 1.21x | 0.0906
-... [2238 more chars]
+ "file_path": "<repo>/results/softmax/agent-run-20261014-200625/notes.md",
+ "content": "# softmax — autonomous kernel-speedrun run 20261014-200625\n\nwho: `agent:claude-opus-5-5, autonomous loop, results/softmax/agent-run-20261014-200625`\nGPU: RTX 5090, driver 617.42, 575 W. Shape 4096x8192 bf16, 50 iters, L2 flushed before each call.\n\n## Result\n\n**Best: `faster`, 1.22x. Candidate 0.0901 ms vs baseline 0.1095 ms (n=7). Log\n`results/softmax/20261014-201039.json`.** Reproduced by a later verify on unchanged code:\n`faster`, 1.21x, 0.0906 vs 0.1095 ms, `results/softmax/20261014-201208.json`.\n\nThe candidate file now holds that kernel: Triton, one program per row, the whole 8192-col row\nin registers (one read and one write per element), fp32 max/exp/sum, num_warps=8.\n\nroofline(flops=1.68e8, bytes=1.34e8) gives attainable_ms = 0.0749. The stop target\n(within 10%, ≤0.0824 ms) was **not** reached; the best is 20% above the floor.\n\n## Hypotheses (4 verify calls, 4 record calls)\n\n| # | Change | Verdict | Candidate ms | keep | Log |\n|---|---|---|---|---|---|\n| 0 | Unchanged blank candidate (sanity) | inconclusive | 0.1179 | false | 20261014-200724.json |\n| 1 | Triton single-pass row softmax, num_warps=16 | faster 1.20x | 0.0910 | **true** | 20261014-200819.json |\n| 2 | Same, num_warps 16 -> 8 | faster 1.22x | 0.0901 | **true** | 20261014-201039.json |\n| 3 | Reproduction of #2, unchanged code | faster 1.21x | 0.0906 | false (same code, as expected) | 20261014-20120
+... [2182 more chars]
 ```
 
 **Tool result `Write`**
 
 ```
-File created successfully at: C:\Users\xinhu\Documents\github\ai模型\hotkernel\results\softmax\agent-run-20261014-200625\notes.md (file state is current in your context — no need to Read it back)
+File created successfully at: <repo>/results/softmax/agent-run-20261014-200625/notes.md (file state is current in your context — no need to Read it back)
 ```
 
 **Assistant:**

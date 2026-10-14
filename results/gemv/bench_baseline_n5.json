@@ -1,6 +1,6 @@
 {
   "cmd": [
-    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "<home>/venvs/5090lab-cu128/bin/python",
     "examples/gemv_baseline.py"
   ],
   "n": 5,

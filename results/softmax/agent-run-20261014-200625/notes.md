@@ -47,7 +47,7 @@ the 10% stop target cannot be reached by any kernel. A tool would need to measur
 
 - `profile(cmd=["python", ...])` failed with `No module named 'torch'`: it runs the bare
   `python` on PATH, not HOTKERNEL_PYTHON like bench/verify do. I had to copy the interpreter path
-  (`/home/ubuntu/venvs/5090lab-cu128/bin/python`) out of a bench result.
+  (`<home>/venvs/5090lab-cu128/bin/python`) out of a bench result.
 - ncu `duration_us` (~47 µs) vs verify (~90 µs): the note says they are not comparable, but
   nothing says how big the flush-related gap is expected to be, so the roofline stop target
   (`attainable_ms` 0.0749) looks unreachable under this timer and I could not confirm why.

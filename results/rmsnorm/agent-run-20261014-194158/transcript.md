@@ -3,14 +3,14 @@
 model: `?`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `?`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
@@ -310,14 +310,14 @@ I'll start by reading the skill, baseline, candidate and timer, and loading the 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Assistant:**
 
@@ -596,168 +596,168 @@ Running the loop's opening steps in parallel: GPU info, roofline for the rmsnorm
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `mcp__hotkernel__verify`**
 
@@ -953,133 +953,133 @@ MCP servers: none
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `Edit`**
 
@@ -1201,21 +1201,21 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Assistant:**
 
@@ -1381,210 +1381,210 @@ Preview (first 2KB):
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `mcp__hotkernel__profile`**
 
@@ -1687,301 +1687,301 @@ MCP servers: none
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `Edit`**
 
@@ -2099,203 +2099,203 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `mcp__hotkernel__record`**
 
@@ -2529,210 +2529,210 @@ Still looping: H2 is recorded, and the candidate now carries H3 (eviction hints,
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `mcp__hotkernel__record`**
 
@@ -2949,238 +2949,238 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `mcp__hotkernel__record`**
 
@@ -3393,196 +3393,196 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\rmsnorm_age
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `mcp__hotkernel__record`**
 
@@ -3898,35 +3898,35 @@ Reproduced: 3.31x, 0.0906 ms. Recording this final row.
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Assistant:**
 

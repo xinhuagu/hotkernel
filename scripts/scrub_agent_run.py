@@ -32,17 +32,40 @@ REDACTED = ("local environment fields (cwd, other MCP servers, plugins, skills, 
             "hotkernel server (scripts/scrub_agent_run.py)")
 
 
-def scrub_stream(path: Path) -> tuple[list[str], int, int]:
-    """Return (new lines, dropped records, changed records)."""
+# The launcher's allowlist (scripts/run_agent_loop.ps1). Used only to restore an init record
+# whose tool list lost the hotkernel names in an earlier, over-eager cleaning: a run whose
+# stream shows mcp__hotkernel__ calls plainly had these tools.
+HOTKERNEL_TOOLS = [f"mcp__hotkernel__{t}" for t in (
+    "gpu_info", "roofline", "bench", "torch_trace", "profile", "top_kernels", "disasm",
+    "verify", "record")]
+
+
+def _hotkernel_calls(events: list[dict]) -> bool:
+    for ev in events:
+        if ev.get("type") != "assistant":
+            continue
+        content = ev.get("message", {}).get("content") or []
+        if any(isinstance(b, dict) and b.get("type") == "tool_use"
+               and str(b.get("name", "")).startswith("mcp__hotkernel__") for b in content):
+            return True
+    return False
+
+
+def scrub_stream(path: Path) -> tuple[list[str], int, int, bool]:
+    """Return (new lines, dropped records, changed records, has hotkernel tools)."""
+    raw_lines = [l for l in path.read_text(encoding="utf-8", errors="replace").splitlines() if l.strip()]
+    parsed: list[dict | None] = []
+    for line in raw_lines:
+        try:
+            parsed.append(json.loads(line))
+        except json.JSONDecodeError:
+            parsed.append(None)
+    called = _hotkernel_calls([ev for ev in parsed if ev])
     out: list[str] = []
     dropped = changed = 0
-    for raw in path.read_text(encoding="utf-8", errors="replace").splitlines():
-        line = raw.strip()
-        if not line:
-            continue
-        try:
-            ev = json.loads(line)
-        except json.JSONDecodeError:
+    has_hk = False
+    for raw, ev in zip(raw_lines, parsed):
+        if ev is None:
             out.append(raw)
             continue
         if ev.get("type") == "system" and ev.get("subtype") in DROP_SUBTYPES:
@@ -50,22 +73,28 @@ def scrub_stream(path: Path) -> tuple[list[str], int, int]:
             continue
         if ev.get("type") == "system" and ev.get("subtype") == "init":
             new = {k: ev[k] for k in KEEP_INIT if k in ev}
-            new["tools"] = [t for t in ev.get("tools", []) if str(t).startswith("mcp__hotkernel__")]
-            new["redacted"] = REDACTED
+            tools = [t for t in ev.get("tools", []) if str(t).startswith("mcp__hotkernel__")]
+            note = REDACTED
+            if not tools and called:
+                tools = list(HOTKERNEL_TOOLS)
+                note += "; tool list restored to the launcher's hotkernel allowlist"
+            new["tools"] = tools
+            new["redacted"] = note
+            has_hk = bool(tools)
             if new != ev:
                 changed += 1
             out.append(json.dumps(new, ensure_ascii=False))
             continue
         out.append(raw)
-    return out, dropped, changed
+    return out, dropped, changed, has_hk
 
 
-def scrub_transcript(path: Path) -> tuple[list[str], int]:
+def scrub_transcript(path: Path, has_hk: bool) -> tuple[list[str], int]:
     out: list[str] = []
     changed = 0
     for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
         if line.startswith("MCP servers:"):
-            new = "MCP servers: hotkernel" if "hotkernel" in line else "MCP servers: none"
+            new = "MCP servers: hotkernel" if has_hk else "MCP servers: none"
             if new != line:
                 changed += 1
             line = new
@@ -76,16 +105,17 @@ def scrub_transcript(path: Path) -> tuple[list[str], int]:
 def scrub_dir(run_dir: Path, check: bool) -> int:
     """Return the number of changes made (or needed, with --check)."""
     total = 0
+    has_hk = False
     stream = run_dir / "stream.jsonl"
     if stream.exists():
-        lines, dropped, changed = scrub_stream(stream)
+        lines, dropped, changed, has_hk = scrub_stream(stream)
         total += dropped + changed
         print(f"{stream}: {dropped} hook records dropped, {changed} init record(s) reduced")
         if not check and (dropped or changed):
             stream.write_text("\n".join(lines) + "\n", encoding="utf-8")
     transcript = run_dir / "transcript.md"
     if transcript.exists():
-        lines, changed = scrub_transcript(transcript)
+        lines, changed = scrub_transcript(transcript, has_hk)
         total += changed
         print(f"{transcript}: {changed} MCP line(s) rewritten")
         if not check and changed:

@@ -3,14 +3,14 @@
 model: `?`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `?`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
@@ -313,14 +313,14 @@ MCP servers: hotkernel
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `mcp__hotkernel__gpu_info`**
 
@@ -603,35 +603,35 @@ MCP servers: none
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `mcp__hotkernel__verify`**
 
@@ -838,35 +838,35 @@ MCP servers: none
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `Edit`**
 
@@ -1202,35 +1202,35 @@ Correct and ~0.091 ms vs ~0.102 ms baseline. Verifying.
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Assistant:**
 
@@ -1358,28 +1358,28 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\gemv_agent_
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Assistant:**
 
@@ -1560,273 +1560,273 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\gemv_agent_
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `Edit`**
 
@@ -1950,175 +1950,175 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\gemv_agent_
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `Edit`**
 
@@ -2225,175 +2225,175 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\gemv_agent_
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Tool call `Edit`**
 
@@ -2617,63 +2617,63 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\gemv_agent_
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Assistant:**
 
@@ -2860,28 +2860,28 @@ The file C:\Users\xinhu\Documents\github\ai模型\hotkernel\examples\gemv_agent_
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 # Agent run
 
 model: `claude-opus-5-5`  
 session: `258ce716-142e-4021-b3a6-5282b683a919`  
 tools allowed: 0  
-MCP servers: none
+MCP servers: hotkernel
 
 **Assistant:**
 

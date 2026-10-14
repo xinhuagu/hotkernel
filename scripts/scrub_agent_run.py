@@ -74,10 +74,13 @@ def scrub_stream(path: Path) -> tuple[list[str], int, int, bool]:
         if ev.get("type") == "system" and ev.get("subtype") == "init":
             new = {k: ev[k] for k in KEEP_INIT if k in ev}
             tools = [t for t in ev.get("tools", []) if str(t).startswith("mcp__hotkernel__")]
-            note = REDACTED
+            # Keep a note this script wrote earlier (it may carry the "restored" suffix), so a
+            # second pass changes nothing.
+            prior = str(ev.get("redacted", ""))
+            note = prior if prior.startswith(REDACTED) else REDACTED
             if not tools and called:
                 tools = list(HOTKERNEL_TOOLS)
-                note += "; tool list restored to the launcher's hotkernel allowlist"
+                note = REDACTED + "; tool list restored to the launcher's hotkernel allowlist"
             new["tools"] = tools
             new["redacted"] = note
             has_hk = bool(tools)
@@ -112,14 +115,14 @@ def scrub_dir(run_dir: Path, check: bool) -> int:
         total += dropped + changed
         print(f"{stream}: {dropped} hook records dropped, {changed} init record(s) reduced")
         if not check and (dropped or changed):
-            stream.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            stream.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     transcript = run_dir / "transcript.md"
     if transcript.exists():
         lines, changed = scrub_transcript(transcript, has_hk)
         total += changed
         print(f"{transcript}: {changed} MCP line(s) rewritten")
         if not check and changed:
-            transcript.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            transcript.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     return total
 
 

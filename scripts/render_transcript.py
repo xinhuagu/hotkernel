@@ -47,6 +47,8 @@ def main(src: str, dst: str) -> None:
             out.append(f"```\n{_trunc(raw, 500)}\n```\n")
             continue
         t = ev.get("type")
+        if t == "system" and ev.get("subtype") != "init":
+            continue  # hook, thinking_tokens and other bookkeeping records: nothing to show
         if t == "system":
             model = ev.get("model", model)
             # Only the hotkernel server is ever named: the transcript is published, and the
@@ -107,7 +109,7 @@ def main(src: str, dst: str) -> None:
         out.append("final: " + json.dumps({k: final.get(k) for k in keys}) + "\n")
         if final.get("result"):
             out.append(f"\n### Agent's final message\n\n{final['result']}\n")
-    Path(dst).write_text("\n".join(out), encoding="utf-8")
+    Path(dst).write_text("\n".join(out), encoding="utf-8", newline="\n")
     print(f"wrote {dst}: {len(lines)} events, {sum(calls.values())} tool calls, "
           f"{len(verdicts)} verify calls")
 

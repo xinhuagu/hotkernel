@@ -20,7 +20,7 @@ baseline it writes; the generated candidate is the file you edit.
   the reference with the tolerances written in the baseline.
 - The baseline owns everything that makes the number honest in its `run(fn, impl, extra)`:
   shape, dtype, seed, reference, tolerances, input rotation and the timer
-  (`examples/_timing.py`, protocol 3: K input buffers cycled so every call reads a cold input
+  (`examples/_hotkernel_contract.py`, protocol 3: K input buffers cycled so every call reads a cold input
   and pays the previous call's output write-back, no cache flush). A candidate defines one
   function with the baseline's signature and calls `run(candidate, impl="...")`; it never owns
   a timing loop. `verify()` returns `invalid` if the two JSON lines disagree on shape, dtype,

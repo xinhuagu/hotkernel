@@ -1016,7 +1016,8 @@ def record(target: str, verify_result: dict | str, note: str = "", who: str = ""
 def new_target(target: str, from_: str, shape: str, dtype: str = "bf16",
                extra: list[str] | None = None, rotate: list[str] | None = None,
                out_dir: str = ".", flops: int | None = None, iters: int = 50, seed: int = 0,
-               rtol: float | None = None, atol: float | None = None, force: bool = False) -> dict:
+               rtol: float | None = None, atol: float | None = None, force: bool = False,
+               reference: str | None = None) -> dict:
     """Scaffold a target from the user's own PyTorch function so the loop can run on it: writes
     <out_dir>/<target>_baseline.py (the function as the baseline plus the Target definition:
     inputs, seed, fp32 reference, dtype-default tolerances, rotation, timer),
@@ -1025,12 +1026,15 @@ def new_target(target: str, from_: str, shape: str, dtype: str = "bf16",
     hotkernel installed there. from_: 'torch.nn.functional:gelu' or './mykernels.py:fused';
     shape: the primary input x, e.g. '4096x8192'; extra: more inputs in call order like
     ['w:8192', 'b:8192'] (random tensors of the same dtype); rotate: inputs that stream through
-    memory (default ['x']); flops: nominal flops per call for roofline(). Same as the CLI
-    `hotkernel new`. Then bench() the baseline and verify() the blank candidate (expect
-    'inconclusive') before changing anything."""
+    memory (default ['x']); flops: nominal flops per call for roofline(); reference: a different
+    'module:function' to run in fp32 as the reference when the baseline cannot run in fp32
+    (a backend-forced SDPA call, a bf16-only library kernel). Same as the CLI `hotkernel new`.
+    Then bench() the baseline and verify() the blank candidate (expect 'inconclusive') before
+    changing anything."""
     from .newtarget import new_target as _new
     out = _local_path(out_dir) or out_dir
-    return _new(target, from_, shape, dtype, extra, rotate, out, flops, iters, seed, rtol, atol, force)
+    return _new(target, from_, shape, dtype, extra, rotate, out, flops, iters, seed, rtol, atol, force,
+                reference=reference)
 
 
 def main() -> None:

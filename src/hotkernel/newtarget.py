@@ -84,12 +84,13 @@ and its tolerances, the input rotation and the timer. A candidate defines a func
 same signature and calls run(candidate, impl="..."); it cannot change any of this without
 changing the contract fields that verify() checks. The loop never edits this file.
 
-The reference is the same function run in fp32 and cast back to DTYPE. If your function
-needs a different reference (a different formula, a library call), edit `reference` below
-before the first verify(), not after.
+The reference is `reference_fn` ({refspec}) run in fp32 and cast back to DTYPE. If your
+function needs a different reference (a different formula, a library call), regenerate with
+--reference or edit `reference` below before the first verify(), not after.
 """
 
 {binding}
+{ref_binding}
 from _hotkernel_contract import PROTOCOL, Target  # noqa: E402
 
 DTYPE = {dtype!r}
@@ -104,7 +105,7 @@ assert PROTOCOL == {protocol}, "contract file does not match the protocol this t
 
 
 def reference({params}):
-    return baseline_fn({float_args}).to({primary}.dtype)
+    return reference_fn({float_args}).to({primary}.dtype)
 
 
 TARGET = Target(name={target!r}, dtype=DTYPE, shapes=SHAPES, rotate=ROTATE, reference=reference,
@@ -144,31 +145,47 @@ _BIND_MODULE = '''import importlib
 
 import torch  # noqa: F401  (the generated scripts run in the interpreter that has your torch)
 
-baseline_fn = getattr(importlib.import_module({module!r}), {function!r})'''
+{var} = getattr(importlib.import_module({module!r}), {function!r})'''
 
 _BIND_FILE = '''import importlib.util
 import sys
 
 import torch  # noqa: F401  (the generated scripts run in the interpreter that has your torch)
 
-_spec = importlib.util.spec_from_file_location({modname!r}, {path!r})
-_mod = importlib.util.module_from_spec(_spec)
-sys.modules[{modname!r}] = _mod
-_spec.loader.exec_module(_mod)
-baseline_fn = getattr(_mod, {function!r})'''
+_spec_{var} = importlib.util.spec_from_file_location({modname!r}, {path!r})
+_mod_{var} = importlib.util.module_from_spec(_spec_{var})
+sys.modules[{modname!r}] = _mod_{var}
+_spec_{var}.loader.exec_module(_mod_{var})
+{var} = getattr(_mod_{var}, {function!r})'''
+
+_BIND_SAME = "reference_fn = baseline_fn  # no --reference given: the baseline itself, run in fp32"
+
+
+def _binding(module: str, function: str, is_file: bool, var: str) -> tuple[str, str]:
+    """Python that binds `var` to the function, and the spec to show for it."""
+    if is_file:
+        path = str(Path(module).expanduser().resolve())
+        modname = "_hk_user_" + re.sub(r"\W", "_", Path(module).stem) + ("" if var == "baseline_fn" else "_ref")
+        return (_BIND_FILE.format(modname=modname, path=path, function=function, var=var),
+                f"{Path(module).name}:{function}")
+    return (_BIND_MODULE.format(module=module, function=function, var=var), f"{module}:{function}")
 
 
 def new_target(target: str, from_: str, shape: str, dtype: str = "bf16",
                extra: list[str] | None = None, rotate: list[str] | None = None,
                out_dir: str = ".", flops: int | None = None, iters: int = 50, seed: int = 0,
-               rtol: float | None = None, atol: float | None = None, force: bool = False) -> dict:
+               rtol: float | None = None, atol: float | None = None, force: bool = False,
+               reference: str | None = None) -> dict:
     """Write the three files and return what was written plus the next commands. Errors come
-    back as {"error": ...} so an agent can read them."""
+    back as {"error": ...} so an agent can read them. `reference` names a different function
+    (module:function or file.py:function) to run in fp32 as the reference, for baselines that
+    cannot run in fp32 themselves (a backend-forced SDPA call, a bf16-only library kernel)."""
     try:
         if not _NAME_RE.match(target):
             raise ValueError(f"target name {target!r} must be lowercase letters, digits and _")
         shapes = parse_inputs(shape, extra)
         module, function, is_file = parse_from(from_)
+        ref_parsed = parse_from(reference) if reference else None
         rotate_names = tuple(rotate) if rotate else ("x",)
         if any(r not in shapes for r in rotate_names):
             raise ValueError(f"--rotate names must be inputs: {list(shapes)}")
@@ -191,23 +208,20 @@ def new_target(target: str, from_: str, shape: str, dtype: str = "bf16",
 
     params = ", ".join(shapes)
     primary = rotate_names[0]
-    if is_file:
-        path = str(Path(module).expanduser().resolve())
-        modname = "_hk_user_" + re.sub(r"\W", "_", Path(module).stem)
-        binding = _BIND_FILE.format(modname=modname, path=path, function=function)
-        spec = f"{Path(module).name}:{function}"
+    binding, spec = _binding(module, function, is_file, "baseline_fn")
+    if ref_parsed:
+        ref_binding, refspec = _binding(*ref_parsed, "reference_fn")
     else:
-        binding = _BIND_MODULE.format(module=module, function=function)
-        spec = f"{module}:{function}"
+        ref_binding, refspec = _BIND_SAME, spec
     protocol = contract_protocol()
     baseline_text = _BASELINE.format(
-        target=target, spec=spec, date=time.strftime("%Y-%m-%d"), protocol=protocol,
-        contract=CONTRACT_FILE, binding=binding, dtype=dtype,
-        shapes="{" + ", ".join(f"{n!r}: {s!r}" for n, s in shapes.items()) + "}",
+        target=target, spec=spec, refspec=refspec, date=time.strftime("%Y-%m-%d"),
+        protocol=protocol, contract=CONTRACT_FILE, binding=binding, ref_binding=ref_binding,
+        dtype=dtype, shapes="{" + ", ".join(f"{n!r}: {s!r}" for n, s in shapes.items()) + "}",
         rotate=repr(tuple(rotate_names)), iters=int(iters), seed=int(seed),
         rtol=repr(rtol), atol=repr(atol), flops=repr(None if flops is None else int(flops)),
         params=params, float_args=", ".join(f"{n}.float()" for n in shapes), primary=primary,
-        refname=f"{spec} in fp32")
+        refname=f"{refspec} in fp32")
     candidate_text = _CANDIDATE.format(target=target, params=params)
 
     contract.write_text(src, encoding="utf-8", newline="\n")
@@ -247,6 +261,9 @@ def build_parser(prog: str = "hotkernel new") -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--rtol", type=float, default=None, help="override the dtype default")
     p.add_argument("--atol", type=float, default=None, help="override the dtype default")
+    p.add_argument("--reference", default=None, metavar="MODULE:FUNCTION",
+                   help="a different function to run in fp32 as the reference (default: the "
+                        "baseline itself); for baselines that cannot run in fp32")
     p.add_argument("--force", action="store_true", help="overwrite existing files")
     return p
 
@@ -254,7 +271,8 @@ def build_parser(prog: str = "hotkernel new") -> argparse.ArgumentParser:
 def main(argv: list[str]) -> int:
     args = build_parser().parse_args(argv)
     result = new_target(args.target, args.from_, args.shape, args.dtype, args.extra, args.rotate,
-                        args.out, args.flops, args.iters, args.seed, args.rtol, args.atol, args.force)
+                        args.out, args.flops, args.iters, args.seed, args.rtol, args.atol, args.force,
+                        reference=args.reference)
     print(json.dumps(result, indent=1))
     return 1 if "error" in result else 0
 

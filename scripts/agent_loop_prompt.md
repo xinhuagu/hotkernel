@@ -9,7 +9,7 @@ identical to the baseline, so your first verify() should come out `inconclusive`
 Rules
 
 1. First Read skills/kernel-speedrun/SKILL.md and follow its loop. Then Read the baseline, the
-   candidate and examples/_timing.py.
+   candidate and examples/_hotkernel_contract.py.
 2. Use repo-relative paths in every tool call (for example "examples/{TARGET}_agent_candidate.py")
    and do not pass `cwd`; the server already runs in this repository.
 3. Budget: at most {VERIFY_LIMIT} verify() calls in total and {TIME_LIMIT_MIN} minutes of wall

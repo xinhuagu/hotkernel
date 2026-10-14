@@ -306,6 +306,17 @@ def test_new_target_scaffolds_three_files(tmp_path: Path) -> None:
     b2 = Path(r2["files"]["baseline"]).read_text(encoding="utf-8")
     assert "spec_from_file_location" in b2 and "def reference(x, w):" in b2
     assert "SHAPES = {'x': (1024, 1024), 'w': (1024,)}" in b2
+    # A separate reference function (module or file form) for baselines that cannot run in fp32.
+    r3 = new_target("attn", "mymod:attn_cudnn", "1x32x1x128", extra=["k:1x8x32768x128", "v:1x8x32768x128"],
+                    rotate=["k", "v"], out_dir=str(tmp_path), reference="mymod:attn_reference_fp32")
+    assert "error" not in r3, r3
+    b3 = Path(r3["files"]["baseline"]).read_text(encoding="utf-8")
+    assert "reference_fn = getattr(importlib.import_module('mymod'), 'attn_reference_fp32')" in b3
+    assert "baseline_fn = getattr(importlib.import_module('mymod'), 'attn_cudnn')" in b3
+    assert "ROTATE = ('k', 'v')" in b3 and "def reference(x, k, v):" in b3
+    assert "return reference_fn(x.float(), k.float(), v.float()).to(k.dtype)" in b3
+    assert "reference_name='mymod:attn_reference_fp32 in fp32'" in b3
+    assert "reference_fn = baseline_fn" in baseline  # the default when --reference is absent
     files["contract"].write_text("# stale\nPROTOCOL = 2\n", encoding="utf-8")
     stale = new_target("other", "torch:relu", "16", out_dir=str(tmp_path))
     assert "error" in stale and "differs" in stale["error"]

@@ -17,7 +17,7 @@ MCP servers: none
 model: `claude-fable-5-1`  
 session: `cfc50eda-b48f-4447-b8d5-ee4cefc0708a`  
 tools allowed: 123  
-MCP servers: hotkernel (connected); other servers in the local config omitted
+MCP servers: hotkernel
 
 **Assistant:**
 

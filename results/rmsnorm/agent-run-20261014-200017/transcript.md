@@ -17,7 +17,7 @@ MCP servers: none
 model: `claude-opus-5-5`  
 session: `18db11ac-301a-4d81-b306-c381df9be7d1`  
 tools allowed: 123  
-MCP servers: hotkernel (connected); other servers in the local config omitted
+MCP servers: hotkernel
 
 **Tool call `ToolSearch`**
 

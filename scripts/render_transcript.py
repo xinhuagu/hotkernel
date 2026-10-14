@@ -49,11 +49,14 @@ def main(src: str, dst: str) -> None:
         t = ev.get("type")
         if t == "system":
             model = ev.get("model", model)
-            tools = ev.get("tools") or []
-            mcp = ev.get("mcp_servers") or []
-            servers = ", ".join(f"{m.get('name')} ({m.get('status')})" for m in mcp) or "none"
+            # Only the hotkernel server is ever named: the transcript is published, and the
+            # machine's other MCP servers, plugins and hooks are not part of the experiment
+            # (scripts/scrub_agent_run.py removes them from stream.jsonl as well).
+            tools = [t for t in (ev.get("tools") or []) if str(t).startswith("mcp__hotkernel__")]
+            servers = "hotkernel" if tools or any(
+                m.get("name") == "hotkernel" for m in (ev.get("mcp_servers") or [])) else "none"
             out.append(f"# Agent run\n\nmodel: `{model}`  \nsession: `{ev.get('session_id', '')}`  \n"
-                       f"tools allowed: {len(tools)}  \nMCP servers: {servers}\n")
+                       f"hotkernel tools allowed: {len(tools)}  \nMCP servers: {servers}\n")
         elif t == "assistant":
             for b in _blocks(ev.get("message", {})):
                 if b.get("type") == "text" and b.get("text", "").strip():

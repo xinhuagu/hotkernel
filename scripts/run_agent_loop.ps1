@@ -63,5 +63,11 @@ if (-not $p.WaitForExit($TimeLimitSec * 1000)) {
     "exited code $($p.ExitCode) at $(Get-Date -Format o)" | Out-File -Encoding utf8 -Append $runLog
 }
 Copy-Item $candidate (Join-Path $runDir "candidate_after.py")
+# Scrub before rendering: hook output, other MCP servers, plugins and host details never
+# reach the repository (see scripts/scrub_agent_run.py). The transcript is rendered from the
+# scrubbed stream and names only the hotkernel server.
+python (Join-Path $PSScriptRoot "scrub_agent_run.py") $runDir
+"scrubbed stream.jsonl at $(Get-Date -Format o)" | Out-File -Encoding utf8 -Append $runLog
 python (Join-Path $PSScriptRoot "render_transcript.py") $streamPath (Join-Path $runDir "transcript.md")
+python (Join-Path $PSScriptRoot "scrub_agent_run.py") $runDir --check
 Get-Content $runLog

@@ -62,6 +62,20 @@ def parse_inputs(shape: str, extra: list[str] | None) -> dict[str, tuple[int, ..
     return shapes
 
 
+def parse_derived_inputs(spec: str | list[str] | tuple[str, ...]) -> tuple[str, ...]:
+    """'x,w_q,scales' (or a list of names) -> the names derive() returns, in call order."""
+    names = re.split(r"[,\s]+", spec.strip()) if isinstance(spec, str) else list(spec)
+    names = [n for n in names if n]
+    if not names:
+        raise ValueError("--inputs must name what derive() returns, in call order, e.g. x,w_q,scales")
+    for n in names:
+        if not _INPUT_RE.match(n):
+            raise ValueError(f"bad input name {n!r}")
+    if len(set(names)) != len(names):
+        raise ValueError(f"duplicate input name in {names}")
+    return tuple(names)
+
+
 def parse_from(spec: str) -> tuple[str, str, bool]:
     """'torch.nn.functional:gelu' -> (module, function, False);
     'mykernels.py:fused' or './dir/k.py:f' -> (file path, function, True)."""
@@ -84,19 +98,17 @@ and its tolerances, the input rotation and the timer. A candidate defines a func
 same signature and calls run(candidate, impl="..."); it cannot change any of this without
 changing the contract fields that verify() checks. The loop never edits this file.
 
-The reference is `reference_fn` ({refspec}) run in fp32 and cast back to DTYPE. If your
-function needs a different reference (a different formula, a library call), regenerate with
---reference or edit `reference` below before the first verify(), not after.
+{ref_doc}
 """
 
 {binding}
 {ref_binding}
-from _hotkernel_contract import PROTOCOL, Target  # noqa: E402
+{derive_binding}from _hotkernel_contract import PROTOCOL, Target  # noqa: E402
 
 DTYPE = {dtype!r}
-SHAPES = {shapes}  # inputs in call order
+SHAPES = {shapes}  # {shapes_note}
 ROTATE = {rotate}  # streamed inputs that get K distinct copies (> 2x L2 in total)
-ITERS = {iters}
+{derive_consts}ITERS = {iters}
 SEED = {seed}
 RTOL, ATOL = {rtol}, {atol}  # None = default for DTYPE (see DEFAULT_TOLERANCES in the contract)
 FLOPS = {flops}  # nominal flops per call for roofline(); None = not stated
@@ -105,12 +117,12 @@ assert PROTOCOL == {protocol}, "contract file does not match the protocol this t
 
 
 def reference({params}):
-    return reference_fn({float_args}).to({primary}.dtype)
+    return reference_fn({args}).to({cast})
 
 
 TARGET = Target(name={target!r}, dtype=DTYPE, shapes=SHAPES, rotate=ROTATE, reference=reference,
-                rtol=RTOL, atol=ATOL, iters=ITERS, seed=SEED, flops=FLOPS,
-                reference_name={refname!r})
+                rtol=RTOL, atol=ATOL, iters=ITERS, seed=SEED, flops=FLOPS{min_bytes_kw},
+                reference_name={refname!r}{derive_kw})
 
 
 def run(fn, impl: str, extra: dict | None = None) -> None:
@@ -120,6 +132,24 @@ def run(fn, impl: str, extra: dict | None = None) -> None:
 if __name__ == "__main__":
     run(baseline_fn, impl={spec!r})
 '''
+
+_REF_DOC = '''The reference is `reference_fn` ({refspec}) run in fp32 and cast back to DTYPE. If your
+function needs a different reference (a different formula, a library call), regenerate with
+--reference or edit `reference` below before the first verify(), not after.'''
+
+_DERIVE_DOC = '''The call's inputs are derived: `derive_fn` ({derivespec}) maps the dict of raw random
+tensors in SHAPES to the dict of inputs named in INPUTS, in call order, once per rotated set
+and outside the timed region (a quantizer, a packed layout). The reference is `reference_fn`
+({refspec}) on those inputs exactly as derived, cast back to DTYPE: nothing is cast to fp32
+for it, since a derived input may be integer codes, so the reference function must do its own
+fp32 math. MIN_BYTES is what one call must read (one weight layout, not every layout derive
+returns) and sizes the rotation K; None sizes it from the rotated derived inputs and the
+output. To change any of this, regenerate before the first verify(), not after.'''
+
+_INPUTS_LINE = "INPUTS = {inputs!r}  # what derive() returns, in call order\n"
+_MIN_BYTES_LINE = "MIN_BYTES = {min_bytes}  # bytes one call must read; sizes the rotation K\n"
+_MIN_BYTES_DERIVED_LINE = ("MIN_BYTES = {min_bytes}  # bytes one call must read (one weight layout; "
+                           "None = rotated derived inputs + output)\n")
 
 _CANDIDATE = '''"""Candidate for the "{target}" target: the file the kernel-speedrun loop edits.
 
@@ -159,13 +189,14 @@ _spec_{var}.loader.exec_module(_mod_{var})
 {var} = getattr(_mod_{var}, {function!r})'''
 
 _BIND_SAME = "reference_fn = baseline_fn  # no --reference given: the baseline itself, run in fp32"
+_BIND_SUFFIX = {"baseline_fn": "", "reference_fn": "_ref", "derive_fn": "_derive"}
 
 
 def _binding(module: str, function: str, is_file: bool, var: str) -> tuple[str, str]:
     """Python that binds `var` to the function, and the spec to show for it."""
     if is_file:
         path = str(Path(module).expanduser().resolve())
-        modname = "_hk_user_" + re.sub(r"\W", "_", Path(module).stem) + ("" if var == "baseline_fn" else "_ref")
+        modname = "_hk_user_" + re.sub(r"\W", "_", Path(module).stem) + _BIND_SUFFIX[var]
         return (_BIND_FILE.format(modname=modname, path=path, function=function, var=var),
                 f"{Path(module).name}:{function}")
     return (_BIND_MODULE.format(module=module, function=function, var=var), f"{module}:{function}")
@@ -175,11 +206,18 @@ def new_target(target: str, from_: str, shape: str, dtype: str = "bf16",
                extra: list[str] | None = None, rotate: list[str] | None = None,
                out_dir: str = ".", flops: int | None = None, iters: int = 50, seed: int = 0,
                rtol: float | None = None, atol: float | None = None, force: bool = False,
-               reference: str | None = None) -> dict:
+               reference: str | None = None, derive: str | None = None,
+               inputs: str | list[str] | None = None, min_bytes: int | None = None) -> dict:
     """Write the three files and return what was written plus the next commands. Errors come
     back as {"error": ...} so an agent can read them. `reference` names a different function
     (module:function or file.py:function) to run in fp32 as the reference, for baselines that
-    cannot run in fp32 themselves (a backend-forced SDPA call, a bf16-only library kernel)."""
+    cannot run in fp32 themselves (a backend-forced SDPA call, a bf16-only library kernel).
+    `derive` names a function from the dict of raw random tensors (named by the shapes) to the
+    dict of tensors the call takes, in call order (a quantizer, a packed layout); `inputs` lists
+    the names it returns and becomes the signature of reference and candidate, and `reference`
+    is then required and gets the derived inputs as they are (integer codes cannot be cast to
+    fp32, so it must do its own fp32 math). `min_bytes` is what one call must read; the
+    contract sizes the rotation K from it (with derive, one weight layout, not every layout)."""
     try:
         if not _NAME_RE.match(target):
             raise ValueError(f"target name {target!r} must be lowercase letters, digits and _")
@@ -189,6 +227,19 @@ def new_target(target: str, from_: str, shape: str, dtype: str = "bf16",
         rotate_names = tuple(rotate) if rotate else ("x",)
         if any(r not in shapes for r in rotate_names):
             raise ValueError(f"--rotate names must be inputs: {list(shapes)}")
+        derive_parsed = parse_from(derive) if derive else None
+        if derive_parsed and not inputs:
+            raise ValueError("--derive needs --inputs: the names derive() returns, in call order")
+        if derive_parsed and not ref_parsed:
+            raise ValueError("--derive needs --reference: the scaffold cannot cast derived inputs to "
+                             "fp32, so a separate reference function must do its own fp32 math")
+        if inputs and not derive_parsed:
+            raise ValueError("--inputs only goes with --derive; without derive the inputs are SHAPES")
+        derived_names = parse_derived_inputs(inputs) if derive_parsed else None
+        if min_bytes is not None:
+            min_bytes = int(min_bytes)
+            if min_bytes <= 0:
+                raise ValueError(f"--min-bytes must be a positive byte count, got {min_bytes!r}")
     except ValueError as e:
         return {"error": str(e)}
 
@@ -206,41 +257,65 @@ def new_target(target: str, from_: str, shape: str, dtype: str = "bf16",
     if clashes and not force:
         return {"error": f"already exists: {clashes}; pass force=True / --force to overwrite"}
 
-    params = ", ".join(shapes)
+    call_names = derived_names or tuple(shapes)
+    params = ", ".join(call_names)
     primary = rotate_names[0]
     binding, spec = _binding(module, function, is_file, "baseline_fn")
     if ref_parsed:
         ref_binding, refspec = _binding(*ref_parsed, "reference_fn")
     else:
         ref_binding, refspec = _BIND_SAME, spec
+    derive_consts = ""
+    if derive_parsed:
+        derive_binding, derivespec = _binding(*derive_parsed, "derive_fn")
+        derive_binding += "\n"
+        ref_doc = _DERIVE_DOC.format(derivespec=derivespec, refspec=refspec)
+        shapes_note, refname = "raw random inputs, before derive()", f"{refspec} on the derived inputs"
+        args, cast = params, "TARGET.dtype"  # derived inputs as they are; the output in DTYPE
+        derive_consts += _INPUTS_LINE.format(inputs=tuple(call_names))
+        derive_consts += _MIN_BYTES_DERIVED_LINE.format(min_bytes=repr(min_bytes))
+        derive_kw = f",\n                derive=derive_fn, derive_name={derivespec!r}"
+    else:
+        derive_binding, derive_kw = "", ""
+        ref_doc = _REF_DOC.format(refspec=refspec)
+        shapes_note, refname = "inputs in call order", f"{refspec} in fp32"
+        args, cast = ", ".join(f"{n}.float()" for n in shapes), f"{primary}.dtype"
+        if min_bytes is not None:
+            derive_consts += _MIN_BYTES_LINE.format(min_bytes=min_bytes)
     protocol = contract_protocol()
     baseline_text = _BASELINE.format(
-        target=target, spec=spec, refspec=refspec, date=time.strftime("%Y-%m-%d"),
+        target=target, spec=spec, ref_doc=ref_doc, date=time.strftime("%Y-%m-%d"),
         protocol=protocol, contract=CONTRACT_FILE, binding=binding, ref_binding=ref_binding,
-        dtype=dtype, shapes="{" + ", ".join(f"{n!r}: {s!r}" for n, s in shapes.items()) + "}",
-        rotate=repr(tuple(rotate_names)), iters=int(iters), seed=int(seed),
+        derive_binding=derive_binding, dtype=dtype,
+        shapes="{" + ", ".join(f"{n!r}: {s!r}" for n, s in shapes.items()) + "}", shapes_note=shapes_note,
+        rotate=repr(tuple(rotate_names)), derive_consts=derive_consts, iters=int(iters), seed=int(seed),
         rtol=repr(rtol), atol=repr(atol), flops=repr(None if flops is None else int(flops)),
-        params=params, float_args=", ".join(f"{n}.float()" for n in shapes), primary=primary,
-        refname=f"{refspec} in fp32")
+        params=params, args=args, cast=cast, refname=refname,
+        min_bytes_kw=", min_bytes=MIN_BYTES" if "MIN_BYTES" in derive_consts else "", derive_kw=derive_kw)
     candidate_text = _CANDIDATE.format(target=target, params=params)
 
     contract.write_text(src, encoding="utf-8", newline="\n")
     baseline.write_text(baseline_text, encoding="utf-8", newline="\n")
     candidate.write_text(candidate_text, encoding="utf-8", newline="\n")
     rel = out.as_posix()
-    return {
+    result = {
         "target": target, "protocol": protocol,
         "files": {"contract": str(contract), "baseline": str(baseline), "candidate": str(candidate)},
         "inputs": {n: list(s) for n, s in shapes.items()}, "dtype": dtype, "rotate": list(rotate_names),
-        "next": [
-            (f"python {baseline.name} (run from {rel}, in the interpreter that has your torch) "
-             "to see the baseline's JSON line"),
-            f"bench(script='{rel}/{baseline.name}', n=5): the number to beat",
-            (f"verify(candidate='{rel}/{candidate.name}', baseline='{rel}/{baseline.name}', n=7): "
-             "must be 'inconclusive' before you change anything"),
-            f"edit {candidate.name}, then verify() and record(target='{target}', ...) after every change",
-        ],
     }
+    if derive_parsed:
+        result["derive"] = {"function": derivespec, "inputs": list(call_names)}
+    if min_bytes is not None:
+        result["min_bytes"] = min_bytes
+    result["next"] = [
+        (f"python {baseline.name} (run from {rel}, in the interpreter that has your torch) "
+         "to see the baseline's JSON line"),
+        f"bench(script='{rel}/{baseline.name}', n=5): the number to beat",
+        (f"verify(candidate='{rel}/{candidate.name}', baseline='{rel}/{baseline.name}', n=7): "
+         "must be 'inconclusive' before you change anything"),
+        f"edit {candidate.name}, then verify() and record(target='{target}', ...) after every change",
+    ]
+    return result
 
 
 def build_parser(prog: str = "hotkernel new") -> argparse.ArgumentParser:
@@ -264,6 +339,15 @@ def build_parser(prog: str = "hotkernel new") -> argparse.ArgumentParser:
     p.add_argument("--reference", default=None, metavar="MODULE:FUNCTION",
                    help="a different function to run in fp32 as the reference (default: the "
                         "baseline itself); for baselines that cannot run in fp32")
+    p.add_argument("--derive", default=None, metavar="MODULE:FUNCTION",
+                   help="a function from the dict of raw random inputs (the shapes) to the dict of "
+                        "inputs the call takes, in call order (a quantizer, a packed layout); needs "
+                        "--inputs and --reference")
+    p.add_argument("--inputs", default=None, metavar="A,B,C",
+                   help="the names --derive returns, in call order; the candidate's signature")
+    p.add_argument("--min-bytes", dest="min_bytes", type=int, default=None, metavar="N",
+                   help="bytes one call must read (with --derive: one weight layout, not every "
+                        "layout derive returns); the rotation K is sized from it")
     p.add_argument("--force", action="store_true", help="overwrite existing files")
     return p
 
@@ -272,7 +356,8 @@ def main(argv: list[str]) -> int:
     args = build_parser().parse_args(argv)
     result = new_target(args.target, args.from_, args.shape, args.dtype, args.extra, args.rotate,
                         args.out, args.flops, args.iters, args.seed, args.rtol, args.atol, args.force,
-                        reference=args.reference)
+                        reference=args.reference, derive=args.derive, inputs=args.inputs,
+                        min_bytes=args.min_bytes)
     print(json.dumps(result, indent=1))
     return 1 if "error" in result else 0
 

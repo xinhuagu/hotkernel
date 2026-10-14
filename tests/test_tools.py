@@ -7,6 +7,7 @@ verify end to end) is exercised by hand on the reference card; see docs/platform
 
 from __future__ import annotations
 
+import ast
 import glob
 import json
 from pathlib import Path
@@ -317,6 +318,42 @@ def test_new_target_scaffolds_three_files(tmp_path: Path) -> None:
     assert "return reference_fn(x.float(), k.float(), v.float()).to(k.dtype)" in b3
     assert "reference_name='mymod:attn_reference_fp32 in fp32'" in b3
     assert "reference_fn = baseline_fn" in baseline  # the default when --reference is absent
+    # Derived inputs: derive() turns the raw random tensors into what the call takes (a quantizer),
+    # the reference gets them as they are, and min_bytes sizes the rotation.
+    r4 = new_target("int4", "paths:int4pack_mm", "8192", extra=["w:8192x8192"], rotate=["w"],
+                    out_dir=str(tmp_path), reference="paths:reference_fp32", derive="paths:quantize",
+                    inputs="x,w_q,scales", min_bytes=35684352, flops=2 * 8192 * 8192)
+    assert "error" not in r4, r4
+    b4 = Path(r4["files"]["baseline"]).read_text(encoding="utf-8")
+    c4 = Path(r4["files"]["candidate"]).read_text(encoding="utf-8")
+    ast.parse(b4)
+    ast.parse(c4)
+    assert "derive_fn = getattr(importlib.import_module('paths'), 'quantize')" in b4
+    assert "SHAPES = {'x': (8192,), 'w': (8192, 8192)}  # raw random inputs, before derive()" in b4
+    assert "INPUTS = ('x', 'w_q', 'scales')" in b4 and "MIN_BYTES = 35684352" in b4
+    assert "def reference(x, w_q, scales):" in b4
+    assert "return reference_fn(x, w_q, scales).to(TARGET.dtype)" in b4  # no .float(): codes stay codes
+    assert "min_bytes=MIN_BYTES" in b4 and "derive=derive_fn, derive_name='paths:quantize'" in b4
+    assert "reference_name='paths:reference_fp32 on the derived inputs'" in b4
+    assert "def int4_candidate(x, w_q, scales):" in c4 and "return baseline_fn(x, w_q, scales)" in c4
+    assert r4["derive"] == {"function": "paths:quantize", "inputs": ["x", "w_q", "scales"]}
+    assert r4["min_bytes"] == 35684352 and r4["inputs"] == {"x": [8192], "w": [8192, 8192]}
+    # The list form of inputs and the file form of derive; without min_bytes the knob is still
+    # there, as None. min_bytes alone (no derive) adds only its line.
+    r5 = new_target("int4f", f"{user}:fused", "8192", extra=["w:8192x8192"], rotate=["w"], out_dir=str(tmp_path),
+                    reference=f"{user}:fused", derive=f"{user}:fused", inputs=["x", "w_q"])
+    assert "error" not in r5, r5
+    b5 = Path(r5["files"]["baseline"]).read_text(encoding="utf-8")
+    assert "sys.modules['_hk_user_mykernels_derive'] = _mod_derive_fn" in b5
+    assert "INPUTS = ('x', 'w_q')" in b5 and "derive_name='mykernels.py:fused'" in b5
+    assert "MIN_BYTES = None  #" in b5 and "min_bytes=MIN_BYTES" in b5 and "min_bytes" not in r5
+    r6 = new_target("mb", "torch:relu", "16", out_dir=str(tmp_path), min_bytes=64)
+    b6 = Path(r6["files"]["baseline"]).read_text(encoding="utf-8")
+    assert "MIN_BYTES = 64  # bytes one call must read; sizes the rotation K" in b6
+    assert "min_bytes=MIN_BYTES" in b6 and "derive" not in b6 and "INPUTS" not in b6
+    # Without --derive nothing changes.
+    assert "derive" not in baseline and "INPUTS" not in baseline and "MIN_BYTES" not in baseline
+    assert "min_bytes" not in baseline and ".to(x.dtype)" in baseline
     files["contract"].write_text("# stale\nPROTOCOL = 2\n", encoding="utf-8")
     stale = new_target("other", "torch:relu", "16", out_dir=str(tmp_path))
     assert "error" in stale and "differs" in stale["error"]
@@ -329,6 +366,15 @@ def test_new_target_rejects_bad_input() -> None:
     assert "error" in new_target("ok", "torch:relu", "16x0")
     assert "error" in new_target("ok", "torch:relu", "16", extra=["noshape"])
     assert "error" in new_target("ok", "torch:relu", "16", rotate=["y"])
+    # derive needs inputs and a separate reference; inputs needs derive; min_bytes is a byte count.
+    assert "needs --inputs" in new_target("ok", "m:f", "16", derive="m:d", reference="m:r")["error"]
+    assert "needs --reference" in new_target("ok", "m:f", "16", derive="m:d", inputs="a,b")["error"]
+    assert "only goes with --derive" in new_target("ok", "m:f", "16", inputs="a,b", reference="m:r")["error"]
+    assert "duplicate" in new_target("ok", "m:f", "16", derive="m:d", inputs="a,a", reference="m:r")["error"]
+    assert "bad input name" in new_target("ok", "m:f", "16", derive="m:d", inputs="1a", reference="m:r")["error"]
+    assert "error" in new_target("ok", "m:f", "16", derive="m:d", inputs=" , ", reference="m:r")
+    assert "error" in new_target("ok", "m:f", "16", derive="nocolon", inputs="a", reference="m:r")
+    assert "error" in new_target("ok", "m:f", "16", min_bytes=0)
 
 
 def test_new_cli_parser() -> None:
@@ -337,6 +383,20 @@ def test_new_cli_parser() -> None:
                                    "--extra", "w:8192", "--out", "/tmp/x", "--flops", "100"])
     assert a.target == "gelu" and a.from_ == "torch.nn.functional:gelu" and a.extra == ["w:8192"]
     assert a.dtype == "bf16" and a.flops == 100 and a.iters == 50
+    assert a.derive is None and a.inputs is None and a.min_bytes is None
+    d = build_parser().parse_args(["int4", "--from", "p:mm", "--shape", "8192", "--extra", "w:8192x8192",
+                                   "--rotate", "w", "--reference", "p:ref", "--derive", "p:quantize",
+                                   "--inputs", "x,w_q,scales", "--min-bytes", "35684352"])
+    assert d.derive == "p:quantize" and d.inputs == "x,w_q,scales" and d.min_bytes == 35684352
+
+
+def test_new_target_tool_passes_derive_through(tmp_path: Path) -> None:
+    from hotkernel.server import new_target as tool
+    r = tool("q", "m:f", "16", extra=["w:16x16"], rotate=["w"], out_dir=str(tmp_path), reference="m:r",
+             derive="m:d", inputs=["x", "codes"], min_bytes=128)
+    assert "error" not in r, r
+    assert r["derive"] == {"function": "m:d", "inputs": ["x", "codes"]} and r["min_bytes"] == 128
+    assert "def q_candidate(x, codes):" in Path(r["files"]["candidate"]).read_text(encoding="utf-8")
 
 
 def test_python_or_error_treats_placeholder_as_unset(monkeypatch) -> None:

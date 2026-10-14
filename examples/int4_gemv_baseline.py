@@ -2,13 +2,17 @@
 groups of 128 (per-group bf16 scale and zero), x and y bf16 (8192,). One decode-step
 projection of a 7B/8B-class model at batch 1, the shape a local-LLM user runs most.
 
-Hand-written rather than scaffolded: the call's inputs are derived from random tensors by a
-quantizer (int4_gemv_paths.quantize), which `hotkernel new` cannot express yet. The contract's
-Target takes `derive=` for that: the raw inputs are x (8192,) and w (8192, 8192) bf16, w
-rotates (K distinct weights, K sized from min_bytes so every implementation streams more
-than 2x L2 per cycle), and derive() scales w to N(0, 0.02^2), a trained LLM's weight
-magnitude, and quantizes each set into (x, w_q, scales, zeros, w_packed, scales_and_zeros).
-min_bytes counts one weight layout: x + 32 MiB of codes + scales + zeros + y.
+Hand-written rather than scaffolded so that BASELINE_PATH selects the kernel and the matching
+derive() together; for the fixed inner_k_tiles=4 layout, `hotkernel new --derive
+int4_gemv_paths:derive --inputs x,w_q,scales,zeros,w_packed,scales_and_zeros --min-bytes ...`
+generates an equivalent target (the full command and its run on the reference card are in
+results/env/new_target_int4_derive.json). The call's inputs are derived from random tensors by
+a quantizer (int4_gemv_paths.quantize); the contract's Target takes `derive=` for that: the raw
+inputs are x (8192,) and w (8192, 8192) bf16, w rotates (K distinct weights, K sized from
+min_bytes so every implementation streams more than 2x L2 per cycle), and derive() scales w to
+N(0, 0.02^2), a trained LLM's weight magnitude, and quantizes each set into (x, w_q, scales,
+zeros, w_packed, scales_and_zeros). min_bytes counts one weight layout: x + 32 MiB of codes +
+scales + zeros + y.
 
 Baseline: torch._weight_int4pack_mm (tinygemm) with the inner_k_tiles chosen by measurement
 in results/int4_gemv/baseline_choice.json. Reference: fp32 dequantize + fp32 matvec, bf16

@@ -57,6 +57,11 @@ def make_derive(inner_k_tiles: int = 4):
     return derive
 
 
+# The fixed form for `hotkernel new --derive int4_gemv_paths:derive`: inner_k_tiles=4, the
+# layout of the chosen baseline (int4_gemv_baseline.BASELINE_PATH).
+derive = make_derive(4)
+
+
 def unpack(w_q: torch.Tensor) -> torch.Tensor:
     """(n, k/2) uint8 -> (n, k) uint8 codes."""
     n = w_q.shape[0]

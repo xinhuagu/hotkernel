@@ -1017,7 +1017,8 @@ def new_target(target: str, from_: str, shape: str, dtype: str = "bf16",
                extra: list[str] | None = None, rotate: list[str] | None = None,
                out_dir: str = ".", flops: int | None = None, iters: int = 50, seed: int = 0,
                rtol: float | None = None, atol: float | None = None, force: bool = False,
-               reference: str | None = None) -> dict:
+               reference: str | None = None, derive: str | None = None,
+               inputs: list[str] | str | None = None, min_bytes: int | None = None) -> dict:
     """Scaffold a target from the user's own PyTorch function so the loop can run on it: writes
     <out_dir>/<target>_baseline.py (the function as the baseline plus the Target definition:
     inputs, seed, fp32 reference, dtype-default tolerances, rotation, timer),
@@ -1028,13 +1029,18 @@ def new_target(target: str, from_: str, shape: str, dtype: str = "bf16",
     ['w:8192', 'b:8192'] (random tensors of the same dtype); rotate: inputs that stream through
     memory (default ['x']); flops: nominal flops per call for roofline(); reference: a different
     'module:function' to run in fp32 as the reference when the baseline cannot run in fp32
-    (a backend-forced SDPA call, a bf16-only library kernel). Same as the CLI `hotkernel new`.
-    Then bench() the baseline and verify() the blank candidate (expect 'inconclusive') before
-    changing anything."""
+    (a backend-forced SDPA call, a bf16-only library kernel). For inputs randn cannot draw (a
+    quantized weight): derive: a 'module:function' from the dict of raw random tensors to the
+    dict of tensors the call takes, in call order; inputs: the names it returns, e.g.
+    ['x', 'w_q', 'scales'] or 'x,w_q,scales', which become the candidate's signature; reference
+    is then required and gets the derived inputs as they are (it must do its own fp32 math);
+    min_bytes: the bytes one call must read (one weight layout), which sizes the rotation K.
+    Same as the CLI `hotkernel new`. Then bench() the baseline and verify() the blank candidate
+    (expect 'inconclusive') before changing anything."""
     from .newtarget import new_target as _new
     out = _local_path(out_dir) or out_dir
     return _new(target, from_, shape, dtype, extra, rotate, out, flops, iters, seed, rtol, atol, force,
-                reference=reference)
+                reference=reference, derive=derive, inputs=inputs, min_bytes=min_bytes)
 
 
 def main() -> None:

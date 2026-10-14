@@ -16,9 +16,13 @@ English | [中文](https://github.com/xinhuagu/hotkernel/blob/main/README_zh.md)
 
 Ask Claude to "make this kernel faster" today and it guesses: it cannot see the Nsight report, does not know which kernel eats 60% of the step, has never read the SASS the compiler produced, and cannot benchmark its own rewrite on your card. hotkernel is the missing pair of hands. Ten tools wrap `nsys`, `ncu`, `cuobjdump`, `torch.profiler` and a strict verify-and-record contract; one skill turns them into a loop: profile, pick the hot kernel, read its SASS, check it against the roofline, rewrite it in Triton, verify against the baseline, record the verdict, keep or revert, repeat.
 
-**Three targets, three autonomous agent runs, one RTX 5090: rmsnorm 3.2× faster than eager PyTorch, softmax 1.2× faster than `torch.softmax`, gemv level with cuBLAS. Every kernel the agent kept runs at 95–105% of the card's measured streaming bandwidth.**¹
+**Five targets, five autonomous agent runs, one RTX 5090: rmsnorm 3.2× faster than eager PyTorch, softmax 1.2× faster than `torch.softmax`, gemv level with cuBLAS. Every kernel the agent kept runs at 95–105% of the card's measured streaming bandwidth. Where the library already sat near that ceiling (cuDNN decode attention, tinygemm int4 GEMV), the agent found nothing, stopped on its own, and the board says so.**¹
 
 > ¹ Each range comes from three independent `verify()` calls of the agent's final kernel against the baseline, n=7 interleaved runs each, on one RTX 5090 at 575 W under WSL2. Speedups are relative to the baseline scripts in `examples/`: eager PyTorch for rmsnorm, `torch.softmax` for softmax, `torch.mv` (cuBLAS) for gemv. "Measured streaming bandwidth" is device memcpy on the same card under the same timer, 1501 GB/s (84% of the 1792 GB/s spec), see [the calibration](https://github.com/xinhuagu/hotkernel/blob/main/docs/platform-matrix.md). Raw logs for every number are in [`results/`](https://github.com/xinhuagu/hotkernel/tree/main/results).
+
+![hotkernel: an agent profiling, rewriting and verifying a softmax kernel](https://raw.githubusercontent.com/xinhuagu/hotkernel/main/docs/images/demo.gif)
+
+<sub>Replay of a real run, rendered from its log: [`results/softmax/agent-run-20261014-200625`](https://github.com/xinhuagu/hotkernel/tree/main/results/softmax/agent-run-20261014-200625). The 1.22× on screen was measured under timing protocol 2; the same kernel re-measured under protocol 3 is 1.17–1.21×.</sub>
 
 ## Install
 
@@ -50,15 +54,19 @@ writes `targets/gelu_baseline.py`, `targets/gelu_candidate.py` (starts as the ba
 
 ## Before / after
 
-All rows: RTX 5090 @ 575 W, bf16, timing protocol 3, three independent `verify()` runs of n=7 each.
+All rows: RTX 5090 @ 575 W, bf16, timing protocol 3, n=7 per `verify()`; rows with a win are three independent reproductions.
 
 | Target | Baseline | Baseline mean | Agent's kernel mean | Speedup | Share of measured bandwidth | Agent time | What the agent wrote |
 |---|---|---|---|---|---|---|---|
 | rmsnorm 4096×8192 | eager PyTorch (5 kernels) | 0.287–0.300 ms | 0.088–0.095 ms | **3.17–3.32×** | 95–101% | 10 min, 7 experiments (a second 3-minute run found the same kernel) | one Triton program per row, row in registers, one read and one write |
 | softmax 4096×8192 | `torch.softmax` | 0.107–0.111 ms | 0.090–0.093 ms | **1.17–1.21×** | 96–99% | 6 min, 4 experiments | one program per row, max, exp and sum in registers, 8 warps |
 | gemv 8192×8192 | `torch.mv` (cuBLAS) | 0.088–0.091 ms | 0.085–0.088 ms | **1.03–1.05×**, 2 of 3 runs significant: level with cuBLAS | 101–105%² | 7 min, 3 experiments | autotuned row-block GEMV, 2 rows × 1024 columns per program |
+| decode attention, 1 token, 32K context, GQA 32/8, d=128 | `F.scaled_dot_product_attention`, cuDNN backend (fastest of the four SDPA backends on sm_120) | 0.100–0.103 ms | 0.104–0.107 ms | **no gain**, 5 of 5 runs inconclusive³ | baseline at ~91% | 10 min, 5 experiments (stopped early) | split-KV Triton decode; the kernel itself beat cuDNN, the combine step ate the gain |
+| int4 GEMV 8192×8192, group 128 | `torch._weight_int4pack_mm` (tinygemm, fastest int4 path that runs on sm_120) | 0.032–0.037 ms | 0.036–0.039 ms | **no gain**, 4 of 4 runs inconclusive³ | baseline at 64–76% | 11 min, 4 experiments (stopped on its own) | Triton GEMV on packed nibbles; about even on medians, behind on means |
 
 > ² gemv is almost all reads; the copy ceiling is half reads and half writes, so a read-only kernel can sit slightly above it.
+>
+> ³ Rows without a win were not reproduced; the ranges are over the agent's own `verify()` calls. Baselines for these two were picked by measuring every library path that runs on this card; the choice is logged in `results/<target>/baseline_choice.json`.
 
 Every row on [LEADERBOARD.md](https://github.com/xinhuagu/hotkernel/blob/main/LEADERBOARD.md) was written by `record()`, including the runs that did not win and a deliberately wrong candidate that `verify()` rejected as `incorrect`. Each agent run's full transcript is in `results/<target>/agent-run-*/`.
 

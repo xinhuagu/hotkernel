@@ -16,9 +16,13 @@
 
 今天你让 Claude"把这个 kernel 跑快点"，它只能靠猜：它看不到 Nsight 的报告，不知道哪个 kernel 吃掉了一步的 60%，没读过编译器生成的 SASS，也没法在你的卡上测自己改的版本。hotkernel 就是它缺的那双手。十个工具包住 `nsys`、`ncu`、`cuobjdump`、`torch.profiler` 和一套严格的验证与记录协议；一个 skill 把它们串成循环：剖析、选最耗时的 kernel、读它的 SASS、对照 roofline、用 Triton 重写、对着基线验证、记录裁决、保留或回滚、再来。
 
-**三个目标，三次 agent 自主运行，一张 RTX 5090：rmsnorm 比 PyTorch 朴素实现快 3.2 倍，softmax 比 `torch.softmax` 快 1.2 倍，gemv 与 cuBLAS 持平。agent 保留下来的每个 kernel 都跑到了这张卡实测流式带宽的 95% 到 105%。**¹
+**五个目标，五次 agent 自主运行，一张 RTX 5090：rmsnorm 比 PyTorch 朴素实现快 3.2 倍，softmax 比 `torch.softmax` 快 1.2 倍，gemv 与 cuBLAS 持平。agent 保留下来的每个 kernel 都跑到了这张卡实测流式带宽的 95% 到 105%。库函数本来就贴近天花板的地方（cuDNN 解码注意力、tinygemm 的 int4 矩阵向量乘），agent 什么也没找到，自己停了下来，排行榜如实记着。**¹
 
 > ¹ 每个区间来自对 agent 最终 kernel 的三次独立 `verify()`，每次与基线交替各跑 7 次，一张 RTX 5090，575 W，WSL2。加速比只相对 `examples/` 里的基线脚本：rmsnorm 是 PyTorch 朴素实现，softmax 是 `torch.softmax`，gemv 是 `torch.mv`（cuBLAS）。"实测流式带宽"是同一张卡、同一计时器下的显存拷贝速度，1501 GB/s（规格 1792 GB/s 的 84%），见[标定](https://github.com/xinhuagu/hotkernel/blob/main/docs/platform-matrix.md)。每个数字的原始日志都在 [`results/`](https://github.com/xinhuagu/hotkernel/tree/main/results)。
+
+![hotkernel：agent 剖析、改写并验证一个 softmax kernel](https://raw.githubusercontent.com/xinhuagu/hotkernel/main/docs/images/demo.gif)
+
+<sub>真实运行的回放，由运行日志渲染：[`results/softmax/agent-run-20261014-200625`](https://github.com/xinhuagu/hotkernel/tree/main/results/softmax/agent-run-20261014-200625)。画面里的 1.22 倍是在计时协议 2 下测的；同一个 kernel 在协议 3 下重测为 1.17 到 1.21 倍。</sub>
 
 ## 安装
 
@@ -50,15 +54,19 @@ hotkernel new gelu --from torch.nn.functional:gelu --shape 4096x8192 --dtype bf1
 
 ## 改前 / 改后
 
-所有行：RTX 5090 @ 575 W，bf16，计时协议 3，三次独立 `verify()`，每次 n=7。
+所有行：RTX 5090 @ 575 W，bf16，计时协议 3，每次 `verify()` n=7；赢了的行是三次独立复现。
 
 | 目标 | 基线 | 基线均值 | agent 的 kernel 均值 | 加速比 | 占实测带宽 | agent 用时 | agent 写了什么 |
 |---|---|---|---|---|---|---|---|
 | rmsnorm 4096×8192 | PyTorch 朴素实现（5 个 kernel） | 0.287–0.300 ms | 0.088–0.095 ms | **3.17–3.32 倍** | 95–101% | 10 分钟 7 次实验（另一次 3 分钟的运行找到了同一个 kernel） | 每行一个 Triton 程序，整行放寄存器，一读一写 |
 | softmax 4096×8192 | `torch.softmax` | 0.107–0.111 ms | 0.090–0.093 ms | **1.17–1.21 倍** | 96–99% | 6 分钟 4 次实验 | 每行一个程序，max、exp、sum 都在寄存器里，8 个 warp |
 | gemv 8192×8192 | `torch.mv`（cuBLAS） | 0.088–0.091 ms | 0.085–0.088 ms | **1.03–1.05 倍**，三次中两次显著：与 cuBLAS 持平 | 101–105%² | 7 分钟 3 次实验 | 自动调参的分行块 GEMV，每个程序 2 行 × 1024 列 |
+| 解码注意力，1 个 token，32K 上下文，GQA 32/8，d=128 | `F.scaled_dot_product_attention` 的 cuDNN 后端（sm_120 上四个 SDPA 后端里最快的） | 0.100–0.103 ms | 0.104–0.107 ms | **无提升**，5 次全部 inconclusive³ | 基线已在约 91% | 10 分钟 5 次实验（提前停止） | split-KV 的 Triton 解码；kernel 本身比 cuDNN 快，合并结果那一步把优势吃掉了 |
+| int4 GEMV 8192×8192，group 128 | `torch._weight_int4pack_mm`（tinygemm，sm_120 上能跑的最快 int4 路径） | 0.032–0.037 ms | 0.036–0.039 ms | **无提升**，4 次全部 inconclusive³ | 基线在 64–76% | 11 分钟 4 次实验（自己停下） | 直接读打包 4-bit 的 Triton GEMV；中位数持平，均值没赢 |
 
 > ² gemv 几乎全是读；拷贝上限是一半读一半写，所以纯读的 kernel 可以略高于它。
+>
+> ³ 没赢的行没有做复现，区间来自 agent 自己的 `verify()` 调用。这两个目标的基线是把这张卡上能跑的所有库函数路径都测一遍后选出来的，选择过程记在 `results/<目标>/baseline_choice.json`。
 
 [LEADERBOARD.md](https://github.com/xinhuagu/hotkernel/blob/main/LEADERBOARD.md) 上的每一行都由 `record()` 写入，包括没赢的运行，以及一个被 `verify()` 判为 `incorrect` 的故意写错的候选。每次 agent 运行的完整对话记录在 `results/<目标>/agent-run-*/`。
 

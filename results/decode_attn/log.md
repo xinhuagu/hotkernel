@@ -15,3 +15,18 @@ Chosen baseline: **cudnn** (0.0979 ms mean), fastest mean over bench n=5 among b
 Floor at the measured 1501 GB/s for 134225920 B: 0.0894 ms; the chosen baseline is at 91.3% of it.
 - efficient / enable_gqa: error: No available kernel. Aborting execution.
 
+
+## Autonomous run agent-run-20261014-222305 (stopped early)
+
+claude-opus-5-5, from the blank candidate, launched with 30 min / 20 verify. The main session
+changed the limits to 10 min / 5 verify while the run was in progress, and the process was
+stopped at 9 min 51 s, after the 5th verify. 5 verify calls, all `inconclusive` (0.95–1.05x),
+5 rows recorded in LEADERBOARD.md as "no gain". Best candidate: a Triton split-KV decode
+kernel whose own device time is ~81 µs against cuDNN's ~90 µs, but with its combine kernel the
+call takes 0.1056 ms against 0.1013 ms (n=15). Trajectory and the agent's last judgment:
+agent-run-20261014-222305/notes.md.
+
+Conclusion: cuDNN SDPA is at about 91% of the measured bandwidth ceiling for this decode
+shape on sm_120 (mean 0.098–0.103 ms against the 0.0894 ms floor). The remaining headroom is
+about 10%, and no candidate reached it in this run. Kept as a documented negative result;
+not a headline target.

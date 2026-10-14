@@ -1,0 +1,3 @@
+﻿started 2026-10-14T22:23:05.5185932+02:00 target=decode_attn time_limit_s=1800 verify_limit=20 max_turns=200 from_blank=True model=claude-opus-5-5 commit=21ea4af
+exited code  at 2026-10-14T22:32:56.4782631+02:00
+scrubbed stream.jsonl at 2026-10-14T22:32:56.5528594+02:00

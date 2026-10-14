@@ -1,0 +1,112 @@
+{
+ "target": "decode_attn",
+ "note": "Triton split-KV, bigger tiles + more splits: NSPLIT=128,BLOCK_N=128,warps=8,stages=2 (n=15)",
+ "who": "agent:claude-opus-5-5, autonomous loop, results/decode_attn/agent-run-20261014-222305",
+ "commit": "21ea4af",
+ "recorded_at": "20261014-222730",
+ "verify": {
+  "baseline": {
+   "n": 15,
+   "mean_ms": 0.10002,
+   "std_ms": 0.00614,
+   "min_ms": 0.09071,
+   "max_ms": 0.10742,
+   "samples_ms": [
+    0.10475,
+    0.10188,
+    0.10699,
+    0.09529,
+    0.0954,
+    0.10596,
+    0.09071,
+    0.09679,
+    0.10742,
+    0.10115,
+    0.10733,
+    0.09414,
+    0.10585,
+    0.09117,
+    0.09554
+   ]
+  },
+  "candidate": {
+   "n": 15,
+   "mean_ms": 0.10433,
+   "std_ms": 0.00723,
+   "min_ms": 0.09324,
+   "max_ms": 0.1171,
+   "samples_ms": [
+    0.10243,
+    0.10383,
+    0.10558,
+    0.11638,
+    0.09826,
+    0.09781,
+    0.09834,
+    0.1171,
+    0.09324,
+    0.10683,
+    0.11233,
+    0.09786,
+    0.10692,
+    0.0985,
+    0.1096
+   ]
+  },
+  "baseline_all_ok": true,
+  "candidate_all_ok": true,
+  "contract_mismatch": [],
+  "speedup": 0.9587,
+  "delta_ms": -0.00431,
+  "threshold_ms": 0.0049,
+  "significant": false,
+  "verdict": "inconclusive",
+  "reason": "candidate mean 0.1043 ms vs baseline 0.1000 ms; |delta| 0.0043 ms <= 2*SE 0.0049 ms (n=15)",
+  "n": 15,
+  "warmup": 2,
+  "order": "interleaved baseline/candidate",
+  "cmds": {
+   "baseline": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/decode_attn_baseline.py"
+   ],
+   "candidate": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/decode_attn_agent_candidate.py"
+   ]
+  },
+  "cwd": null,
+  "timestamp": "2026-10-14T22:27:21+0200",
+  "wall_s": 66.8,
+  "contract": {
+   "shape": [
+    1,
+    8,
+    32768,
+    128
+   ],
+   "dtype": "torch.bfloat16",
+   "iters": 50,
+   "seed": 0,
+   "protocol": 3,
+   "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+   "rotation_k": 2,
+   "rotation_bytes": 268451840,
+   "l2_bytes": 100663296,
+   "torch": "2.11.0+cu128"
+  },
+  "roofline_inputs": {
+   "min_bytes": 134225920,
+   "flops": 536870912
+  },
+  "candidate_extra": {
+   "config": "triton split-KV NSPLIT=128,BLOCK_N=128,warps=8,stages=2"
+  },
+  "note": "speedup = this call's baseline mean / candidate mean and moves with the baseline's run-to-run noise (a few %); to rank hypotheses against each other compare candidate mean_ms, which is what record() uses for keep",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "617.42",
+  "power_limit_w": 575,
+  "sm_clock_mhz": 2610,
+  "temperature_c": 37
+ }
+}

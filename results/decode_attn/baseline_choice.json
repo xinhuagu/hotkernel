@@ -1,0 +1,124 @@
+{
+ "target": "decode_attn",
+ "date": "2026-10-14",
+ "gpu": "NVIDIA GeForce RTX 5090",
+ "capability": [
+  12,
+  0
+ ],
+ "torch": "2.11.0+cu128",
+ "cudnn": 91900,
+ "protocol": 3,
+ "bench_n": 5,
+ "availability_on_this_gpu": {
+  "flash": {
+   "enable_gqa": "ok",
+   "repeat_interleave": "ok"
+  },
+  "cudnn": {
+   "enable_gqa": "ok",
+   "repeat_interleave": "ok"
+  },
+  "efficient": {
+   "enable_gqa": "error: No available kernel. Aborting execution.",
+   "repeat_interleave": "ok"
+  },
+  "math": {
+   "enable_gqa": "ok",
+   "repeat_interleave": "ok"
+  }
+ },
+ "backends": {
+  "flash": {
+   "path_used": "enable_gqa=True",
+   "runs": true,
+   "all_ok": true,
+   "n": 5,
+   "mean_ms": 0.11,
+   "std_ms": 0.0032,
+   "min_ms": 0.1062,
+   "max_ms": 0.1158,
+   "samples_ms": [
+    0.11584,
+    0.11042,
+    0.10813,
+    0.10929,
+    0.10625
+   ],
+   "achieved_gbs_lower_bound": 1158.7,
+   "min_bytes": 134225920,
+   "rotation_k": 2,
+   "impl": "torch sdpa backend flash"
+  },
+  "cudnn": {
+   "path_used": "enable_gqa=True",
+   "runs": true,
+   "all_ok": true,
+   "n": 5,
+   "mean_ms": 0.0979,
+   "std_ms": 0.0062,
+   "min_ms": 0.0907,
+   "max_ms": 0.1057,
+   "samples_ms": [
+    0.09072,
+    0.10315,
+    0.09092,
+    0.10571,
+    0.09895
+   ],
+   "achieved_gbs_lower_bound": 1479.5,
+   "min_bytes": 134225920,
+   "rotation_k": 2,
+   "impl": "torch sdpa backend cudnn"
+  },
+  "efficient": {
+   "path_used": "repeat_interleave KV x4 (enable_gqa=True is rejected for this shape)",
+   "runs": true,
+   "all_ok": true,
+   "n": 5,
+   "mean_ms": 2.6212,
+   "std_ms": 0.0612,
+   "min_ms": 2.5189,
+   "max_ms": 2.71,
+   "samples_ms": [
+    2.51886,
+    2.70995,
+    2.62352,
+    2.61407,
+    2.6396
+   ],
+   "achieved_gbs_lower_bound": 53.3,
+   "min_bytes": 134225920,
+   "rotation_k": 2,
+   "impl": "torch sdpa backend efficient"
+  },
+  "math": {
+   "path_used": "enable_gqa=True",
+   "runs": true,
+   "all_ok": true,
+   "n": 5,
+   "mean_ms": 2.8955,
+   "std_ms": 0.0106,
+   "min_ms": 2.8829,
+   "max_ms": 2.9143,
+   "samples_ms": [
+    2.89566,
+    2.91425,
+    2.8884,
+    2.8829,
+    2.8964
+   ],
+   "achieved_gbs_lower_bound": 46.4,
+   "min_bytes": 134225920,
+   "rotation_k": 2,
+   "impl": "torch sdpa backend math"
+  }
+ },
+ "chosen": "cudnn",
+ "chosen_mean_ms": 0.0979,
+ "reason": "fastest mean over bench n=5 among backends that run on this GPU and pass the fp32 reference check (bf16 default tolerances)",
+ "min_bytes": 134225920,
+ "measured_mem_gbs": 1501.0,
+ "floor_ms_at_measured_bandwidth": 0.08942433044636908,
+ "chosen_pct_of_measured_bandwidth": 91.3
+}

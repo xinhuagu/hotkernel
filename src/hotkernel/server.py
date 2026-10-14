@@ -13,6 +13,7 @@ can read them instead of crashing):
   verify        baseline vs candidate, interleaved, n runs each: speedup + verdict
                 (faster / slower / inconclusive / incorrect / invalid)
   record        write a verify result to results/<target>/ and append the LEADERBOARD row
+  new_target    scaffold baseline + blank candidate + vendored contract from the user's function
 
 Design rules:
   * hotkernel's own environment stays light (no torch). Anything that needs the user's
@@ -64,8 +65,46 @@ _DEFAULT_TIMEOUT = 600
 
 # --------------------------------------------------------------------------- helpers
 
+_PYTHON_HELP = (
+    "Set HOTKERNEL_PYTHON to the interpreter that has your PyTorch (and Triton), for example "
+    "~/venvs/mytorch/bin/python: `claude mcp add -e HOTKERNEL_PYTHON=... hotkernel -- uvx hotkernel`, "
+    "or for the Claude Code plugin the 'Python with your PyTorch' option "
+    "(`claude plugin configure hotkernel@hotkernel`), or an env entry in any other MCP client's "
+    "config. hotkernel itself stays torch-free."
+)
+
+
+@functools.lru_cache(maxsize=1)
+def _probe_torch_python() -> str | None:
+    """The first python/python3 on PATH that can import torch, or None. Probed once per server."""
+    for name in ("python3", "python"):
+        exe = shutil.which(name)
+        if not exe:
+            continue
+        r = _run([exe, "-c", "import torch, sys; print(sys.executable)"], timeout=120)
+        if "error" not in r and r["returncode"] == 0:
+            return r["stdout"].strip().splitlines()[-1] if r["stdout"].strip() else exe
+    return None
+
+
+def _python_or_error() -> tuple[str | None, dict | None]:
+    """HOTKERNEL_PYTHON if set (an empty value or an unexpanded ${...} placeholder counts as
+    unset), else the first python on PATH that imports torch, else a clear error."""
+    env = (os.environ.get("HOTKERNEL_PYTHON") or "").strip()
+    if env and not env.startswith("${"):
+        return env, None
+    found = _probe_torch_python()
+    if found:
+        return found, None
+    return None, {"error": "HOTKERNEL_PYTHON is not set and no python/python3 on PATH can import "
+                           "torch, so this tool cannot run the target. " + _PYTHON_HELP}
+
+
 def _python() -> str:
-    return os.environ.get("HOTKERNEL_PYTHON") or shutil.which("python") or sys.executable
+    """Best guess for places that only need an interpreter path (Triton's bundled cuobjdump,
+    profile commands); tools that run a target use _python_or_error() and fail loudly."""
+    py, _ = _python_or_error()
+    return py or sys.executable
 
 
 def _local_path(p: str | None) -> str | None:
@@ -236,7 +275,9 @@ def bench(script: str, n: int = 5, args: list[str] | None = None, cwd: str | Non
     Contract: the script prints one JSON line to stdout containing at least {"ms": <float>}
     and optionally {"ok": <bool>} for a correctness check. Returns mean/std/min over the n
     timed runs plus every raw sample, so a LEADERBOARD row can cite n and seed."""
-    py = _python()
+    py, err = _python_or_error()
+    if err:
+        return err
     cmd = [py, script, *(args or [])]
     samples: list[float] = []
     oks: list[bool] = []
@@ -328,7 +369,9 @@ def torch_trace(script: str, top: int = 15, args: list[str] | None = None,
     """Run a Python script under torch.profiler in the user's interpreter. Returns `kernels`
     (real GPU kernels by device time, pct over total kernel time) and `ops` (aten ops with
     input shapes, inclusive time). Works without Nsight installed; use this first."""
-    py = _python()
+    py, err = _python_or_error()
+    if err:
+        return err
     with tempfile.NamedTemporaryFile("w", suffix="_hotkernel_torchprof.py", delete=False) as f:
         f.write(_TORCH_PROF_RUNNER)
         runner = f.name
@@ -741,7 +784,9 @@ def verify(candidate: str, baseline: str, n: int = 7, warmup: int = 2,
     speedup is reported), 'invalid' if the two scripts disagree on shape/dtype/iters/seed or the
     baseline fails its own check. Also records gpu, driver, power limit, timestamp and the exact
     commands. Pass the result to record()."""
-    py = _python()
+    py, err = _python_or_error()
+    if err:
+        return err
     b_cmd = [py, baseline, *(args or [])]
     c_cmd = [py, candidate, *(args or [])]
     t0 = time.perf_counter()
@@ -967,7 +1012,42 @@ def record(target: str, verify_result: dict | str, note: str = "", who: str = ""
             "advice": advice, **counts}
 
 
+@mcp.tool()
+def new_target(target: str, from_: str, shape: str, dtype: str = "bf16",
+               extra: list[str] | None = None, rotate: list[str] | None = None,
+               out_dir: str = ".", flops: int | None = None, iters: int = 50, seed: int = 0,
+               rtol: float | None = None, atol: float | None = None, force: bool = False) -> dict:
+    """Scaffold a target from the user's own PyTorch function so the loop can run on it: writes
+    <out_dir>/<target>_baseline.py (the function as the baseline plus the Target definition:
+    inputs, seed, fp32 reference, dtype-default tolerances, rotation, timer),
+    <out_dir>/<target>_candidate.py (the file to edit; starts as the baseline) and the vendored
+    _hotkernel_contract.py (protocol 3) they import, so they run in HOTKERNEL_PYTHON without
+    hotkernel installed there. from_: 'torch.nn.functional:gelu' or './mykernels.py:fused';
+    shape: the primary input x, e.g. '4096x8192'; extra: more inputs in call order like
+    ['w:8192', 'b:8192'] (random tensors of the same dtype); rotate: inputs that stream through
+    memory (default ['x']); flops: nominal flops per call for roofline(). Same as the CLI
+    `hotkernel new`. Then bench() the baseline and verify() the blank candidate (expect
+    'inconclusive') before changing anything."""
+    from .newtarget import new_target as _new
+    out = _local_path(out_dir) or out_dir
+    return _new(target, from_, shape, dtype, extra, rotate, out, flops, iters, seed, rtol, atol, force)
+
+
 def main() -> None:
+    """`hotkernel` starts the MCP server over stdio (what `uvx hotkernel` in an MCP config
+    runs); `hotkernel new ...` scaffolds a target; `hotkernel --version` prints the version."""
+    argv = sys.argv[1:]
+    if argv and argv[0] == "new":
+        from .newtarget import main as new_main
+        sys.exit(new_main(argv[1:]))
+    if argv and argv[0] in ("--version", "-V"):
+        print(f"hotkernel {__version__}")
+        return
+    if argv and argv[0] in ("-h", "--help"):
+        print("usage: hotkernel            start the MCP server (stdio)\n"
+              "       hotkernel new ...    scaffold a target from your function (see `hotkernel new -h`)\n"
+              "       hotkernel --version")
+        return
     mcp.run()
 
 

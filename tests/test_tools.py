@@ -268,3 +268,73 @@ def test_record_lists_superseded_logs_separately(tmp_path: Path) -> None:
 def test_record_rejects_garbage() -> None:
     assert "error" in record("x", "not json")
     assert "error" in record("x", {"verdict": "faster"})
+
+
+# ----------------------------------------------------------------------------- contract / new
+
+def test_examples_vendor_the_same_contract() -> None:
+    """One source for the contract: the template in the package and the copy in examples/."""
+    from hotkernel.newtarget import contract_protocol, contract_source
+    assert (REPO / "examples" / "_hotkernel_contract.py").read_text(encoding="utf-8") == contract_source()
+    assert contract_protocol() == 3
+    assert "import hotkernel" not in contract_source()  # runs where hotkernel is not installed
+
+
+def test_new_target_scaffolds_three_files(tmp_path: Path) -> None:
+    from hotkernel.newtarget import new_target
+    r = new_target("gelu", "torch.nn.functional:gelu", "4096x8192", dtype="bf16", out_dir=str(tmp_path))
+    assert "error" not in r, r
+    files = {k: Path(v) for k, v in r["files"].items()}
+    assert files["contract"].name == "_hotkernel_contract.py" and files["contract"].exists()
+    baseline = files["baseline"].read_text(encoding="utf-8")
+    candidate = files["candidate"].read_text(encoding="utf-8")
+    assert 'getattr(importlib.import_module(\'torch.nn.functional\'), \'gelu\')' in baseline
+    assert "SHAPES = {'x': (4096, 8192)}" in baseline and "ROTATE = ('x',)" in baseline
+    assert "assert PROTOCOL == 3" in baseline and "def reference(x):" in baseline
+    assert "from gelu_baseline import baseline_fn, run" in candidate and "def gelu_candidate(x):" in candidate
+    assert "import hotkernel" not in baseline + candidate
+    # Refuses to clobber, unless forced.
+    again = new_target("gelu", "torch.nn.functional:gelu", "4096x8192", out_dir=str(tmp_path))
+    assert "error" in again and "already exists" in again["error"]
+    forced = new_target("gelu", "torch.nn.functional:gelu", "4096x8192", out_dir=str(tmp_path), force=True)
+    assert "error" not in forced
+    # Extra inputs, a file-based function and a stale contract.
+    user = tmp_path / "mykernels.py"
+    user.write_text("def fused(x, w):\n    return x * w\n")
+    r2 = new_target("scaled", f"{user}:fused", "1024x1024", extra=["w:1024"], out_dir=str(tmp_path))
+    assert "error" not in r2, r2
+    b2 = Path(r2["files"]["baseline"]).read_text(encoding="utf-8")
+    assert "spec_from_file_location" in b2 and "def reference(x, w):" in b2
+    assert "SHAPES = {'x': (1024, 1024), 'w': (1024,)}" in b2
+    files["contract"].write_text("# stale\nPROTOCOL = 2\n", encoding="utf-8")
+    stale = new_target("other", "torch:relu", "16", out_dir=str(tmp_path))
+    assert "error" in stale and "differs" in stale["error"]
+
+
+def test_new_target_rejects_bad_input() -> None:
+    from hotkernel.newtarget import new_target
+    assert "error" in new_target("Bad-Name", "torch:relu", "16")
+    assert "error" in new_target("ok", "torchrelu", "16")  # no colon
+    assert "error" in new_target("ok", "torch:relu", "16x0")
+    assert "error" in new_target("ok", "torch:relu", "16", extra=["noshape"])
+    assert "error" in new_target("ok", "torch:relu", "16", rotate=["y"])
+
+
+def test_new_cli_parser() -> None:
+    from hotkernel.newtarget import build_parser
+    a = build_parser().parse_args(["gelu", "--from", "torch.nn.functional:gelu", "--shape", "4096x8192",
+                                   "--extra", "w:8192", "--out", "/tmp/x", "--flops", "100"])
+    assert a.target == "gelu" and a.from_ == "torch.nn.functional:gelu" and a.extra == ["w:8192"]
+    assert a.dtype == "bf16" and a.flops == 100 and a.iters == 50
+
+
+def test_python_or_error_treats_placeholder_as_unset(monkeypatch) -> None:
+    import hotkernel.server as srv
+    monkeypatch.setenv("HOTKERNEL_PYTHON", "/some/venv/bin/python")
+    assert srv._python_or_error() == ("/some/venv/bin/python", None)
+    monkeypatch.setattr(srv, "_probe_torch_python", lambda: None)  # pretend PATH has no torch
+    for unset in ("", "   ", "${user_config.hotkernel_python}"):
+        monkeypatch.setenv("HOTKERNEL_PYTHON", unset)
+        py, err = srv._python_or_error()
+        assert py is None and "HOTKERNEL_PYTHON is not set" in err["error"]
+        assert "claude plugin configure" in err["error"]

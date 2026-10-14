@@ -5,4 +5,4 @@ hands on NVIDIA's profiling and disassembly tools, plus the data needed to run a
 overnight kernel-speedrun loop on the GPU you own.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"

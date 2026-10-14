@@ -1,0 +1,14 @@
+{
+  "name": "hotkernel",
+  "owner": { "name": "Xinhua Gu", "url": "https://github.com/xinhuagu" },
+  "description": "hotkernel: Nsight/SASS tools and the kernel-speedrun loop for coding agents, measured on the GPU in your machine.",
+  "plugins": [
+    {
+      "name": "hotkernel",
+      "source": ".",
+      "description": "Ten MCP tools (gpu_info, roofline, bench, torch_trace, profile, top_kernels, disasm, verify, record, new_target) and the kernel-speedrun skill. Needs an NVIDIA GPU and a Python with PyTorch; Nsight is optional.",
+      "category": "gpu",
+      "tags": ["gpu", "cuda", "triton", "nsight", "profiling", "benchmark"]
+    }
+  ]
+}

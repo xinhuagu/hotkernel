@@ -1,0 +1,25 @@
+{
+  "name": "hotkernel",
+  "version": "0.1.1",
+  "description": "Nsight, SASS and a verify-and-record contract for the GPU on your desk: ten MCP tools plus the kernel-speedrun loop that profiles a kernel, rewrites it in Triton, verifies it against the baseline n times and records the verdict.",
+  "author": { "name": "Xinhua Gu", "url": "https://github.com/xinhuagu" },
+  "homepage": "https://github.com/xinhuagu/hotkernel",
+  "repository": "https://github.com/xinhuagu/hotkernel",
+  "license": "Apache-2.0",
+  "keywords": ["gpu", "cuda", "triton", "nsight", "profiling", "kernel", "mcp", "benchmark"],
+  "mcpServers": {
+    "hotkernel": {
+      "command": "uvx",
+      "args": ["hotkernel"],
+      "env": { "HOTKERNEL_PYTHON": "${user_config.hotkernel_python}" }
+    }
+  },
+  "userConfig": {
+    "hotkernel_python": {
+      "type": "file",
+      "title": "Python with your PyTorch",
+      "description": "Path to the interpreter that has your PyTorch and Triton, e.g. ~/venvs/mytorch/bin/python. bench, verify, torch_trace and profile run targets with it. Leave empty to let hotkernel use the first python/python3 on PATH that can import torch.",
+      "required": false
+    }
+  }
+}

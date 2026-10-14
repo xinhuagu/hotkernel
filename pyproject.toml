@@ -1,6 +1,6 @@
 [project]
 name = "hotkernel"
-version = "0.1.0"
+version = "0.1.1"
 description = "Find the hot kernel, cool it down: an Nsight/SASS MCP server with a verify-and-record contract and a kernel-speedrun loop for coding agents."
 readme = "README.md"
 license = "Apache-2.0"

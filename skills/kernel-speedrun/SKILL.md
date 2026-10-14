@@ -6,8 +6,11 @@ description: Overnight loop that makes one GPU kernel faster on the GPU in this 
 # kernel-speedrun
 
 You have the `hotkernel` MCP tools: `gpu_info`, `roofline`, `bench`, `torch_trace`, `profile`,
-`top_kernels`, `disasm`, `verify`, `record`. This skill is the loop that turns them into a
-speedup that someone else can reproduce.
+`top_kernels`, `disasm`, `verify`, `record`, and `new_target` (scaffold a target from the
+user's own function). This skill is the loop that turns them into a speedup that someone else
+can reproduce. If the user's kernel has no target yet, start with
+`new_target(target, from_="module:function", shape="4096x8192", dtype="bf16")` and bench the
+baseline it writes; the generated candidate is the file you edit.
 
 ## The contract
 

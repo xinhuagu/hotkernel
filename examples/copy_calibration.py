@@ -16,7 +16,7 @@ import json
 import torch
 import triton
 import triton.language as tl
-from _timing import PROTOCOL, TIMING, l2_bytes, rotation_k, time_kernel
+from _hotkernel_contract import PROTOCOL, TIMING, l2_bytes, rotation_k, time_kernel
 
 ROWS, COLS = 4096, 8192
 DTYPE = torch.bfloat16

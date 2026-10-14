@@ -19,6 +19,10 @@ Paths inside recorded tool calls are shown relative to the repo (the prefix up t
 is dropped for display only); long lines are cut with an ellipsis. Output: ~1000 px wide,
 20-30 s, well under 5 MB.
 
+`--final-note` draws one short line of small text on the closing frame only, above the
+footer, for something the recorded run cannot carry, such as a later re-measurement of the
+same kernel. It is the only text in the GIF that does not come from the records.
+
     uv run --with pillow --no-project python scripts/render_demo_gif.py \
         results/<target>/agent-run-<ts> --out docs/images/demo.gif
 """
@@ -258,7 +262,7 @@ class Terminal:
         return {"cmd": FG, "cmd2": FG, "out": DIM, "hi": GREEN, "agent": YELLOW, "sass": MAGENTA,
                 "sys": DIM}[kind]
 
-    def render(self) -> Image.Image:
+    def render(self, note: str | None = None) -> Image.Image:
         im = Image.new("RGB", (self.width, self.height), BG)
         dr = ImageDraw.Draw(im)
         dr.rectangle([0, 0, self.width, self.bar], fill=BAR)
@@ -280,6 +284,8 @@ class Terminal:
             else:
                 dr.text((x, y), text, fill=self.color(kind), font=self.font)
             y += self.lh
+        if note:
+            dr.text((self.pad, self.height - self.foot - 6), note, fill=FG, font=self.small, anchor="ls")
         dr.rectangle([0, self.height - self.foot, self.width, self.height], fill=BAR)
         dr.text((self.pad, self.height - self.foot / 2), self.footer, fill=DIM, font=self.small, anchor="lm")
         return im
@@ -312,7 +318,7 @@ class Terminal:
 
 
 def build(run_dir: pathlib.Path, out: pathlib.Path, seconds: float, width: int, rows: int,
-          font: str) -> dict:
+          font: str, final_note: str | None = None) -> dict:
     stream = run_dir / "stream.jsonl"
     run = parse(stream)
     moms = moments(run)
@@ -330,7 +336,12 @@ def build(run_dir: pathlib.Path, out: pathlib.Path, seconds: float, width: int, 
             else:
                 term.put_line(kind, text)
         term.hold(1500)
-    term.hold(2500)
+    if final_note:
+        # The closing frame alone carries the note; every earlier frame is unchanged.
+        term.frames.append(term.render(note=final_note))
+        term.durations.append(2500)
+    else:
+        term.hold(2500)
 
     total = sum(term.durations)
     scale = seconds * 1000 / total
@@ -354,8 +365,11 @@ def main(argv=None) -> int:
     ap.add_argument("--width", type=int, default=1000)
     ap.add_argument("--rows", type=int, default=20)
     ap.add_argument("--font", default=FONT)
+    ap.add_argument("--final-note", default=None,
+                    help="one short line drawn in small type on the closing frame only")
     a = ap.parse_args(argv)
-    info = build(pathlib.Path(a.run_dir), pathlib.Path(a.out), a.seconds, a.width, a.rows, a.font)
+    info = build(pathlib.Path(a.run_dir), pathlib.Path(a.out), a.seconds, a.width, a.rows, a.font,
+                 final_note=a.final_note)
     print(json.dumps(info, indent=1, ensure_ascii=False))
     return 0
 

@@ -1,0 +1,92 @@
+{
+ "target": "int4_gemv",
+ "note": "control: unchanged candidate (baseline tinygemm call)",
+ "who": "agent:claude-opus-5-5, autonomous loop, results/int4_gemv/agent-run-20261014-224714",
+ "commit": "9c3d623",
+ "recorded_at": "20261014-224818",
+ "verify": {
+  "baseline": {
+   "n": 7,
+   "mean_ms": 0.03263,
+   "std_ms": 0.0037,
+   "min_ms": 0.02869,
+   "max_ms": 0.03763,
+   "samples_ms": [
+    0.02916,
+    0.03591,
+    0.02886,
+    0.03763,
+    0.03458,
+    0.02869,
+    0.03358
+   ]
+  },
+  "candidate": {
+   "n": 7,
+   "mean_ms": 0.03381,
+   "std_ms": 0.00908,
+   "min_ms": 0.02856,
+   "max_ms": 0.05292,
+   "samples_ms": [
+    0.02957,
+    0.0292,
+    0.02856,
+    0.0289,
+    0.02939,
+    0.03815,
+    0.05292
+   ]
+  },
+  "baseline_all_ok": true,
+  "candidate_all_ok": true,
+  "contract_mismatch": [],
+  "speedup": 0.9651,
+  "delta_ms": -0.00118,
+  "threshold_ms": 0.00741,
+  "significant": false,
+  "verdict": "inconclusive",
+  "reason": "candidate mean 0.0338 ms vs baseline 0.0326 ms; |delta| 0.0012 ms <= 2*SE 0.0074 ms (n=7)",
+  "n": 7,
+  "warmup": 2,
+  "order": "interleaved baseline/candidate",
+  "cmds": {
+   "baseline": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/int4_gemv_baseline.py"
+   ],
+   "candidate": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/int4_gemv_agent_candidate.py"
+   ]
+  },
+  "cwd": null,
+  "timestamp": "2026-10-14T22:48:10+0200",
+  "wall_s": 36.8,
+  "contract": {
+   "shape": [
+    8192,
+    8192
+   ],
+   "dtype": "torch.bfloat16",
+   "iters": 50,
+   "seed": 0,
+   "protocol": 3,
+   "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+   "rotation_k": 6,
+   "rotation_bytes": 427917312,
+   "l2_bytes": 100663296,
+   "torch": "2.11.0+cu128"
+  },
+  "roofline_inputs": {
+   "min_bytes": 35684352,
+   "flops": 134217728
+  },
+  "candidate_extra": {},
+  "note": "speedup = this call's baseline mean / candidate mean and moves with the baseline's run-to-run noise (a few %); to rank hypotheses against each other compare candidate mean_ms, which is what record() uses for keep",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "617.42",
+  "power_limit_w": 575,
+  "sm_clock_mhz": 2550,
+  "temperature_c": 35
+ }
+}

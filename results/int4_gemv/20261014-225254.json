@@ -1,0 +1,94 @@
+{
+ "target": "int4_gemv",
+ "note": "Triton GEMV on w_q uint8 layout, group-factored dequant (s*(sum qx - 8 sum x) + z sum x), direct compiled-kernel launch; BLOCK_N=16,BLOCK_KB=512,warps=8",
+ "who": "agent:claude-opus-5-5, autonomous loop, results/int4_gemv/agent-run-20261014-224714",
+ "commit": "9c3d623",
+ "recorded_at": "20261014-225254",
+ "verify": {
+  "baseline": {
+   "n": 7,
+   "mean_ms": 0.03262,
+   "std_ms": 0.0045,
+   "min_ms": 0.02847,
+   "max_ms": 0.03864,
+   "samples_ms": [
+    0.02874,
+    0.0374,
+    0.02892,
+    0.0359,
+    0.03029,
+    0.02847,
+    0.03864
+   ]
+  },
+  "candidate": {
+   "n": 7,
+   "mean_ms": 0.03601,
+   "std_ms": 0.00285,
+   "min_ms": 0.03386,
+   "max_ms": 0.04125,
+   "samples_ms": [
+    0.03873,
+    0.03386,
+    0.0354,
+    0.03407,
+    0.03442,
+    0.04125,
+    0.03436
+   ]
+  },
+  "baseline_all_ok": true,
+  "candidate_all_ok": true,
+  "contract_mismatch": [],
+  "speedup": 0.9059,
+  "delta_ms": -0.00339,
+  "threshold_ms": 0.00403,
+  "significant": false,
+  "verdict": "inconclusive",
+  "reason": "candidate mean 0.0360 ms vs baseline 0.0326 ms; |delta| 0.0034 ms <= 2*SE 0.0040 ms (n=7)",
+  "n": 7,
+  "warmup": 2,
+  "order": "interleaved baseline/candidate",
+  "cmds": {
+   "baseline": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/int4_gemv_baseline.py"
+   ],
+   "candidate": [
+    "/home/ubuntu/venvs/5090lab-cu128/bin/python",
+    "examples/int4_gemv_agent_candidate.py"
+   ]
+  },
+  "cwd": null,
+  "timestamp": "2026-10-14T22:52:45+0200",
+  "wall_s": 35.8,
+  "contract": {
+   "shape": [
+    8192,
+    8192
+   ],
+   "dtype": "torch.bfloat16",
+   "iters": 50,
+   "seed": 0,
+   "protocol": 3,
+   "timing": "per-call CUDA events, steady-state rotation over K buffer pairs > 2x L2, no flush",
+   "rotation_k": 6,
+   "rotation_bytes": 427917312,
+   "l2_bytes": 100663296,
+   "torch": "2.11.0+cu128"
+  },
+  "roofline_inputs": {
+   "min_bytes": 35684352,
+   "flops": 134217728
+  },
+  "candidate_extra": {
+   "config": "BLOCK_N=16,BLOCK_KB=512,warps=8"
+  },
+  "note": "speedup = this call's baseline mean / candidate mean and moves with the baseline's run-to-run noise (a few %); to rank hypotheses against each other compare candidate mean_ms, which is what record() uses for keep",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "driver": "617.42",
+  "power_limit_w": 575,
+  "sm_clock_mhz": 2595,
+  "temperature_c": 36
+ }
+}
